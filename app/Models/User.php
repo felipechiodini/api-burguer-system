@@ -13,7 +13,11 @@ class User extends Authenticatable implements JWTSubject
 
     protected $filafillable = [
         'name',
-        'email'
+        'email',
+        'email_verified_at',
+        'password',
+        'cellphone',
+        'remember_token'
     ];
 
     public function getJWTIdentifier()

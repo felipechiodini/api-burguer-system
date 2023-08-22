@@ -6,7 +6,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function() {
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
+    Route::get('me', 'AuthController@me');
 });
 
 Route::post('register', 'UserController@register');
@@ -30,9 +30,9 @@ Route::middleware('auth:api')->group(function() {
     Route::post('product/{product}/configuration', 'ProductConfigurationController@createOrUpdate');
     Route::apiResource('product', 'ProductController');
     Route::apiResource('product/{product}/photo', 'ProductPhotoController');
-    Route::apiResource('products/{product}/prices', 'ProductPriceController');
-    Route::apiResource('products/{product}/additionals', 'ProductAdditionalController');
-    Route::apiResource('products/{product}/replacements', 'ProductReplacementController');
+    Route::apiResource('product/{product}/prices', 'ProductPriceController');
+    Route::apiResource('product/{product}/additionals', 'ProductAdditionalController');
+    Route::apiResource('product/{product}/replacements', 'ProductReplacementController');
     Route::apiResource('combo', 'ComboController');
     Route::apiResource('combo/{combo}/option', 'ComboOptionController');
     Route::apiResource('card', 'CardController');
