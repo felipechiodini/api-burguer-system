@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class StoreConfiguration extends Model
+{
+
+    protected $table = 'store_configurations';
+
+    protected $fillable = [
+        'warning',
+        'allow_withdrawal',
+        'withdrawal_time',
+        'delivery_time',
+        'minimum_order_value',
+        'delivery_price_per_km',
+        'force_store_open',
+        'force_store_close'
+    ];
+
+    protected $casts = [
+        'allow_withdrawal' => 'boolean',
+        'force_store_open' => 'boolean',
+        'force_store_close' => 'boolean'
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('store', function($query) {
+            $query->where('user_store_id', request()->header(UserStore::HEADER_KEY));
+        });
+    }
+
+}
