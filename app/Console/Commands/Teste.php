@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Product;
 
 class Teste extends Command
 {
@@ -13,9 +12,6 @@ class Teste extends Command
 
     public function handle()
     {
-
-        Product::greet();
-
 
     }
 }

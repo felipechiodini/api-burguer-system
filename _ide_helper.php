@@ -18192,6 +18192,16 @@
                         /** @var \App\Product\Product $instance */
                         return $instance->greet();
         }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function calculatePrice()
+        {
+                        /** @var \App\Product\Product $instance */
+                        return $instance->calculatePrice();
+        }
          
     }
      

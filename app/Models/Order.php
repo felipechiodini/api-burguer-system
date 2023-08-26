@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Order\CalculateOrderTotalValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,15 +17,6 @@ class Order extends Model
         'status',
         'origin',
     ];
-
-    protected $appends = [
-        'total'
-    ];
-
-    public function getTotalAttribute()
-    {
-        return CalculateOrderTotalValue::order($this)->totalValue();
-    }
 
     public function coupon()
     {
@@ -47,14 +37,4 @@ class Order extends Model
     {
         return $this->hasOne(OrderPayment::class);
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('store', function($query) {
-            $query->where('user_store_id', request()->header(UserStore::HEADER_KEY));
-        });
-    }
-
 }
