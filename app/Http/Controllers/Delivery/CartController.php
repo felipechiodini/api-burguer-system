@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Cart\Cart;
+use App\Cart\CartItem;
 use App\Discount\Coupon;
 use App\Http\Controllers\Controller;
+use App\Models\Cart as ModelsCart;
 use App\Models\Order;
+use App\Models\Product as ModelsProduct;
+use App\Product\Product;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -25,18 +29,26 @@ class CartController extends Controller
 
     public function addItem(Request $request)
     {
-        $request->validate([
-            'cart_id' => 'exists:carts,id',
-            'item_id' => 'exists:product_items,id',
-            'amount' => 'integer'
-        ]);
+        $cart = new Cart(ModelsCart::first());
 
-        Cart::make($request->cart_id)
-            ->add($request->item_id, $request->input('amount', 1));
+        foreach ($request->products as $product) {
+            $modelProduct = ModelsProduct::find($request->product->id);
+            $classProduct = new Product($modelProduct);
+
+            foreach ($product->additionals as $additional) {
+                $classProduct->addAdditional($additional->id, $additional->amount);
+            }
+
+            foreach ($product->replacements as $replacement) {
+                $classProduct->addReplacement($replacement->id);
+            }
+
+            $cart->addItem(new CartItem($classProduct, $product->amout));
+        }
 
         return response()
             ->json([
-                'message' => 'Item adicionado com sucesso!'
+                'message' => 'Item adicionado com sucesso'
             ]);
     }
 

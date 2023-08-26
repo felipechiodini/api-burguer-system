@@ -13,6 +13,7 @@ class Cart {
     public $items;
     public $discount;
     public $payment;
+    public $address;
 
     public function __construct(ModelsCart $cart)
     {
@@ -55,14 +56,19 @@ class Cart {
         $this->discount = $discount;
     }
 
+    public function addAddress($address)
+    {
+        $this->address = $address;
+    }
+
     public function addPayment($payment)
     {
         $this->payment = $payment;
     }
 
-    public function addItem(Product $product, Int $amount = 1)
+    public function addItem(CartItem $cartitem)
     {
-        $this->items->push(new CartItem($product, $amount));
+        $this->items->push($cartitem);
     }
 
     public function finish()

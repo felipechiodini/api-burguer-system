@@ -34,7 +34,7 @@ class Product {
         return $this->model->price + $additionalPrice + $replacementPrice;
     }
 
-    public function addAdditional(ProductAdditional $additional, Int $amount)
+    public function addAdditional(ProductAdditional $additional, Int $amount = 1)
     {
         $exists = $this->model
             ->additionals()

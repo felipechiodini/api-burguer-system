@@ -18,7 +18,6 @@ class CategoryController extends Controller
             ->json(compact('categories'));
     }
 
-
     public function index(Request $request)
     {
         $page = Category::query()
