@@ -6,6 +6,8 @@ use App\Discount\DiscountInterface;
 use App\Models\Cart as ModelsCart;
 use App\Models\Order;
 use App\Product\Product;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class Cart {
 
@@ -19,6 +21,16 @@ class Cart {
     {
         $this->model = $cart;
         $this->items = collect([]);
+    }
+
+    public static function load()
+    {
+        return Cache::get('cart');
+    }
+
+    public function save()
+    {
+        Cache::add('cart', $this);
     }
 
     public function getShippingPrice()

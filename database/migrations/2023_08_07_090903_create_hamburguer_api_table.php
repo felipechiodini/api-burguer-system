@@ -33,9 +33,24 @@ return new class extends Migration
         Schema::create('cart_items', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('cart_id')->index('cart_items_cart_id_foreign');
-            $table->unsignedBigInteger('product_item_id')->index('cart_items_product_item_id_foreign');
+            $table->foreignId('product_id')->references('id')->on('products');
             $table->double('value');
             $table->integer('amount');
+            $table->timestamps();
+        });
+
+        Schema::create('cart_item_additionals', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
+            $table->foreignId('product_additional_id')->references('id')->on('product_additionals');
+            $table->unsignedInteger('amount');
+            $table->timestamps();
+        });
+
+        Schema::create('cart_item_replacements', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
+            $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
             $table->timestamps();
         });
 
