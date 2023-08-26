@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cart extends Model
+class CartItemReplacement extends Model
 {
     use HasFactory;
 
-    public function items()
+    public function replacement()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->belongsTo(ProductReplacement::class);
     }
 }

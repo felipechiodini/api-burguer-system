@@ -5,7 +5,9 @@ namespace App\Cart;
 use App\Discount\DiscountInterface;
 use App\Models\Cart as ModelsCart;
 use App\Models\Order;
+use App\Product\Additional;
 use App\Product\Product;
+use App\Product\Replacement;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -23,8 +25,25 @@ class Cart {
         $this->items = collect([]);
     }
 
-    public static function load()
+    public static function load($id)
     {
+        $cart = ModelsCart::find($id);
+        $dioawjdiow = new static($cart);
+
+        foreach ($cart->items as $item) {
+            $product = new Product($item->product);
+
+            foreach ($item->additionals as $additional) {
+                $product->addAdditional(new Additional($additional->additional, $additional->amount));
+            }
+
+            foreach ($item->replacements as $replacement) {
+                $product->addReplacement(new Replacement($replacement));
+            }
+
+            $dioawjdiow->addItem(new CartItem($product, $item->amount));
+        }
+
         return Cache::get('cart');
     }
 

@@ -21,15 +21,6 @@ class Product extends Model
         'active' => 'boolean'
     ];
 
-    // protected $appends = [
-    //     'price'
-    // ];
-
-    // public function prices()
-    // {
-    //     return $this->hasMany(ProductPrice::class);
-    // }
-
     public function photos()
     {
         return $this->hasMany(ProductPhoto::class);
@@ -38,11 +29,6 @@ class Product extends Model
     public function configuration()
     {
         return $this->hasOne(ProductConfiguration::class);
-    }
-
-    public function variations()
-    {
-        return $this->hasMany(ProductVariation::class);
     }
 
     public function additionals()
