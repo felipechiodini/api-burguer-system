@@ -21,6 +21,11 @@ class Product extends Model
         'active' => 'boolean'
     ];
 
+    public function prices()
+    {
+        return $this->hasMany(ProductPrice::class);
+    }
+
     public function photos()
     {
         return $this->hasMany(ProductPhoto::class);

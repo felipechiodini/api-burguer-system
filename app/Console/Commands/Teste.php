@@ -17,9 +17,5 @@ class Teste extends Command
     {
         $cart = new Cart(ModelsCart::first());
 
-        $cart->save();
-
-        dd($cart::load());
-
     }
 }

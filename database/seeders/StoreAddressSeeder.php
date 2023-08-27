@@ -19,6 +19,7 @@ class StoreAddressSeeder extends Seeder
                 'district' => 'João Pessoa',
                 'city' => 'Jaraguá do Sul',
                 'state' => 'SC',
+                'cep' => '89253390',
                 'latitude' => -26.5055932,
                 'longitude' => -49.0971134,
             ]);

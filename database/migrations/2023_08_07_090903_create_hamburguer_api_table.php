@@ -30,34 +30,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('cart_items', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('cart_id')->index('cart_items_cart_id_foreign');
-            $table->foreignId('product_id')->references('id')->on('products');
-            $table->double('value');
-            $table->integer('amount');
-            $table->timestamps();
-        });
-
-        Schema::create('cart_item_additionals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
-            $table->foreignId('product_additional_id')->references('id')->on('product_additionals');
-            $table->unsignedInteger('amount');
-            $table->timestamps();
-        });
-
-        Schema::create('cart_item_replacements', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
-            $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
-            $table->timestamps();
-        });
-
         Schema::create('carts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('customer_id')->index('carts_customer_id_foreign');
-            $table->unsignedBigInteger('coupon_id')->index('carts_coupon_id_foreign');
+            $table->unsignedBigInteger('customer_id')->nullable()->default(null)->index('carts_customer_id_foreign');
+            $table->unsignedBigInteger('coupon_id')->nullable()->default(null)->index('carts_coupon_id_foreign');
             $table->timestamps();
         });
 
@@ -283,6 +259,30 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('cart_items', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('cart_id')->index('cart_items_cart_id_foreign');
+            $table->foreignId('product_id')->references('id')->on('products');
+            $table->double('value');
+            $table->integer('amount');
+            $table->timestamps();
+        });
+
+        Schema::create('cart_item_additionals', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
+            $table->foreignId('product_additional_id')->references('id')->on('product_additionals');
+            $table->unsignedInteger('amount');
+            $table->timestamps();
+        });
+
+        Schema::create('cart_item_replacements', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
+            $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
+            $table->timestamps();
+        });
+
         Schema::create('store_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('store_configurations_user_store_id_foreign');
@@ -450,10 +450,6 @@ return new class extends Migration
 
         Schema::table('product_follow_up', function (Blueprint $table) {
             $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
-        Schema::table('product_items', function (Blueprint $table) {
-            // $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('product_photos', function (Blueprint $table) {
@@ -657,11 +653,6 @@ return new class extends Migration
         Schema::table('carts', function (Blueprint $table) {
             $table->dropForeign('carts_coupon_id_foreign');
             $table->dropForeign('carts_customer_id_foreign');
-        });
-
-        Schema::table('cart_items', function (Blueprint $table) {
-            $table->dropForeign('cart_items_cart_id_foreign');
-            $table->dropForeign('cart_items_product_item_id_foreign');
         });
 
         Schema::table('cards', function (Blueprint $table) {
