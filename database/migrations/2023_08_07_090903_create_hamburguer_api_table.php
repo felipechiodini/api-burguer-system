@@ -31,7 +31,7 @@ return new class extends Migration
         });
 
         Schema::create('carts', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->char('id', 36)->primary();
             $table->unsignedBigInteger('customer_id')->nullable()->default(null)->index('carts_customer_id_foreign');
             $table->unsignedBigInteger('coupon_id')->nullable()->default(null)->index('carts_coupon_id_foreign');
             $table->timestamps();
@@ -258,7 +258,7 @@ return new class extends Migration
 
         Schema::create('cart_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('cart_id')->index('cart_items_cart_id_foreign');
+            $table->foreignUuid('cart_id')->references('id')->on('carts');
             $table->foreignId('product_id')->references('id')->on('products');
             $table->double('value');
             $table->integer('amount');
@@ -380,11 +380,6 @@ return new class extends Migration
 
         Schema::table('cards', function (Blueprint $table) {
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
-        Schema::table('cart_items', function (Blueprint $table) {
-            $table->foreign(['cart_id'])->references(['id'])->on('carts')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            // $table->foreign(['product_item_id'])->references(['id'])->on('product_items')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('carts', function (Blueprint $table) {

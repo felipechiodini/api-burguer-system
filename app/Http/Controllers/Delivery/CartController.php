@@ -12,6 +12,7 @@ use App\Models\OrderPayment;
 use App\Models\Product as ModelsProduct;
 use App\Product\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
@@ -35,13 +36,11 @@ class CartController extends Controller
             'cart_id' => 'required'
         ]);
 
-        $cart = ModelsCart::find($request->cart_id);
-
         foreach ($request->products as $product) {
             $cart->addItem(
                 new Product(ModelsProduct::find($product['id'])),
                 $product['amount'],
-                $product->observation
+                $product->observation ?? null
             );
         }
 
