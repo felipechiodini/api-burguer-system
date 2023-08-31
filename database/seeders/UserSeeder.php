@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderPayment;
 use App\Models\Product;
 use App\Models\ProductAdditional;
+use App\Models\ProductConfiguration;
 use App\Models\ProductPhoto;
 use App\Models\ProductPrice;
 use App\Models\ProductReplacement;
@@ -33,9 +34,10 @@ class UserSeeder extends Seeder
                     ->has(Category::factory()->count(10), 'categories')
                     ->has(Product::factory()
                         ->has(ProductPrice::factory()->count(1), 'prices')
+                        ->has(ProductConfiguration::factory()->count(1), 'configuration')
                         ->has(ProductPhoto::factory()->count(3), 'photos')
-                        // ->has(ProductAdditional::factory()->count(3), 'additionals')
-                        // ->has(ProductReplacement::factory()->count(3), 'replacements')
+                        ->has(ProductAdditional::factory()->count(3), 'additionals')
+                        ->has(ProductReplacement::factory()->count(3), 'replacements')
                             ->count(30), 'products')
                     ->has(Customer::factory()->count(30), 'customers')
                     ->has(Waiter::factory()->count(10), 'waiters')
@@ -45,7 +47,6 @@ class UserSeeder extends Seeder
                     ->create();
 
         Order::factory()
-            ->has(SubOrder::factory()->count(3), 'subOrders')
             ->count(50)
             ->create([
                 'user_store_id' => UserStore::first()->id

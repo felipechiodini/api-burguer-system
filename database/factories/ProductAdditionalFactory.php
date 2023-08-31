@@ -11,8 +11,7 @@ class ProductAdditionalFactory extends Factory
     {
         return [
             'name' => $this->faker->word(5),
-            'value' => $this->faker->numberBetween(1, 26),
-            'max' => 5
+            'value' => $this->faker->numberBetween(1, 26)
         ];
     }
 

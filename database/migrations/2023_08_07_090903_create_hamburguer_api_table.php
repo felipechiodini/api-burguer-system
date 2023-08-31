@@ -92,18 +92,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('order_addresses', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('order_id')->index('order_addresses_order_id_foreign');
-            $table->string('name');
-            $table->string('cep');
-            $table->string('state');
-            $table->string('city');
-            $table->string('street');
-            $table->string('number');
-            $table->string('complement');
-            $table->timestamps();
-        });
+
 
         Schema::create('order_payments', function (Blueprint $table) {
             $table->bigIncrements('id');
@@ -123,6 +112,15 @@ return new class extends Migration
             $table->enum('origin', ['app']);
             $table->timestamps();
             $table->unsignedBigInteger('coupon_id')->nullable()->index('orders_coupon_id_foreign');
+        });
+
+        Schema::create('order_delivery', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('order_id')->references('id')->on('orders');
+            // $table->foreignId('delivery_address_id')->nullable()->default(null)->references('id')->on('delivery_addresses'); // to do create the table
+            $table->enum('type', ['withdrawal', 'delivery', 'on_site']);
+            $table->tinyText('observation')->nullable()->default(null);
+            $table->timestamps();
         });
 
         Schema::create('payment_types', function (Blueprint $table) {
@@ -159,13 +157,12 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->index('product_additionals_product_id_foreign');
             $table->string('name');
             $table->double('value', 8, 2);
-            $table->smallInteger('max_times');
             $table->timestamps();
         });
 
-        Schema::create('product_configuration', function (Blueprint $table) {
+        Schema::create('product_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('product_id')->index('product_configuration_product_id_foreign');
+            $table->unsignedBigInteger('product_id')->index('product_configurations_product_id_foreign');
             $table->enum('unit_type', ['grams', 'unit'])->nullable();
             $table->tinyInteger('max_number_replacements');
             $table->tinyInteger('max_number_additionals');
@@ -265,6 +262,7 @@ return new class extends Migration
             $table->foreignId('product_id')->references('id')->on('products');
             $table->double('value');
             $table->integer('amount');
+            $table->text('observation')->nullable()->default(null);
             $table->timestamps();
         });
 
@@ -415,10 +413,6 @@ return new class extends Migration
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('order_addresses', function (Blueprint $table) {
-            $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
         Schema::table('order_payments', function (Blueprint $table) {
             $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
             $table->foreign(['payment_type_id'])->references(['id'])->on('payment_types')->onUpdate('NO ACTION')->onDelete('NO ACTION');
@@ -444,7 +438,7 @@ return new class extends Migration
             $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('product_configuration', function (Blueprint $table) {
+        Schema::table('product_configurations', function (Blueprint $table) {
             $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
@@ -596,8 +590,8 @@ return new class extends Migration
             $table->dropForeign('product_follow_up_product_id_foreign');
         });
 
-        Schema::table('product_configuration', function (Blueprint $table) {
-            $table->dropForeign('product_configuration_product_id_foreign');
+        Schema::table('product_configurations', function (Blueprint $table) {
+            $table->dropForeign('product_configurations_product_id_foreign');
         });
 
         Schema::table('product_additionals', function (Blueprint $table) {
@@ -623,10 +617,6 @@ return new class extends Migration
         Schema::table('order_payments', function (Blueprint $table) {
             $table->dropForeign('order_payments_order_id_foreign');
             $table->dropForeign('order_payments_payment_type_id_foreign');
-        });
-
-        Schema::table('order_addresses', function (Blueprint $table) {
-            $table->dropForeign('order_addresses_order_id_foreign');
         });
 
         Schema::table('dashboards', function (Blueprint $table) {
@@ -701,7 +691,7 @@ return new class extends Migration
 
         Schema::dropIfExists('product_follow_up');
 
-        Schema::dropIfExists('product_configuration');
+        Schema::dropIfExists('product_configurations');
 
         Schema::dropIfExists('product_additionals');
 
@@ -716,8 +706,6 @@ return new class extends Migration
         Schema::dropIfExists('orders');
 
         Schema::dropIfExists('order_payments');
-
-        Schema::dropIfExists('order_addresses');
 
         Schema::dropIfExists('modules');
 

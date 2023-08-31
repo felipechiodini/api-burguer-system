@@ -3,8 +3,6 @@
 namespace App\Product;
 
 use App\Models\Product as ModelsProduct;
-use App\Models\ProductAdditional;
-use App\Models\ProductReplacement;
 
 class Product {
 
@@ -31,36 +29,18 @@ class Product {
             $replacementPrice =+ $replacement->getValue();
         }
 
-        return $this->model->price + $additionalPrice + $replacementPrice;
+        return $this->model->getCurrentPrice()->value + $additionalPrice + $replacementPrice;
     }
 
-    public function addAdditional(ProductAdditional $additional, Int $amount = 1)
+    public function addAdditional(Additional $additional)
     {
-        $exists = $this->model
-            ->additionals()
-            ->where('id', $additional->id)
-            ->exists();
-
-        if ($exists === false)
-            throw new \Exception("Adicional {$additional->id} não permitido!");
-
-        $this->additionals->push(new Additional($additional, $amount));
-
+        $this->additionals->push($additional);
         return $this;
     }
 
-    public function addReplacement(ProductReplacement $replacement)
+    public function addReplacement(Replacement $replacement)
     {
-        $exists = $this->model
-            ->replacements()
-            ->where('id', $replacement->id)
-            ->exists();
-
-        if ($exists === false)
-            throw new \Exception("Substituição {$replacement->id} não permitida!");
-
-        $this->replacements->push(new Replacement($replacement));
-
+        $this->replacements->push($replacement);
         return $this;
     }
 

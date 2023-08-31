@@ -12,7 +12,6 @@ class ProductAdditional extends Model
     protected $fillable = [
         'product_id',
         'name',
-        'value',
-        'max'
+        'value'
     ];
 }

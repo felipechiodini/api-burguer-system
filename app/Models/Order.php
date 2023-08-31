@@ -13,7 +13,6 @@ class Order extends Model
         'user_store_id',
         'card_id',
         'customer_id',
-        'type',
         'status',
         'origin',
     ];
@@ -28,9 +27,9 @@ class Order extends Model
         return $this->belongsTo(Card::class);
     }
 
-    public function subOrders()
+    public function delivery()
     {
-        return $this->hasMany(SubOrder::class);
+        return $this->hasOne(OrderDelivery::class);
     }
 
     public function payment()

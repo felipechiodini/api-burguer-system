@@ -18176,38 +18176,7 @@
      
 }
 
-        namespace App\Product { 
-            /**
-     * 
-     *
-     */ 
-        class ProductFacade {
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function greet()
-        {
-                        /** @var \App\Product\Product $instance */
-                        return $instance->greet();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function calculatePrice()
-        {
-                        /** @var \App\Product\Product $instance */
-                        return $instance->calculatePrice();
-        }
-         
-    }
-     
-}
-
-    namespace Spatie\LaravelIgnition\Facades { 
+        namespace Spatie\LaravelIgnition\Facades { 
             /**
      * 
      *
@@ -23076,7 +23045,6 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
-            class Product extends \App\Product\ProductFacade {}
             class Flare extends \Spatie\LaravelIgnition\Facades\Flare {}
             class JWTAuth extends \Tymon\JWTAuth\Facades\JWTAuth {}
             class JWTFactory extends \Tymon\JWTAuth\Facades\JWTFactory {}

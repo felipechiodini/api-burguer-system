@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Cart\Cart;
-use App\Models\Cart as ModelsCart;
-use App\Models\CartItem;
 use Illuminate\Console\Command;
 
 class Teste extends Command
@@ -15,7 +13,9 @@ class Teste extends Command
 
     public function handle()
     {
-        $cart = new Cart(ModelsCart::first());
+        $cart = Cart::load(1);
+
+        $cart->removeItem();
 
     }
 }

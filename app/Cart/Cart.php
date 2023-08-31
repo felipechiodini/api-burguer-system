@@ -9,7 +9,6 @@ use App\Product\Additional;
 use App\Product\Product;
 use App\Product\Replacement;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class Cart {
 
@@ -25,8 +24,10 @@ class Cart {
         $this->items = collect([]);
     }
 
-    public static function load($id)
+    public static function load($id): self
     {
+        if (Cache::has($id)) return Cache::get($id);
+
         $cart = ModelsCart::find($id);
         $dioawjdiow = new static($cart);
 
@@ -44,12 +45,14 @@ class Cart {
             $dioawjdiow->addItem(new CartItem($product, $item->amount));
         }
 
-        return Cache::get('cart');
+        return $dioawjdiow;
     }
 
     public function save()
     {
-        Cache::add('cart', $this);
+        Cache::set($this->model->id, $this, now()->endOfDay());
+
+        //logica para salvar no banco
     }
 
     public function getShippingPrice()
@@ -70,11 +73,15 @@ class Cart {
 
     public function getDiscount()
     {
-        if ($this->discount->getType() === 'percent') {
-            return ($this->discount->getValue() / 100) * $this->getSubtotal();
-        } else {
-            return $this->discount->getValue();
+        if ($this->hasDiscount()) {
+            if ($this->discount->getType() === 'percent') {
+                return ($this->discount->getValue() / 100) * $this->getSubtotal();
+            } else {
+                return $this->discount->getValue();
+            }
         }
+
+        return 0;
     }
 
     public function getTotal()
@@ -100,6 +107,18 @@ class Cart {
     public function addItem(CartItem $cartitem)
     {
         $this->items->push($cartitem);
+        return $this;
+    }
+
+    public function removeItem($id)
+    {
+
+
+    }
+
+    public function hasDiscount(): bool
+    {
+        return $this->discount !== null;
     }
 
     public function finish()

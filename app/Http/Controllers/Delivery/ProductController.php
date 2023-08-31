@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Delivery;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
 
-    public function get()
+    public function index()
     {
         $categories = Category::with([
             'products' => function($query) {
@@ -19,17 +20,33 @@ class ProductController extends Controller
             'products.photos',
             'products.additionals',
             'products.replacements',
-            'products.followup',
-            'products.configuration'
+            'products.configuration',
+            // 'products.followup',
         ])
-        ->get();
+        ->get()
+        ->each(function($categories) {
+            $categories->products->each(function(Product $product) {
+                $product->price = $product->getCurrentPrice()->value;
+            });
+        });
 
-        return response()->json($categories);
+        return response()
+            ->json(compact('categories'));
     }
 
     public function show($product, Request $request)
     {
-        $product = Product::with('photos', 'additionals', 'replacements')
+        $product = Product::query()
+            ->with([
+                'photos' => function(Builder $query) {
+                    $query->select('id', 'src')
+                        ->orderBy('order');
+                },
+                'additionals' => function(Builder $query) {
+                    $query->select('name', 'value', 'max');
+                },
+                'replacements'
+            ])
             ->where('id', $product)
             ->first();
 

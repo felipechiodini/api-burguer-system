@@ -23,7 +23,7 @@ class Product extends Model
 
     public function prices()
     {
-        return $this->hasMany(ProductPrice::class);
+        return $this->hasOne(ProductPrice::class);
     }
 
     public function photos()
@@ -44,5 +44,12 @@ class Product extends Model
     public function replacements()
     {
         return $this->hasMany(ProductReplacement::class);
+    }
+
+    public function getCurrentPrice(): ?ProductPrice
+    {
+        // to do filter the current price
+        return $this->prices()
+            ->first();
     }
 }

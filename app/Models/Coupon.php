@@ -16,4 +16,11 @@ class Coupon extends Model
         'value',
         'type',
     ];
+
+    public static function getByCode(String $code): ?self
+    {
+        return self::query()
+            ->whereRaw('LOWER(code) = ?', $code)
+            ->first();
+    }
 }

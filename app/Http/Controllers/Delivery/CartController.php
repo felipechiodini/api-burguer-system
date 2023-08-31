@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers\Delivery;
 
-use App\Cart\Cart;
-use App\Cart\CartItem;
-use App\Discount\Coupon;
 use App\Http\Controllers\Controller;
 use App\Models\Cart as ModelsCart;
+use App\Models\Coupon as ModelsCoupon;
+use App\Models\DeliveryAddress;
 use App\Models\Order;
+use App\Models\OrderDelivery;
+use App\Models\OrderPayment;
 use App\Models\Product as ModelsProduct;
 use App\Product\Product;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
+
     public function get(Request $request)
     {
         $request->validate([
             'cart_id' => 'exists:carts,id'
         ]);
 
-        $cart = Cart::make($request->cart_id)
-            ->get();
+        $cart = (ModelsCart::find($request->cart_id))
+            ->serialize();
 
         return response()
             ->json(compact('cart'));
@@ -29,56 +31,89 @@ class CartController extends Controller
 
     public function addItem(Request $request)
     {
-        $cart = new Cart(ModelsCart::first());
+        $request->validate([
+            'cart_id' => 'required'
+        ]);
+
+        $cart = ModelsCart::find($request->cart_id);
 
         foreach ($request->products as $product) {
-            $modelProduct = ModelsProduct::find($request->product->id);
-            $classProduct = new Product($modelProduct);
-
-            foreach ($product->additionals as $additional) {
-                $classProduct->addAdditional($additional->id, $additional->amount);
-            }
-
-            foreach ($product->replacements as $replacement) {
-                $classProduct->addReplacement($replacement->id);
-            }
-
-            $cart->addItem(new CartItem($classProduct, $product->amout));
+            $cart->addItem(
+                new Product(ModelsProduct::find($product['id'])),
+                $product['amount'],
+                $product->observation
+            );
         }
 
         return response()
-            ->json([
-                'message' => 'Item adicionado com sucesso'
-            ]);
+            ->json(['message' => 'Item adicionado com sucesso!']);
+    }
+
+    public function removeItem(Request $request)
+    {
+        $request->validate([
+            'cart_id' => 'required',
+            'item_id' => 'required'
+        ]);
+
+        $cart = ModelsCart::find($request->cart_id);
+
+        $cart->items()
+            ->find($request->id)
+            ->delete();
+
+        return response()
+            ->json(['message' => 'Item adicionado com sucesso!']);
     }
 
     public function addCoupon(Request $request)
     {
         $request->validate([
-            'cart_id' => 'exists:carts,id',
-            'coupon' => 'exists:coupons,code'
+            'cart_id' => 'required',
+            'code' => 'required|string'
         ]);
 
-        Cart::make($request->cart_id)
-            ->addDiscount(Coupon::make($request->coupon));
+        $cart = ModelsCart::find($request->cart_id);
+
+        $cart->addCoupon(ModelsCoupon::getByCode($request->code));
 
         return response()
-            ->json([
-                'message' => 'Desconto adicionado!'
-            ]);
+            ->json(['message' => 'Desconto adicionado!']);
     }
 
     public function finish(Request $request)
     {
         $request->validate([
-            'cart_id' => 'exists:carts,id'
+            'cart_id' => 'required',
+            'observation' => 'nullable|string'
         ]);
 
-        Order::query()
+        $order = Order::query()
             ->create([
                 'user_id' => 'dwads',
                 'total' => 'dwads'
             ]);
 
+        $address = DeliveryAddress::query()
+            ->create([
+                'street' => $request->address->street
+            ]);
+
+        OrderDelivery::query()
+            ->create([
+                'order_id' => $order->id,
+                'delivery_address_id' => $address->id,
+                'type' => $request->delivery->type,
+                'observation' => $request->delivery->observation
+            ]);
+
+        OrderPayment::query()
+            ->create([
+                'order_id' => $order->id,
+                'payment_type_id' => $request->payment_type_id
+            ]);
+
+        return response()
+            ->json(['message' => 'Pedido realizado com sucesso!']);
     }
 }

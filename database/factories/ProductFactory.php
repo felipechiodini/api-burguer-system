@@ -13,6 +13,7 @@ class ProductFactory extends Factory
         return [
             'category_id' => Category::all('id')->random()->id,
             'name' => $this->faker->word(),
+            'active' => true,
             'description' => $this->faker->text()
         ];
     }
