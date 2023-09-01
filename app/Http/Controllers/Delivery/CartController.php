@@ -36,6 +36,8 @@ class CartController extends Controller
             'cart_id' => 'required'
         ]);
 
+        $cart = ModelsCart::find($request->cart_id);
+
         foreach ($request->products as $product) {
             $cart->addItem(
                 new Product(ModelsProduct::find($product['id'])),

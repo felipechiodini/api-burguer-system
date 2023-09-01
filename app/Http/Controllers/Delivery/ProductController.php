@@ -13,25 +13,21 @@ class ProductController extends Controller
 
     public function index()
     {
-        $categories = Category::with([
-            'products' => function($query) {
-                $query->where('active', true);
-            },
-            'products.photos',
-            'products.additionals',
-            'products.replacements',
-            'products.configuration',
-            // 'products.followup',
-        ])
-        ->get()
-        ->each(function($categories) {
-            $categories->products->each(function(Product $product) {
+        $products = Product::query()
+            ->with([
+                'photos',
+                'additionals',
+                'replacements',
+                'configuration',
+            ])
+            ->where('active', true)
+            ->get()
+            ->each(function(Product $product) {
                 $product->price = $product->getCurrentPrice()->value;
             });
-        });
 
         return response()
-            ->json(compact('categories'));
+            ->json(compact('products'));
     }
 
     public function show($product, Request $request)
