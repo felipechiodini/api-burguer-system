@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Utils\Helper;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CustomerFactory extends Factory
@@ -12,7 +13,7 @@ class CustomerFactory extends Factory
         return [
             'name' => "{$this->faker->firstName()} {$this->faker->lastName()}",
             'document' => $this->faker->cpf(false),
-            'cellphone' => $this->faker->phoneNumber()
+            'cellphone' => Helper::clearAllIsNotNumber($this->faker->phoneNumber())
         ];
     }
 

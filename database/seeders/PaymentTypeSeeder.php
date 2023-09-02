@@ -12,7 +12,7 @@ class PaymentTypeSeeder extends Seeder
     {
         PaymentType::create(['id' => 'pix', 'name' => 'Pix']);
         PaymentType::create(['id' => 'cash', 'name' => 'Dinheiro']);
-        PaymentType::create(['id' => 'creadit-card', 'name' => 'Cartão de Crédito']);
+        PaymentType::create(['id' => 'credit-card', 'name' => 'Cartão de Crédito']);
         PaymentType::create(['id' => 'debit-card', 'name' => 'Cartão de Débito']);
     }
 

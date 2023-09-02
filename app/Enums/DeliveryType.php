@@ -8,4 +8,5 @@ final class DeliveryType extends Enum
 {
     const DELIVERY = 1;
     const WITHDRAW = 2;
+    const ON_SITE = 3;
 }

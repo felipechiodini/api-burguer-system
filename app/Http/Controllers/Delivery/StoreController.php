@@ -29,7 +29,8 @@ class StoreController extends Controller
             ->whereRaw('LOWER(slug) = ?', Str::lower($request->slug))
             ->firstOrFail();
 
-        return response()->json($store);
+        return response()
+            ->json(compact('store'));
     }
 
     public function distance(Request $request)

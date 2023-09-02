@@ -15,4 +15,9 @@ class OrderDelivery extends Model
         'type',
         'observation'
     ];
+
+    public function address()
+    {
+        return $this->hasOne(DeliveryAddress::class);
+    }
 }

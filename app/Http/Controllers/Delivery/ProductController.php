@@ -19,6 +19,7 @@ class ProductController extends Controller
                 'additionals',
                 'replacements',
                 'configuration',
+                'category'
             ])
             ->where('active', true)
             ->get()

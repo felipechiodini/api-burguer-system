@@ -11,10 +11,11 @@ class Order extends Model
 
     protected $fillable = [
         'user_store_id',
-        'card_id',
+        'store_card_id',
         'customer_id',
         'status',
         'origin',
+        'coupon_id'
     ];
 
     public function products()
@@ -24,12 +25,12 @@ class Order extends Model
 
     public function additionals()
     {
-        return $this->hasMany(ProductAdditional::class);
+        return $this->hasManyThrough(ProductAdditional::class, OrderProductAdditional::class);
     }
 
     public function replacements()
     {
-        return $this->hasMany(ProductReplacement::class);
+        return $this->hasManyThrough(ProductReplacement::class, OrderProductReplacement::class);
     }
 
     public function delivery()

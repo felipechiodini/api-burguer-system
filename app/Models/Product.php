@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,11 @@ class Product extends Model
     ];
 
     public function prices()
+    {
+        return $this->hasMany(ProductPrice::class);
+    }
+
+    public function promotion()
     {
         return $this->hasOne(ProductPrice::class);
     }
@@ -46,10 +52,29 @@ class Product extends Model
         return $this->hasMany(ProductReplacement::class);
     }
 
-    public function getCurrentPrice(): ?ProductPrice
+    public function category()
     {
-        // to do filter the current price
-        return $this->prices()
+        return $this->belongsTo(Category::class);
+    }
+
+    public function getCurrentPrice()
+    {
+        $now = now();
+
+        $modelPrice = $this->prices()
+            ->where('start_date', '<', $now)
+            ->where('end_date', '>', $now)
             ->first();
+
+        $modelPromotion = $this->promotion()
+            ->where('start_date', '<', $now)
+            ->where('end_date', '>', $now)
+            ->first();
+
+        if ($modelPromotion) {
+            return Helper::calculateDiscount($modelPrice->value, $modelPromotion, $modelPromotion->type);
+        }
+
+        return $modelPrice->value;
     }
 }

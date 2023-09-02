@@ -59,7 +59,8 @@ class UserStore extends Model
 
     public function banners()
     {
-        return $this->hasMany(Banner::class)->orderBy('order');
+        return $this->hasMany(Banner::class)
+            ->orderBy('order');
     }
 
     public function configuration()
@@ -74,7 +75,7 @@ class UserStore extends Model
 
     public function paymentTypes()
     {
-        return $this->hasManyThrough(PaymentType::class, UserStorePaymentType::class);
+        return $this->belongsToMany(PaymentType::class, UserStorePaymentType::class);
     }
 
     public function getOpenAttribute()
