@@ -72,6 +72,11 @@ class UserStore extends Model
         return $this->hasOne(StoreAddress::class);
     }
 
+    public function paymentTypes()
+    {
+        return $this->hasManyThrough(PaymentType::class, UserStorePaymentType::class);
+    }
+
     public function getOpenAttribute()
     {
         $storeSchedule = StoreSchedule::where('week_day', now()->dayOfWeek)
