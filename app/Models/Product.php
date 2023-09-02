@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Cart\ActiveProduct;
 use App\Utils\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -66,15 +67,23 @@ class Product extends Model
             ->where('end_date', '>', $now)
             ->first();
 
+        if ($modelPrice == null) return null;
+
         $modelPromotion = $this->promotion()
             ->where('start_date', '<', $now)
             ->where('end_date', '>', $now)
             ->first();
 
         if ($modelPromotion) {
-            return Helper::calculateDiscount($modelPrice->value, $modelPromotion, $modelPromotion->type);
+            return Helper::calculateDiscount($modelPrice->value, $modelPromotion->value, $modelPromotion->type);
         }
 
         return $modelPrice->value;
+    }
+
+    public function active()
+    {
+        (new ActiveProduct($this))
+            ->active();
     }
 }
