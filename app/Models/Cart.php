@@ -53,13 +53,28 @@ class Cart extends Model
         return $total;
     }
 
+    public function getDeliveryValue()
+    {
+        return 10;
+    }
+
+    public function getDiscount()
+    {
+        return 0;
+    }
+
+    public function getTotal()
+    {
+        return $this->getSubtotal() + $this->getDeliveryValue() - $this->getDiscount();
+    }
+
     public function serialize()
     {
         return [
             'subtotal' => $this->getSubtotal(),
-            'shipping' => 5,
-            'discount' => 0,
-            'total' => 105,
+            'shipping' => $this->getDeliveryValue(),
+            'discount' => $this->getDiscount(),
+            'total' => $this->getTotal()
         ];
     }
 }

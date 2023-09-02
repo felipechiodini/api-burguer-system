@@ -4,7 +4,7 @@ namespace App\Cart;
 
 class Order {
 
-    public static function make()
+    public static function create()
     {
         return new CreateOrder();
     }

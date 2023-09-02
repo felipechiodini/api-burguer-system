@@ -15,11 +15,6 @@ class Waiter extends Model
         'name'
     ];
 
-    public function subOrders()
-    {
-        return $this->hasMany(SubOrder::class);
-    }
-
     protected static function boot()
     {
         parent::boot();
