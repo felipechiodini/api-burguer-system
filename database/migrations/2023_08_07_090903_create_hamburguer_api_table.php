@@ -200,7 +200,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-
         Schema::create('product_prices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('product_id')->index('product_prices_product_id_foreign');

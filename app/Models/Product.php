@@ -73,7 +73,7 @@ class Product extends Model
             ->where('end_date', '>', $now)
             ->first();
 
-        if ($modelPrice == null) return null;
+        if ($modelPrice === null) return null;
 
         $modelPromotion = $this->promotion()
             ->where('start_date', '<', $now)

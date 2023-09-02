@@ -19,7 +19,7 @@ class ProductController extends Controller
             ->where('active', true)
             ->get()
             ->each(function(Product $product) {
-                $product->price = $product->getCurrentPrice()->value;
+                $product->price = $product->getCurrentPrice();
             });
 
         return response()
@@ -28,17 +28,16 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        $product
-            ->load([
-                'photos' => function(Builder $query) {
-                    $query->select('id', 'src')
-                        ->orderBy('order');
-                },
-                'additionals' => function(Builder $query) {
-                    $query->select('name', 'value', 'max');
-                },
-                'replacements'
-            ]);
+        $product->load([
+            'photos' => function (Builder $query) {
+                $query->select('id', 'src')
+                    ->orderBy('order');
+            },
+            'additionals' => function (Builder $query) {
+                $query->select('name', 'value', 'max');
+            },
+            'replacements'
+        ]);
 
         return response()
             ->json(compact('product'));
