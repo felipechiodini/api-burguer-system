@@ -17,14 +17,19 @@ class Order extends Model
         'origin',
     ];
 
-    public function coupon()
+    public function products()
     {
-        return $this->belongsTo(Coupon::class);
+        return $this->hasMany(Product::class);
     }
 
-    public function card()
+    public function additionals()
     {
-        return $this->belongsTo(Card::class);
+        return $this->hasMany(ProductAdditional::class);
+    }
+
+    public function replacements()
+    {
+        return $this->hasMany(ProductReplacement::class);
     }
 
     public function delivery()
@@ -35,5 +40,15 @@ class Order extends Model
     public function payment()
     {
         return $this->hasOne(OrderPayment::class);
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+
+    public function card()
+    {
+        return $this->belongsTo(Card::class);
     }
 }

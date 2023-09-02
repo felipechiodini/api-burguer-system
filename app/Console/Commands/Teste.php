@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Cart\Cart;
+use App\Cart\Order;
+use App\Enums\DeliveryType;
+use App\Models\Product as ModelsProduct;
+use App\Product\Product;
 use Illuminate\Console\Command;
 
 class Teste extends Command
@@ -13,9 +16,14 @@ class Teste extends Command
 
     public function handle()
     {
-        $cart = Cart::load(1);
+        $product = new Product(ModelsProduct::query()->first());
 
-        $cart->removeItem();
-
+        Order::make()
+            ->setCustomer('Felipe Bona')
+            ->setAddress('Arthur gonçalvez de araújo', '500')
+            ->setDelivery(DeliveryType::fromValue(1), 'Entregar para o vizinho')
+            ->setPayment('pix')
+            ->setProduct($product)
+            ->create();
     }
 }

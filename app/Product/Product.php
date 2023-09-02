@@ -17,7 +17,7 @@ class Product {
         $this->replacements = collect([]);
     }
 
-    public function getPrice()
+    public function getValue()
     {
         $additionalPrice = 0;
         foreach ($this->additionals as $additional) {

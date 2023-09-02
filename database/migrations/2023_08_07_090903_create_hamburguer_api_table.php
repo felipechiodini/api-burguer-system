@@ -107,9 +107,8 @@ return new class extends Migration
             $table->char('user_store_id', 36)->index('orders_user_store_id_foreign');
             $table->unsignedBigInteger('store_card_id')->nullable()->index('orders_store_card_id_foreign');
             $table->unsignedBigInteger('customer_id')->index('orders_customer_id_foreign');
-            $table->enum('type', ['withdrawal', 'delivery', 'on_site']);
-            $table->enum('status', ['open', 'aceppted', 'delivered', 'canceled'])->default('open');
-            $table->enum('origin', ['app']);
+            $table->unsignedTinyInteger('status');
+            $table->unsignedTinyInteger('origin');
             $table->timestamps();
             $table->unsignedBigInteger('coupon_id')->nullable()->index('orders_coupon_id_foreign');
         });
@@ -256,6 +255,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('user_store_payment_types', function (Blueprint $table) {
+            $table->id();
+            $table->foreignUlid('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('payment_type_id')->references('id')->on('payment_types');
+            $table->timestamps();
+        });
+
         Schema::create('cart_items', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignUuid('cart_id')->references('id')->on('carts');
@@ -275,6 +281,13 @@ return new class extends Migration
         });
 
         Schema::create('cart_item_replacements', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
+            $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
+            $table->timestamps();
+        });
+
+        Schema::create('order_product_replacements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cart_item_id')->references('id')->on('cart_items');
             $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
@@ -319,20 +332,27 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('sub_order_has_products', function (Blueprint $table) {
+        Schema::create('order_products', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('sub_order_id')->index('sub_order_has_products_sub_order_id_foreign');
-            $table->unsignedBigInteger('product_id')->index('sub_order_has_products_product_id_foreign');
+            $table->foreignId('product_id')->references('id')->on('products');
             $table->double('value', 8, 2);
             $table->smallInteger('amount');
             $table->text('observation')->nullable();
             $table->timestamps();
         });
 
-        Schema::create('sub_orders', function (Blueprint $table) {
+        Schema::create('order_products_additionals', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('order_id')->index('sub_orders_order_id_foreign');
-            $table->unsignedBigInteger('waiter_id')->nullable()->index('sub_orders_waiter_id_foreign');
+            $table->foreignId('additional_id')->references('id')->on('product_additionals');
+            $table->double('value', 8, 2);
+            $table->integer('amount');
+            $table->timestamps();
+        });
+
+        Schema::create('order_products_replacements', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('replacement_id')->references('id')->on('product_replacements');
+            $table->double('value', 8, 2);
             $table->timestamps();
         });
 

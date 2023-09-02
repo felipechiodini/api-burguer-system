@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Delivery;
 
+use App\Cart\Cart;
+use App\Cart\Order;
+use App\Enums\DeliveryType;
 use App\Http\Controllers\Controller;
 use App\Models\Cart as ModelsCart;
+use App\Models\CartItem;
 use App\Models\Coupon as ModelsCoupon;
-use App\Models\DeliveryAddress;
-use App\Models\Order;
-use App\Models\OrderDelivery;
-use App\Models\OrderPayment;
 use App\Models\Product as ModelsProduct;
 use App\Product\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
@@ -89,30 +88,15 @@ class CartController extends Controller
             'observation' => 'nullable|string'
         ]);
 
-        $order = Order::query()
-            ->create([
-                'user_id' => 'dwads',
-                'total' => 'dwads'
-            ]);
+        $product = new Product(ModelsProduct::query()->first());
 
-        $address = DeliveryAddress::query()
-            ->create([
-                'street' => $request->address->street
-            ]);
-
-        OrderDelivery::query()
-            ->create([
-                'order_id' => $order->id,
-                'delivery_address_id' => $address->id,
-                'type' => $request->delivery->type,
-                'observation' => $request->delivery->observation
-            ]);
-
-        OrderPayment::query()
-            ->create([
-                'order_id' => $order->id,
-                'payment_type_id' => $request->payment_type_id
-            ]);
+        Order::make()
+            ->setCustomer($request->customer->name)
+            ->setAddress($request->address->street, $request->address->number)
+            ->setDelivery(DeliveryType::fromValue($request->delivery->type), $request->delivery->observation)
+            ->setPayment($request->payment->id)
+            ->setProduct($product)
+            ->create();
 
         return response()
             ->json(['message' => 'Pedido realizado com sucesso!']);
