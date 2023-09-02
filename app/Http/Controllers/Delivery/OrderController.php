@@ -6,13 +6,17 @@ use App\Cart\Order;
 use App\Enums\DeliveryType;
 use App\Http\Controllers\Controller;
 use App\Models\Product as ModelsProduct;
+use App\Models\ProductAdditional;
+use App\Models\ProductReplacement;
+use App\Product\Additional;
 use App\Product\Product;
+use App\Product\Replacement;
 use Illuminate\Http\Request;
 
-class CartController extends Controller
+class OrderController extends Controller
 {
 
-    public function finish(Request $request)
+    public function create(Request $request)
     {
         $request->validate([
             'customer.name' => 'required',
@@ -26,14 +30,28 @@ class CartController extends Controller
             'observation' => 'nullable|string'
         ]);
 
-        $product = new Product(ModelsProduct::query()->first());
+        $products = collect();
+        foreach ($request->products as $product) {
+
+            $diowjfoajfoawi = new Product(ModelsProduct::find($product->id));
+
+            foreach ($product->additionals as $additional) {
+                $diowjfoajfoawi->addAdditional(new Additional(ProductAdditional::find($additional->id), $additional->amount));
+            }
+
+            foreach ($product->replacements as $replacement) {
+                $diowjfoajfoawi->addReplacement(new Replacement(ProductReplacement::find($replacement->id)));
+            }
+
+            $products->push($diowjfoajfoawi);
+        }
 
         Order::create()
             ->setCustomer($request->customer->name)
             ->setAddress($request->address->street, $request->address->number)
             ->setDelivery(DeliveryType::fromValue($request->delivery->type), $request->delivery->observation)
             ->setPayment($request->payment->id)
-            ->setProduct($product)
+            ->setProducts($products)
             ->create();
 
         return response()

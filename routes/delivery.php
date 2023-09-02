@@ -9,5 +9,5 @@ Route::get('store', 'StoreController@get');
     Route::get('product/{product}', 'ProductController@show');
     Route::get('distance', 'StoreController@distance');
     Route::get('shipping/calculate', 'DeliveryController@calculateShipping');
-    Route::post('cart/finish', 'CartController@finish');
+    Route::post('cart/finish', 'OrderController@create');
 // });

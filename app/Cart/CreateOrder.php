@@ -13,8 +13,8 @@ use App\Models\OrderPayment;
 use App\Models\OrderProduct;
 use App\Models\OrderProductAdditional;
 use App\Models\OrderProductReplacement;
-use App\Product\Product;
 use App\Utils\Helper;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class CreateOrder {
@@ -41,9 +41,9 @@ class CreateOrder {
         return $this;
     }
 
-    public function setProduct(Product $product)
+    public function setProducts(Collection $products)
     {
-        $this->products->push($product);
+        $this->products = $products;
         return $this;
     }
 
@@ -109,7 +109,7 @@ class CreateOrder {
                     ->create([
                         'order_id' => $order->id,
                         'additional_id' => $additional->id,
-                        'value' => $additional->getPrice()
+                        'value' => $additional->getValue()
                     ]);
             }
 
@@ -117,7 +117,7 @@ class CreateOrder {
                 OrderProductReplacement::query()
                     ->create([
                         'order_id' => $order->id,
-                        'value' => $replacement->getPrice()
+                        'value' => $replacement->getValue()
                     ]);
             }
         }
