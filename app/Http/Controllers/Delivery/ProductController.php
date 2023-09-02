@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -15,10 +13,7 @@ class ProductController extends Controller
     {
         $products = Product::query()
             ->with([
-                'photos',
-                'additionals',
-                'replacements',
-                'configuration',
+                'mainPhoto',
                 'category'
             ])
             ->where('active', true)
@@ -31,10 +26,10 @@ class ProductController extends Controller
             ->json(compact('products'));
     }
 
-    public function show($product, Request $request)
+    public function show(Product $product)
     {
-        $product = Product::query()
-            ->with([
+        $product
+            ->load([
                 'photos' => function(Builder $query) {
                     $query->select('id', 'src')
                         ->orderBy('order');
@@ -43,11 +38,10 @@ class ProductController extends Controller
                     $query->select('name', 'value', 'max');
                 },
                 'replacements'
-            ])
-            ->where('id', $product)
-            ->first();
+            ]);
 
-        return response()->json($product);
+        return response()
+            ->json(compact('product'));
     }
 
 }

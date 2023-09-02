@@ -38,6 +38,12 @@ class Product extends Model
         return $this->hasMany(ProductPhoto::class);
     }
 
+    public function mainPhoto()
+    {
+        return $this->hasOne(ProductPhoto::class)
+            ->orderBy('order');
+    }
+
     public function configuration()
     {
         return $this->hasOne(ProductConfiguration::class);

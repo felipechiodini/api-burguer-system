@@ -2,29 +2,24 @@
 
 namespace App\Http\Controllers\Delivery;
 
-use App\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\StoreAddress;
-use App\Models\UserStore;
+use App\Utils\Helper;
 use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
 
-    public function calculateValue(Request $request)
+    public function calculateShipping(Request $request)
     {
         $request->validate([
             'cep' => 'required'
         ]);
 
-        $address = StoreAddress::where('user_store_id', $request->header(UserStore::HEADER_KEY))
-            ->first();
+        $cordinates = Helper::coordinatesByCep('89253390');
 
-        $cordinates = Helper::coordinatesByCep($request->cep);
-
-        $distance = Helper::haversine(
-            $address->latitude,
-            $address->longitude,
+        $distance = Helper::distanceBetweenTwoCoordinates(
+            '-26.5050371',
+            '-49.097304',
             $cordinates->latitude,
             $cordinates->longitude
         );

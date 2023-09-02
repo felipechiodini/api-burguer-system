@@ -14,6 +14,8 @@ use App\Models\OrderProduct;
 use App\Models\OrderProductAdditional;
 use App\Models\OrderProductReplacement;
 use App\Product\Product;
+use App\Utils\Helper;
+use Illuminate\Support\Str;
 
 class CreateOrder {
 
@@ -31,9 +33,9 @@ class CreateOrder {
     public function setCustomer(String $name, ?String $cpf = null, ?String $email = null)
     {
         $this->customer = [
-            'name' => $name,
-            'cpf' => $cpf,
-            'email' => $email,
+            'name' => Helper::captalizeName($name),
+            'cpf' => Helper::clearAllIsNotNumber($cpf),
+            'email' => Str::lower($email)
         ];
 
         return $this;

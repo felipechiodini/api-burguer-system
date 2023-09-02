@@ -6,6 +6,7 @@ use App\Cart\Order;
 use App\Enums\DeliveryType;
 use App\Models\Product as ModelsProduct;
 use App\Product\Product;
+use App\Utils\Helper;
 use Illuminate\Console\Command;
 
 class Teste extends Command
@@ -16,14 +17,13 @@ class Teste extends Command
 
     public function handle()
     {
-        $product = new Product(ModelsProduct::query()->first());
+        $cordinates = Helper::coordinatesByCep('89253390');
 
-        Order::make()
-            ->setCustomer('Felipe Bona')
-            ->setAddress('Arthur gonçalvez de araújo', '500')
-            ->setDelivery(DeliveryType::fromValue(1), 'Entregar para o vizinho')
-            ->setPayment('pix')
-            ->setProduct($product)
-            ->create();
+        $distance = Helper::distanceBetweenTwoCoordinates(
+            '-26.5050371',
+            '-49.097304',
+            $cordinates->latitude,
+            $cordinates->longitude
+        );
     }
 }

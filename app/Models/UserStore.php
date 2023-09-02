@@ -78,6 +78,11 @@ class UserStore extends Model
         return $this->belongsToMany(PaymentType::class, UserStorePaymentType::class);
     }
 
+    public function deliveryOptions()
+    {
+        return $this->belongsToMany(DeliveryOptions::class, UserStoreDeliveryOptions::class);
+    }
+
     public function getOpenAttribute()
     {
         $storeSchedule = StoreSchedule::where('week_day', now()->dayOfWeek)

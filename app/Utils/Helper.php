@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class Helper {
@@ -70,13 +71,20 @@ class Helper {
 
     public static function coordinatesByCep($cep)
     {
-        $address = Http::get("https://nominatim.openstreetmap.org/search?q={$cep}&format=json&addressdetails=1&limit=1")
-            ->json()[0];
+        $address = self::openStreetMapQuery($cep);
 
         return (object) [
             'latitude' => $address['lat'],
             'longitude' => $address['lon']
         ];
+    }
+
+    public static function openStreetMapQuery($cep)
+    {
+        return Cache::remember("open-street-map-response-{$cep}", now()->addDay(), function() use ($cep) {
+            return Http::get("https://nominatim.openstreetmap.org/search?q={$cep}&format=json&addressdetails=1&limit=1")
+                ->json()[0];
+        });
     }
 
     public static function haversine($lat1, $lon1, $lat2, $lon2, $unit = 'K')
@@ -96,15 +104,22 @@ class Helper {
         }
     }
 
-    public static function distanceBetweenTwoCoordinates($origin, $destination)
+    public static function distanceBetweenTwoCoordinates($a, $b, $c, $d)
     {
-        $response = Http::get('https://maps.googleapis.com/maps/api/directions/json', [
-            'origin' => $origin,
-            'destination' => $destination,
-            'key' => 'AIzaSyDjeZ7dRZLdllXMRjLRbw-sC23x58vBam8'
-        ])->json();
+        $response = self::googleQuery($a, $b, $c, $d);
 
         return $response['routes'][0]['legs'][0]['distance']['value'] / 1000;
+    }
+
+    public static function googleQuery($a,$b,$c,$d)
+    {
+        return Cache::remember("$a,$b,$c,$d", now()->addDay(), function () use ($a, $b, $c, $d) {
+            return Http::get('https://maps.googleapis.com/maps/api/directions/json', [
+                'origin' => "$a,$b",
+                'destination' => "$c,$d",
+                'key' => 'AIzaSyDjeZ7dRZLdllXMRjLRbw-sC23x58vBam8'
+            ])->json();
+        });
     }
 
     public static function generateSlug($name)
