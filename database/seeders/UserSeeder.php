@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Banner;
+use App\Models\StoreBanner;
 use App\Models\Card;
 use App\Models\Category;
 use App\Models\Customer;
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
             ->count(1)
             ->has(
                 UserStore::factory()
-                    ->has(Banner::factory()->count(3), 'banners')
+                    ->has(StoreBanner::factory()->count(3), 'banners')
                     ->has(Category::factory()->count(10), 'categories')
                     ->has(Product::factory()
                         ->has(ProductPrice::factory()->count(1), 'prices')
@@ -41,7 +41,6 @@ class UserSeeder extends Seeder
                             ->count(30), 'products')
                     ->has(Customer::factory()->count(30), 'customers')
                     ->has(Waiter::factory()->count(10), 'waiters')
-                    ->has(Card::factory()->count(20), 'cards')
                         ->count(1), 'stores')
                     ->has(UserSubscription::factory()->count(1), 'subscription')
                     ->create();

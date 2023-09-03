@@ -34,8 +34,9 @@ class CreateOrder {
     {
         $this->customer = [
             'name' => Helper::captalizeName($name),
-            'cpf' => Helper::clearAllIsNotNumber($cpf),
-            'email' => Str::lower($email)
+            'document' => Helper::clearAllIsNotNumber($cpf),
+            'email' => Str::lower($email),
+            'cellphone' => '47999097073'
         ];
 
         return $this;
@@ -56,15 +57,8 @@ class CreateOrder {
         return $this;
     }
 
-    public function setDelivery(DeliveryType $type, String $observation)
+    public function setDelivery($type, ?String $observation = null)
     {
-        $can = Store::deliveryOptions()
-            ->can($type);
-
-        if ($can === false) {
-            throw new \Exception("delivery nao permitido");
-        }
-
         $this->delivery = [
             'type' => $type,
             'observation' => $observation
@@ -76,8 +70,14 @@ class CreateOrder {
     public function setAddress(String $street, String $number)
     {
         $this->address = [
-            'street' => $street,
-            'number' => $number
+            'cep' => 'dwadawd',
+            'street' => 'dwadawd',
+            'number' => 'dwadawd',
+            'district' => 'dwadawd',
+            'city' => 'dwadawd',
+            'state' => 'dwadawd',
+            'latitude' => 'dwadawd',
+            'longitude' => 'dwadawd',
         ];
 
         return $this;
@@ -86,11 +86,13 @@ class CreateOrder {
     public function create()
     {
         $customer = Customer::query()
-            ->create($this->customer);
+            ->create(array_merge($this->customer, [
+                'user_store_id' => '18d61b11-2f3e-34db-93ad-6e3692cac7e8',
+            ]));
 
         $order = Order::query()
             ->create([
-                'user_store_id' => 'dwa',
+                'user_store_id' => '18d61b11-2f3e-34db-93ad-6e3692cac7e8',
                 'customer_id' => $customer->id,
                 'status' => OrderStatus::OPEN,
                 'origin' => OrderOrigin::CUSTOMER
@@ -101,6 +103,7 @@ class CreateOrder {
                 ->create([
                     'order_id' => $order->id,
                     'product_id' => $product->model->id,
+                    'amount' => $product->amount,
                     'value' => $product->getValue()
                 ]);
 
@@ -108,8 +111,9 @@ class CreateOrder {
                 OrderProductAdditional::query()
                     ->create([
                         'order_id' => $order->id,
-                        'additional_id' => $additional->id,
-                        'value' => $additional->getValue()
+                        'product_additional_id' => $additional->model->id,
+                        'value' => $additional->getValue(),
+                        'amount' => 2
                     ]);
             }
 
@@ -117,6 +121,7 @@ class CreateOrder {
                 OrderProductReplacement::query()
                     ->create([
                         'order_id' => $order->id,
+                        'replacement_id' => $replacement->model->id,
                         'value' => $replacement->getValue()
                     ]);
             }
@@ -129,7 +134,7 @@ class CreateOrder {
 
         DeliveryAddress::query()
             ->create(array_merge($this->address, [
-                'order_delivery_id' => $delivery->id,
+                'delivery_id' => $delivery->id
             ]));
 
         OrderPayment::query()

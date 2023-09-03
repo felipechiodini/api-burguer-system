@@ -30,7 +30,7 @@ class Product extends Model
 
     public function promotion()
     {
-        return $this->hasOne(ProductPrice::class);
+        return $this->hasOne(ProductPromotion::class);
     }
 
     public function photos()

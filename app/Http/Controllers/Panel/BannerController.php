@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\Banner;
+use App\Models\StoreBanner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +12,7 @@ class BannerController extends Controller
 
     public function index(Request $request)
     {
-        $page = Banner::query()
+        $page = StoreBanner::query()
             ->paginate(10);
 
         return response()
@@ -30,7 +30,7 @@ class BannerController extends Controller
 
         $path = Storage::put('banners', $request->file('image'));
 
-        Banner::query()
+        StoreBanner::query()
             ->create([
                 'name' => $request->name,
                 'src' => $path
@@ -40,7 +40,7 @@ class BannerController extends Controller
             ->json(['message' => 'Banner criado com sucesso!']);
     }
 
-    public function destroy(Banner $banner)
+    public function destroy(StoreBanner $banner)
     {
         Storage::delete($banner->src);
 

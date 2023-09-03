@@ -5,13 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderProductReplacement extends Model
+class ProductPromotion extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'order_id',
-        'replacement_id',
-        'value',
-    ];
 }

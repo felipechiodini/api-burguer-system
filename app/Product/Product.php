@@ -7,12 +7,14 @@ use App\Models\Product as ModelsProduct;
 class Product {
 
     public $model;
+    public $amount;
     public $additionals;
     public $replacements;
 
-    public function __construct(ModelsProduct $product)
+    public function __construct(ModelsProduct $product, Int $amount = 1)
     {
         $this->model = $product;
+        $this->amount = $amount;
         $this->additionals = collect([]);
         $this->replacements = collect([]);
     }
@@ -29,7 +31,7 @@ class Product {
             $replacementPrice =+ $replacement->getValue();
         }
 
-        return $this->model->getCurrentPrice()->value + $additionalPrice + $replacementPrice;
+        return $this->model->getCurrentPrice() + $additionalPrice + $replacementPrice;
     }
 
     public function addAdditional(Additional $additional)

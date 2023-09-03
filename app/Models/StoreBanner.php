@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Banner extends Model
+class StoreBanner extends Model
 {
     use HasFactory;
 
@@ -16,13 +16,9 @@ class Banner extends Model
         'order',
     ];
 
-    protected static function boot()
+    public function store()
     {
-        parent::boot();
-
-        static::addGlobalScope('store', function($query) {
-            $query->where('user_store_id', request()->header(UserStore::HEADER_KEY));
-        });
+        return $this->belongsTo(UserStore::class);
     }
 
 }

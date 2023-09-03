@@ -20,7 +20,7 @@ class OrderController extends Controller
     {
         $request->validate([
             'customer.name' => 'required',
-            'customer.cpf' => 'cpf',
+            'customer.cpf' => 'required',
             'customer.email' => 'email',
             'address.street' => 'required',
             'address.number' => 'required',
@@ -33,24 +33,24 @@ class OrderController extends Controller
         $products = collect();
         foreach ($request->products as $product) {
 
-            $diowjfoajfoawi = new Product(ModelsProduct::find($product->id));
+            $diowjfoajfoawi = new Product(ModelsProduct::find($product['id']));
 
-            foreach ($product->additionals as $additional) {
-                $diowjfoajfoawi->addAdditional(new Additional(ProductAdditional::find($additional->id), $additional->amount));
+            foreach ($product['additionals'] as $additional) {
+                $diowjfoajfoawi->addAdditional(new Additional(ProductAdditional::find($additional['id']), $additional['amount']));
             }
 
-            foreach ($product->replacements as $replacement) {
-                $diowjfoajfoawi->addReplacement(new Replacement(ProductReplacement::find($replacement->id)));
+            foreach ($product['replacements'] as $replacement) {
+                $diowjfoajfoawi->addReplacement(new Replacement(ProductReplacement::find($replacement['id'])));
             }
 
             $products->push($diowjfoajfoawi);
         }
 
         Order::create()
-            ->setCustomer($request->customer->name)
-            ->setAddress($request->address->street, $request->address->number)
-            ->setDelivery(DeliveryType::fromValue($request->delivery->type), $request->delivery->observation)
-            ->setPayment($request->payment->id)
+            ->setCustomer($request->json('customer.name'), $request->json('customer.cpf'), $request->json('customer.email'))
+            ->setAddress($request->json('address.street'), $request->json('address.number'))
+            ->setDelivery($request->json('delivery.type'), $request->json('delivery.observation'))
+            ->setPayment($request->json('payment.id'))
             ->setProducts($products)
             ->create();
 

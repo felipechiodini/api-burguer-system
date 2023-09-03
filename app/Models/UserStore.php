@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -59,9 +58,7 @@ class UserStore extends Model
 
     public function banners()
     {
-        return $this->hasMany(Banner::class)
-            ->where('user_store_id', $this->id)
-            ->orderBy('order');
+        return $this->hasMany(StoreBanner::class);
     }
 
     public function configuration()

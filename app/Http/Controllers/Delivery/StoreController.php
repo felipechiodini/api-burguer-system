@@ -24,8 +24,8 @@ class StoreController extends Controller
                 'banners',
                 'address',
                 'categories',
-                'paymentTypes',
-                'deliveryOptions'
+                // 'paymentTypes',
+                // 'deliveryOptions'
             ])
             ->whereRaw('LOWER(slug) = ?', Str::lower($request->slug))
             ->firstOrFail();

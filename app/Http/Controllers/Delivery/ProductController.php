@@ -29,15 +29,13 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->load([
-            'photos' => function (Builder $query) {
-                $query->select('id', 'src')
-                    ->orderBy('order');
-            },
-            'additionals' => function (Builder $query) {
-                $query->select('name', 'value', 'max');
-            },
-            'replacements'
+            'photos',
+            'additionals',
+            'replacements',
+            // 'followup'
         ]);
+
+        $product->price = $product->getCurrentPrice();
 
         return response()
             ->json(compact('product'));

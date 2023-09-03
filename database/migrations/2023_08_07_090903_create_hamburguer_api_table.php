@@ -2,41 +2,12 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::create('banners', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('banners_user_store_id_foreign');
-            $table->string('name');
-            $table->string('src');
-            $table->tinyInteger('order');
-            $table->timestamps();
-        });
-
-        Schema::create('cards', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('cards_user_store_id_foreign');
-            $table->integer('number');
-            $table->timestamps();
-        });
-
-        Schema::create('carts', function (Blueprint $table) {
-            $table->char('id', 36)->primary();
-            $table->unsignedBigInteger('customer_id')->nullable()->default(null)->index('carts_customer_id_foreign');
-            $table->unsignedBigInteger('coupon_id')->nullable()->default(null)->index('carts_coupon_id_foreign');
-            $table->timestamps();
-        });
-
         Schema::create('categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('categories_user_store_id_foreign');
@@ -128,8 +99,8 @@ return new class extends Migration
             $table->string('district');
             $table->string('city');
             $table->string('state');
-            $table->decimal('latitude')->nullable();
-            $table->decimal('longitude')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->timestamps();
         });
 
@@ -261,35 +232,20 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('cart_items', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignUuid('cart_id')->references('id')->on('carts');
-            $table->foreignId('product_id')->references('id')->on('products');
-            $table->double('value');
-            $table->integer('amount');
-            $table->text('observation')->nullable()->default(null);
-            $table->timestamps();
-        });
-
-        Schema::create('cart_item_additionals', function (Blueprint $table) {
+        Schema::create('order_product_additionals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
+            $table->foreignId('order_id')->references('id')->on('orders');
             $table->foreignId('product_additional_id')->references('id')->on('product_additionals');
-            $table->unsignedInteger('amount');
-            $table->timestamps();
-        });
-
-        Schema::create('cart_item_replacements', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
-            $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
+            $table->float('value');
+            $table->unsignedTinyInteger('amount');
             $table->timestamps();
         });
 
         Schema::create('order_product_replacements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cart_item_id')->references('id')->on('cart_items');
+            $table->foreignId('order_id')->references('id')->on('orders');
             $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
+            $table->float('value');
             $table->timestamps();
         });
 
@@ -302,8 +258,8 @@ return new class extends Migration
             $table->string('district');
             $table->string('city');
             $table->string('state');
-            $table->decimal('latitude')->nullable();
-            $table->decimal('longitude')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->timestamps();
         });
 
@@ -333,6 +289,7 @@ return new class extends Migration
 
         Schema::create('order_products', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->foreignId('order_id')->references('id')->on('orders');
             $table->foreignId('product_id')->references('id')->on('products');
             $table->double('value', 8, 2);
             $table->smallInteger('amount');
@@ -360,6 +317,15 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->index('user_stores_user_id_foreign');
             $table->string('name');
             $table->string('slug')->unique();
+            $table->timestamps();
+        });
+
+        Schema::create('store_banners', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignUuid('user_store_id')->references('id')->on('user_stores');
+            $table->string('name');
+            $table->string('src');
+            $table->tinyInteger('order');
             $table->timestamps();
         });
 
@@ -407,19 +373,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('banners', function (Blueprint $table) {
-            $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
-        Schema::table('cards', function (Blueprint $table) {
-            $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
-        Schema::table('carts', function (Blueprint $table) {
-            $table->foreign(['coupon_id'])->references(['id'])->on('coupons')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            $table->foreign(['customer_id'])->references(['id'])->on('customers')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
         Schema::table('categories', function (Blueprint $table) {
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
@@ -449,7 +402,6 @@ return new class extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->foreign(['coupon_id'])->references(['id'])->on('coupons')->onUpdate('NO ACTION')->onDelete('NO ACTION');
             $table->foreign(['customer_id'])->references(['id'])->on('customers')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            $table->foreign(['store_card_id'])->references(['id'])->on('cards')->onUpdate('NO ACTION')->onDelete('NO ACTION');
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
@@ -640,18 +592,6 @@ return new class extends Migration
             $table->dropForeign('categories_user_store_id_foreign');
         });
 
-        Schema::table('carts', function (Blueprint $table) {
-            $table->dropForeign('carts_coupon_id_foreign');
-            $table->dropForeign('carts_customer_id_foreign');
-        });
-
-        Schema::table('cards', function (Blueprint $table) {
-            $table->dropForeign('cards_user_store_id_foreign');
-        });
-
-        Schema::table('banners', function (Blueprint $table) {
-            $table->dropForeign('banners_user_store_id_foreign');
-        });
 
         Schema::dropIfExists('waiters');
 
@@ -715,12 +655,11 @@ return new class extends Migration
 
         Schema::dropIfExists('categories');
 
-        Schema::dropIfExists('carts');
 
         Schema::dropIfExists('cart_items');
 
-        Schema::dropIfExists('cards');
+        Schema::dropIfExists('store_cards');
 
-        Schema::dropIfExists('banners');
+        Schema::dropIfExists('store_banners');
     }
 };
