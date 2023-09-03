@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Cart\User;
 use App\Http\Controllers\Controller;
-use App\MercadoPago\MercadoPago;
+use App\Mail\Panel\ResetPassword;
 use App\Models\Plan;
-use App\Models\User as ModelsUser;
+use App\Models\User;
+use App\Utils\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -53,11 +55,59 @@ class UserController extends Controller
 
     public function deleteAccount()
     {
-        ModelsUser::query()
-            ->find(auth()->user()->id)
-            ->delete();
-
         return response()
             ->json(['message' => 'Conta excluída com sucesso!']);
+    }
+
+    public function sendMailResetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ], [
+            'email.required' => 'Informe um e-mail',
+            'email.email' => 'Informe um e-mail válido',
+            'email.exists' => 'E-mail não encontrado'
+        ]);
+
+        $token = Helper::resetPasswordToken(50);
+
+        $user = User::query()
+            ->where('email', $request->email)
+            ->first();
+
+        $user->update([
+            'token' => $token,
+            'token_expires_in' => now()->addMinutes(30)->toDateTimeString()
+        ]);
+
+        Mail::to($user->email)
+            ->queue(new ResetPassword($user, $token));
+
+        return response()
+            ->json(['message' => 'Você receberá um email com as instruções para redefinir sua senha']);
+    }
+
+    public function resetPasswordByToken(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string'
+        ]);
+
+        $user = User::query()
+            ->where('token', $request->token)
+            ->firstOrFail();
+
+        if (now()->isAfter($user->token_expires_in)) {
+            throw ValidationException::withMessages(['token' => 'Token expirado']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+            'token' => null,
+            'token_expires_in' => null
+        ]);
+
+        return response()
+            ->json(['message' => 'Senha alterada com sucesso']);
     }
 }

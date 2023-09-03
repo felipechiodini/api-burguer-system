@@ -127,4 +127,8 @@ class Helper {
         return strtolower(preg_replace('/\s+/', '-', $name));
     }
 
+    public static function resetPasswordToken($length)
+    {
+        return bin2hex(random_bytes($length));
+    }
 }

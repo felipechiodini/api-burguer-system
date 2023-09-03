@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => 'api', 'prefix' => 'auth'], function() {
+Route::group(['prefix' => 'auth'], function() {
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
@@ -11,6 +11,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function() {
 
 Route::post('register', 'UserController@register');
 Route::delete('register', 'UserController@deleteAccount');
+Route::post('subscribe', 'UserController@subscribe');
+Route::post('mail-reset-password', 'UserController@sendMailResetPassword');
+Route::post('reset-password-token', 'UserController@resetPasswordByToken');
 
 Route::middleware('auth:api')->group(function() {
     Route::get('address', 'StoreAddressController@get');
@@ -19,9 +22,7 @@ Route::middleware('auth:api')->group(function() {
     Route::post('schedule', 'StoreScheduleController@createOrUpdate');
     Route::get('configuration', 'StoreConfigurationController@get');
     Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
-
     Route::get('home', 'HomeController@get');
-    Route::post('subscribe', 'UserController@subscribe');
     Route::apiResource('store', 'UserStoreController');
     Route::apiResource('customer', 'UserStoreController');
     Route::get('category/all', 'CategoryController@all');
