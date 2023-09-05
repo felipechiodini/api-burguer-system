@@ -30,6 +30,25 @@ class StoreController extends Controller
             ->whereRaw('LOWER(slug) = ?', Str::lower($request->slug))
             ->firstOrFail();
 
+        $store->payments = [
+            [
+                'id' => 1,
+                'name' => 'Pix'
+            ],
+            [
+                'id' => 2,
+                'name' => 'Dinheiro'
+            ],
+            [
+                'id' => 3,
+                'name' => 'Cartão Crédito'
+            ],
+            [
+                'id' => 4,
+                'name' => 'Cartão Débito'
+            ]
+        ];
+
         return response()
             ->json(compact('store'));
     }

@@ -16,13 +16,4 @@ class Customer extends Model
         'cellphone'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('store', function($query) {
-            $query->where('user_store_id', request()->header(UserStore::HEADER_KEY));
-        });
-    }
-
 }

@@ -18,6 +18,11 @@ class Order extends Model
         'coupon_id'
     ];
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);

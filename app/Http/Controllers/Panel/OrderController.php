@@ -9,9 +9,18 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Order::with(['card', 'subOrders.products'])->get());
+        $page = Order::query()
+            ->with([
+                'customer',
+                'delivery.address'
+            ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return response()
+            ->json(compact('page'));
     }
 
 
