@@ -18,24 +18,25 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        Route::middleware('web')
-            ->namespace('App\Http\Controllers\Company')
-            ->group(base_path('routes/web.php'));
-
-        Route::prefix('api', function () {
-            Route::middleware('api')
-                ->namespace('App\Http\Controllers')
-                ->group(base_path('routes/api.php'));
+        $this->routes(function () {
+            Route::middleware('web')
+                ->namespace('App\Http\Controllers\Company')
+                ->group(base_path('routes/web.php'));
 
             Route::middleware('api')
-                ->prefix('panel')
-                ->namespace('App\Http\Controllers\Panel')
-                ->group(base_path('routes/panel.php'));
+                ->prefix('api')
+                ->group(function() {
+                    Route::namespace('App\Http\Controllers')
+                        ->group(base_path('routes/api.php'));
 
-            Route::middleware('api')
-                ->prefix('delivery')
-                ->namespace('App\Http\Controllers\Delivery')
-                ->group(base_path('routes/delivery.php'));
+                    Route::prefix('panel')
+                        ->namespace('App\Http\Controllers\Panel')
+                        ->group(base_path('routes/panel.php'));
+
+                    Route::prefix('delivery')
+                        ->namespace('App\Http\Controllers\Delivery')
+                        ->group(base_path('routes/delivery.php'));
+                });
         });
     }
 }
