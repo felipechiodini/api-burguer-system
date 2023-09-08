@@ -12,6 +12,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('categories_user_store_id_foreign');
             $table->string('name');
+            $table->unsignedInteger('order');
             $table->timestamps();
         });
 
@@ -85,7 +86,7 @@ return new class extends Migration
         Schema::create('order_deliveries', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('order_id')->references('id')->on('orders');
-            $table->unsignedTinyInteger('type');
+            $table->string('type');
             $table->tinyText('observation')->nullable()->default(null);
             $table->timestamps();
         });
@@ -93,14 +94,8 @@ return new class extends Migration
         Schema::create('delivery_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('delivery_id')->references('id')->on('order_deliveries');
-            $table->string('cep');
             $table->string('street');
             $table->string('number');
-            $table->string('district');
-            $table->string('city');
-            $table->string('state');
-            $table->string('latitude')->nullable();
-            $table->string('longitude')->nullable();
             $table->timestamps();
         });
 

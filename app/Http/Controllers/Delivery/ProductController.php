@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Delivery;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Builder;
 
 class ProductController extends Controller
 {
@@ -12,11 +11,13 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::query()
+            ->select('products.id', 'products.name', 'products.description', 'categories.name as category_name')
             ->with([
-                'mainPhoto',
-                'category'
+                'mainPhoto'
             ])
+            ->join('categories', 'categories.id', '=', 'products.category_id')
             ->where('active', true)
+            ->orderBy('categories.order')
             ->get()
             ->each(function(Product $product) {
                 $product->price = $product->getCurrentPrice();
@@ -32,7 +33,7 @@ class ProductController extends Controller
             'photos',
             'additionals',
             'replacements',
-            // 'followup'
+            'followup'
         ]);
 
         $product->price = $product->getCurrentPrice();

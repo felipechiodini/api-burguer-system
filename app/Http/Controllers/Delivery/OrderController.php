@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Cart\Order;
-use App\Enums\DeliveryType;
 use App\Http\Controllers\Controller;
 use App\Models\Product as ModelsProduct;
 use App\Models\ProductAdditional;
@@ -47,9 +46,9 @@ class OrderController extends Controller
         }
 
         Order::create()
-            ->setCustomer($request->json('customer.name'), $request->json('customer.cpf'), $request->json('customer.email'))
-            ->setAddress($request->json('address.street'), $request->json('address.number'))
+            ->setCustomer($request->json('customer'))
             ->setDelivery($request->json('delivery.type'), $request->json('delivery.observation'))
+            ->setAddress($request->json('address'))
             ->setPayment($request->json('payment.id'))
             ->setProducts($products)
             ->create();

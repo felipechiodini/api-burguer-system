@@ -59,6 +59,11 @@ class Product extends Model
         return $this->hasMany(ProductReplacement::class);
     }
 
+    public function followup()
+    {
+        return $this->hasMany(ProductReplacement::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

@@ -2,7 +2,6 @@
 
 namespace App\Cart;
 
-use App\Enums\DeliveryType;
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
 use App\Models\Customer;
@@ -25,26 +24,15 @@ class CreateOrder {
     private $address;
     private $payment;
 
-    public function __construct()
-    {
-        $this->products = collect([]);
-    }
-
-    public function setCustomer(String $name, ?String $cpf = null, ?String $email = null)
+    public function setCustomer($customer)
     {
         $this->customer = [
-            'name' => Helper::captalizeName($name),
-            'document' => Helper::clearAllIsNotNumber($cpf),
-            'email' => Str::lower($email),
-            'cellphone' => '47999097073'
+            'name' => Helper::captalizeName($customer['name']),
+            'document' => Helper::clearAllIsNotNumber($customer['cpf']),
+            'email' => Str::lower($customer['email']),
+            'cellphone' => Helper::clearAllIsNotNumber($customer['cellphone']),
         ];
 
-        return $this;
-    }
-
-    public function setProducts(Collection $products)
-    {
-        $this->products = $products;
         return $this;
     }
 
@@ -67,19 +55,19 @@ class CreateOrder {
         return $this;
     }
 
-    public function setAddress(String $street, String $number)
+    public function setAddress($address)
     {
         $this->address = [
-            'cep' => 'dwadawd',
-            'street' => 'dwadawd',
-            'number' => 'dwadawd',
-            'district' => 'dwadawd',
-            'city' => 'dwadawd',
-            'state' => 'dwadawd',
-            'latitude' => 'dwadawd',
-            'longitude' => 'dwadawd',
+            'street' => $address['street'],
+            'number' => $address['number'],
         ];
 
+        return $this;
+    }
+
+    public function setProducts(Collection $products)
+    {
+        $this->products = $products;
         return $this;
     }
 

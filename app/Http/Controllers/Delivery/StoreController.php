@@ -32,20 +32,54 @@ class StoreController extends Controller
 
         $store->payments = [
             [
-                'id' => 1,
+                'id' => 'pix',
                 'name' => 'Pix'
             ],
             [
-                'id' => 2,
+                'id' => 'cash',
                 'name' => 'Dinheiro'
             ],
             [
-                'id' => 3,
+                'id' => 'credit-card',
                 'name' => 'Cartão Crédito'
             ],
             [
-                'id' => 4,
+                'id' => 'debit-card',
                 'name' => 'Cartão Débito'
+            ]
+        ];
+
+        $store->delivery_options = [
+            [
+                'id' => 'shipping',
+                'name' => 'Entrega',
+                'icon' => 'delivery_dining',
+                'time' => '1h'
+            ],
+            [
+                'id' => 'withdraw',
+                'name' => 'Retirada',
+                'icon' => 'storefront',
+                'time' => '30m'
+            ]
+        ];
+
+        $store->addresses = [
+            [
+                'id' => 1,
+                'name' => 'João Pessoa'
+            ],
+            [
+                'id' => 2,
+                'name' => 'Vieiras'
+            ],
+            [
+                'id' => 3,
+                'name' => 'Jaraguá Esquerdo'
+            ],
+            [
+                'id' => 4,
+                'name' => 'Barra do Rio Cerro'
             ]
         ];
 
