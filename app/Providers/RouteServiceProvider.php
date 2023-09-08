@@ -19,12 +19,8 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            Route::middleware('web')
-                ->namespace('App\Http\Controllers\Company')
-                ->group(base_path('routes/web.php'));
-
             Route::middleware('api')
-                ->prefix('api')
+                ->domain('api' . config('app.host'))
                 ->group(function() {
                     Route::namespace('App\Http\Controllers')
                         ->group(base_path('routes/api.php'));
@@ -37,6 +33,10 @@ class RouteServiceProvider extends ServiceProvider
                         ->namespace('App\Http\Controllers\Delivery')
                         ->group(base_path('routes/delivery.php'));
                 });
+
+            Route::middleware('web')
+                ->namespace('App\Http\Controllers\Company')
+                ->group(base_path('routes/web.php'));
         });
     }
 }
