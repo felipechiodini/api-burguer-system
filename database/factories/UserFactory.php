@@ -13,6 +13,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => 'Felipe Chiodini Bona',
+            'tenant_id' => 1,
             'email' => 'felipechiodinibona@hotmail.com',
             'cellphone' => '47999097073',
             'password' => Hash::make('132567'),

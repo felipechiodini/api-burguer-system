@@ -8,6 +8,14 @@ return new class extends Migration
 {
     public function up()
     {
+        Schema::create('tenants', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('domain')->unique();
+            $table->string('database')->unique();
+            $table->timestamps();
+        });
+
         Schema::create('categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('categories_user_store_id_foreign');
@@ -350,6 +358,7 @@ return new class extends Migration
 
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->foreignId('tenant_id')->references('id')->on('tenants');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');

@@ -20,12 +20,20 @@ use App\Models\UserStore;
 use App\Models\UserSubscription;
 use App\Models\Waiter;
 use Illuminate\Database\Seeder;
+use Spatie\Multitenancy\Models\Tenant;
 
 class UserSeeder extends Seeder
 {
 
     public function run()
     {
+        Tenant::query()
+            ->create([
+                'name' => 'Plankton Burguer',
+                'domain' => 'plankton',
+                'database' => 'hamburguer_api',
+            ]);
+
         User::factory()
             ->count(1)
             ->has(
