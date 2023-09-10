@@ -15,7 +15,7 @@ class StoreController extends Controller
     public function get(Request $request)
     {
         $request->validate([
-            'slug' => 'required|string'
+            'slug' => 'string'
         ]);
 
         $store = UserStore::query()
@@ -24,8 +24,8 @@ class StoreController extends Controller
                 'banners',
                 'address',
                 'categories',
-                'paymentTypes',
-                'deliveryTypes'
+                'payment',
+                'delivery'
             ])
             ->whereRaw('LOWER(slug) = ?', Str::lower($request->slug))
             ->firstOrFail();

@@ -13,7 +13,9 @@ class SlugTenantFinder extends TenantFinder {
 
     public function findForRequest(Request $request): ?Tenant
     {
-        $slug = explode('.', $request->getHost())[0];
+        $slug = $request->header('store-slug');
+
+        // $slug = explode('.', $request->getHost())[0];
 
         return $this->getTenantModel()::where('slug', $slug)->first();
     }

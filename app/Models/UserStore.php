@@ -66,13 +66,13 @@ class UserStore extends ModelsTenant
         return $this->hasOne(StoreAddress::class);
     }
 
-    public function paymentTypes()
+    public function payment()
     {
-        return $this->belongsToMany(PaymentType::class, UserStorePaymentType::class);
+        return $this->belongsToMany(PaymentType::class, StorePaymentType::class);
     }
 
-    public function deliveryTypes()
+    public function delivery()
     {
-        return $this->belongsToMany(DeliveryOptions::class, UserStoreDeliveryOptions::class);
+        return $this->belongsToMany(DeliveryType::class, StoreDeliveryType::class);
     }
 }

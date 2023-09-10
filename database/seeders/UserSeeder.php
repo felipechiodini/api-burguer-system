@@ -3,10 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\StoreBanner;
-use App\Models\Category;
-use App\Models\Customer;
 use App\Models\StoreOrder;
-use App\Models\Product;
 use App\Models\ProductAdditional;
 use App\Models\ProductConfiguration;
 use App\Models\ProductPhoto;
@@ -19,10 +16,7 @@ use App\Models\StorePaymentType;
 use App\Models\StoreProduct;
 use App\Models\User;
 use App\Models\UserStore;
-use App\Models\UserStoreDeliveryType;
-use App\Models\UserStorePaymentType;
-use App\Models\UserSubscription;
-use App\Models\Waiter;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -34,6 +28,10 @@ class UserSeeder extends Seeder
             ->count(1)
             ->has(
                 UserStore::factory()
+                    ->state(new Sequence(
+                        ['slug' => 'plankton', 'slug' => 'plankton'],
+                        ['slug' => 'bona', 'slug' => 'bona'],
+                    ))
                     ->has(StoreBanner::factory()->count(3), 'banners')
                     ->has(StoreCategory::factory()->count(10), 'categories')
                     ->has(StoreProduct::factory()
@@ -44,7 +42,7 @@ class UserSeeder extends Seeder
                         ->has(ProductReplacement::factory()->count(3), 'replacements')
                             ->count(30), 'products')
                     ->has(StoreCustomer::factory()->count(30), 'customers')
-                        ->count(1), 'stores')
+                        ->count(2), 'stores')
                     ->create();
 
         StorePaymentType::query()
