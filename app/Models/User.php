@@ -17,6 +17,7 @@ class User extends Authenticatable implements JWTSubject
         'tenant_id',
         'email_verified_at',
         'password',
+        'root',
         'cellphone',
         'token',
         'token_expires_in'
@@ -42,4 +43,12 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('tenant', function($query) {
+            $query->where('tenant_id', app('currentTenant')->id);
+        });
+    }
 }

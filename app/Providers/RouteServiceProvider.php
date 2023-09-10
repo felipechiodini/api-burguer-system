@@ -19,25 +19,24 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
+            Route::middleware('web')
+                ->domain('www.burguersytem.local')
+                ->namespace('App\Http\Controllers\Site')
+                ->group(base_path('routes/web.php'));
+
             Route::middleware('api')
-                ->domain(config('app.api'))
                 ->group(function() {
                     Route::namespace('App\Http\Controllers')
                         ->group(base_path('routes/api.php'));
 
-                    Route::prefix('panel')
-                        ->namespace('App\Http\Controllers\Panel')
-                        ->group(base_path('routes/panel.php'));
-
                     Route::prefix('delivery')
                         ->namespace('App\Http\Controllers\Delivery')
                         ->group(base_path('routes/delivery.php'));
-                });
 
-            Route::middleware('web')
-                ->domain(config('app.web'))
-                ->namespace('App\Http\Controllers\Company')
-                ->group(base_path('routes/web.php'));
+                    Route::prefix('panel')
+                        ->namespace('App\Http\Controllers\Panel')
+                        ->group(base_path('routes/panel.php'));
+                });
         });
     }
 }

@@ -315,6 +315,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('tenant_stores', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('tenant_id')->references('id')->on('tenants');
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->timestamps();
+        });
+
         Schema::create('user_stores', function (Blueprint $table) {
             $table->char('id', 36)->primary();
             $table->unsignedBigInteger('user_id')->index('user_stores_user_id_foreign');
@@ -360,9 +368,10 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->foreignId('tenant_id')->references('id')->on('tenants');
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('password');
             $table->string('cellphone', 30);
+            $table->boolean('root')->default(false);
             $table->string('token')->nullable()->default(null);
             $table->timestamp('token_expires_in')->nullable()->default(null);
             $table->timestamps();

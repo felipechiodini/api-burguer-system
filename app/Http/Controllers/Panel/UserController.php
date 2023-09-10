@@ -14,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
+
     public function register(Request $request)
     {
         $request->validate([
@@ -110,4 +111,5 @@ class UserController extends Controller
         return response()
             ->json(['message' => 'Senha alterada com sucesso']);
     }
+
 }

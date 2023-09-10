@@ -38,53 +38,13 @@
 <body>
     <div class="hero_area">
         <div class="hero_bg_box">
-            <img src="images/hero-bg.jpg" alt="">
+            {{-- <img src="images/hero-bg.jpg" alt=""> --}}
         </div>
-        <!-- header section strats -->
         <header class="header_section">
-            <div class="header_top">
-                <div class="container-fluid header_top_container">
-
-                    <div class="contact_nav">
-                        <a href="">
-                            <i class="fa fa-map-marker" aria-hidden="true"></i>
-                            <span>
-                                Location
-                            </span>
-                        </a>
-                        <a href="">
-                            <i class="fa fa-phone" aria-hidden="true"></i>
-                            <span>
-                                Call : +55 47999097073
-                            </span>
-                        </a>
-                        <a href="">
-                            <i class="fa fa-envelope" aria-hidden="true"></i>
-                            <span>
-                                contato@burguersystem.online
-                            </span>
-                        </a>
-                    </div>
-                    <div class="social_box">
-                        <a href="">
-                            <i class="fa fa-facebook" aria-hidden="true"></i>
-                        </a>
-                        <a href="">
-                            <i class="fa fa-twitter" aria-hidden="true"></i>
-                        </a>
-                        <a href="">
-                            <i class="fa fa-linkedin" aria-hidden="true"></i>
-                        </a>
-                        <a href="">
-                            <i class="fa fa-instagram" aria-hidden="true"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
             <div class="header_bottom">
                 <div class="container-fluid">
                     <nav class="navbar navbar-expand-lg custom_nav-container ">
-                        <h3 class="navbar-brand " href="index.html">Burguer System</h3>
+                        <h3 class="navbar-brand" href="index.html">Burguer System</h3>
 
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -93,36 +53,19 @@
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav  ">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="index.html">Home <span
-                                            class="sr-only">(current)</span></a>
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/planos-e-precos">Preços</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="about.html"> Sobre Nós</a>
+                                    <a class="nav-link" href="/solucoes">Soluções</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="service.html">Soluções</a>
-                                </li>
-                                {{-- <li class="nav-item">
-                                    <a class="nav-link" href="team.html"> Team </a>
-                                </li> --}}
                                 <li class="nav-item">
                                     <a class="nav-link" href="contact.html">Contato</a>
                                 </li>
-                                {{-- <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="fa fa-user" aria-hidden="true"></i>
-                                        <span>
-                                            Login
-                                        </span>
-                                    </a>
-                                </li> --}}
-                                <form class="form-inline justify-content-center">
-                                    <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                                        <i class="fa fa-search" aria-hidden="true"></i>
-                                    </button>
-                                </form>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/login">Acessar</a>
+                                </li>
                             </ul>
                         </div>
                     </nav>
@@ -140,17 +83,14 @@
                                 <div class="col-lg-10 col-md-11 mx-auto">
                                     <div class="detail-box">
                                         <h1>
-                                            We Provide <br>
-                                            Welding Services
+                                            Gerenciamento de Pedidos
                                         </h1>
                                         <p>
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio omnis fugit,
-                                            sed tempora praesentium commodi error, hic recusandae repudiandae neque ad
-                                            molestias, atque veritatis labore quae eveniet autem in
+                                            O gerenciamento de pedidos é fundamental para o sucesso de qualquer negócio. Ao otimizar esse processo, as empresas podem melhorar a eficiência operacional, reduzir erros e aumentar a satisfação do cliente.
                                         </p>
                                         <div class="btn-box">
                                             <a href="" class="btn1">
-                                                Contact Us
+                                                Testar
                                             </a>
                                         </div>
                                     </div>

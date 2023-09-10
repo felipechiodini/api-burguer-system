@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
         Tenant::query()
             ->create([
                 'name' => 'Plankton Burguer',
-                'domain' => 'plankton',
+                'domain' => 'plankton.burguersytem.local',
                 'database' => 'hamburguer_api',
             ]);
 
