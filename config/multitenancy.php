@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\UserStore;
-use App\Utils\SlugTenantFinder;
+use App\Utils\SubDomainTenantFinder;
 use Illuminate\Broadcasting\BroadcastEvent;
 use Illuminate\Events\CallQueuedListener;
 use Illuminate\Mail\SendQueuedMailable;
@@ -19,7 +19,7 @@ return [
      * This class should extend `Spatie\Multitenancy\TenantFinder\TenantFinder`
      *
      */
-    'tenant_finder' => SlugTenantFinder::class,
+    'tenant_finder' => SubDomainTenantFinder::class,
 
     /*
      * These fields are used by tenant:artisan command to match one or more tenant

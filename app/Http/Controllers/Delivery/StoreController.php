@@ -3,32 +3,23 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Http\Controllers\Controller;
-use App\Models\StoreAddress;
-use App\Models\UserStore;
-use App\Utils\Helper as UtilsHelper;
+use App\Utils\Helper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
 
     public function get(Request $request)
     {
-        $request->validate([
-            'slug' => 'string'
-        ]);
-
-        $store = UserStore::query()
-            ->with([
+        $store = app('currentTenant')
+            ->load([
                 'configuration',
                 'banners',
                 'address',
                 'categories',
                 'payment',
                 'delivery'
-            ])
-            ->whereRaw('LOWER(slug) = ?', Str::lower($request->slug))
-            ->firstOrFail();
+            ]);
 
         $store->addresses = [
             [
@@ -60,13 +51,14 @@ class StoreController extends Controller
             'longitude' => 'required'
         ]);
 
-        $address = StoreAddress::first();
+        $address = app('currentTenant')
+            ->address()
+            ->first();
 
-        $distance = UtilsHelper::distanceBetweenTwoCoordinates($request->latitude, $request->longitude, $address->latitude, $address->longitude);
+        $distance = Helper::distanceBetweenTwoCoordinates($request->latitude, $request->longitude, $address->latitude, $address->longitude);
 
         return response()->json([
             'distance' => number_format($distance, 1)
         ]);
     }
-
 }

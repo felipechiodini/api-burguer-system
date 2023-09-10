@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Http\Controllers\Controller;
-use App\Models\Customer;
+use App\Models\StoreCustomer;
 use App\Utils\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,8 +20,9 @@ class CustomerController extends Controller
             'password' => 'required'
         ]);
 
-        Customer::query()
+        StoreCustomer::query()
             ->create([
+                'user_store_id' => app('currentTenant')->id,
                 'name' => Helper::captalizeName($request->name),
                 'cpf' => Helper::clearAllIsNotNumber($request->cpf),
                 'cellphone' => Helper::clearAllIsNotNumber($request->cellphone),
@@ -30,6 +31,15 @@ class CustomerController extends Controller
 
         return response()
             ->json(['message' => 'Cadastrado com sucesso!']);
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
     }
 
 }

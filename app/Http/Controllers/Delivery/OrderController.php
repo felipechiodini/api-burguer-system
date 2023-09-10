@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Delivery;
 
 use App\Cart\Order;
 use App\Http\Controllers\Controller;
-use App\Models\Product as ModelsProduct;
+use App\Models\StoreProduct;
 use App\Models\ProductAdditional;
 use App\Models\ProductReplacement;
 use App\Product\Additional;
@@ -32,7 +32,7 @@ class OrderController extends Controller
         $products = collect();
         foreach ($request->products as $product) {
 
-            $diowjfoajfoawi = new Product(ModelsProduct::find($product['id']));
+            $diowjfoajfoawi = new Product(StoreProduct::find($product['id']));
 
             foreach ($product['additionals'] as $additional) {
                 $diowjfoajfoawi->addAdditional(new Additional(ProductAdditional::find($additional['id']), $additional['amount']));

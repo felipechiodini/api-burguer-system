@@ -29,8 +29,8 @@ class UserSeeder extends Seeder
             ->has(
                 UserStore::factory()
                     ->state(new Sequence(
-                        ['slug' => 'plankton', 'slug' => 'plankton'],
-                        ['slug' => 'bona', 'slug' => 'bona'],
+                        ['name' => 'Plankton Burguer', 'slug' => 'plankton'],
+                        ['name' => 'Bona Burguer', 'slug' => 'bona'],
                     ))
                     ->has(StoreBanner::factory()->count(3), 'banners')
                     ->has(StoreCategory::factory()->count(10), 'categories')
@@ -54,6 +54,18 @@ class UserSeeder extends Seeder
         StoreDeliveryType::query()
             ->create([
                 'user_store_id' => 1,
+                'delivery_type_id' => 'delivery'
+            ]);
+
+        StorePaymentType::query()
+            ->create([
+                'user_store_id' => 2,
+                'payment_type_id' => 'pix'
+            ]);
+
+        StoreDeliveryType::query()
+            ->create([
+                'user_store_id' => 2,
                 'delivery_type_id' => 'delivery'
             ]);
 
