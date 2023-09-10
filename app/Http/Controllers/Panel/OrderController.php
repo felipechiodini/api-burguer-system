@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\StoreOrder;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -11,7 +12,7 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-        $page = Order::query()
+        $page = StoreOrder::query()
             ->with([
                 'customer',
                 'delivery.address'

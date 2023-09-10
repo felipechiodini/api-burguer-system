@@ -9,24 +9,24 @@ Route::group(['prefix' => 'auth'], function() {
     Route::get('me', 'AuthController@me');
 });
 
-Route::post('register', 'UserController@register');
-Route::delete('register', 'UserController@deleteAccount');
-Route::post('subscribe', 'UserController@subscribe');
-Route::post('mail-reset-password', 'UserController@sendMailResetPassword');
-Route::post('reset-password-token', 'UserController@resetPasswordByToken');
+// Route::post('register', 'UserController@register');
+// Route::delete('register', 'UserController@deleteAccount');
+// Route::post('subscribe', 'UserController@subscribe');
+// Route::post('mail-reset-password', 'UserController@sendMailResetPassword');
+// Route::post('reset-password-token', 'UserController@resetPasswordByToken');
 
-Route::middleware('auth:api')->group(function() {
+Route::middleware('tenant')->middleware('auth:api')->group(function() {
+    Route::get('home', 'HomeController@get');
     Route::get('address', 'StoreAddressController@get');
     Route::post('address', 'StoreAddressController@updateOrCreate');
     Route::get('schedule', 'StoreScheduleController@get');
     Route::post('schedule', 'StoreScheduleController@createOrUpdate');
     Route::get('configuration', 'StoreConfigurationController@get');
     Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
-    Route::get('home', 'HomeController@get');
-    Route::apiResource('store', 'UserStoreController');
-    // Route::apiResource('customer', 'UserStoreController');
+    Route::apiResource('user', 'UserStoreController');
     Route::get('category/all', 'CategoryController@all');
     Route::apiResource('category', 'CategoryController');
+    Route::apiResource('banner', 'BannerController');
     Route::apiResource('order', 'OrderController');
     Route::post('product/{product}/configuration', 'ProductConfigurationController@createOrUpdate');
     Route::apiResource('product', 'ProductController');
@@ -38,7 +38,7 @@ Route::middleware('auth:api')->group(function() {
     Route::apiResource('combo/{combo}/option', 'ComboOptionController');
     Route::apiResource('card', 'CardController');
     Route::apiResource('waiter', 'WaiterController');
+    // Route::apiResource('customer', 'UserStoreController');
     // Route::apiResource('combo/{combo}/product', 'ComboProductController');
     // Route::apiResource('order/{order}/sub-order', 'SubOrderController');
 });
-

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\StoreCategory;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
 
@@ -12,7 +12,7 @@ class CategoryController extends Controller
 
     public function all(Request $request)
     {
-        $categories = Category::all();
+        $categories = StoreCategory::all();
 
         return response()
             ->json(compact('categories'));
@@ -20,7 +20,7 @@ class CategoryController extends Controller
 
     public function index(Request $request)
     {
-        $page = Category::query()
+        $page = StoreCategory::query()
             ->paginate(10);
 
         return response()
@@ -29,7 +29,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $category = Category::create([
+        $category = StoreCategory::create([
             'user_store_id' => UserStore::query()->first()->id,
             'name' => $request->name
         ]);
