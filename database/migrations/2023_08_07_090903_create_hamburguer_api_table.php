@@ -8,17 +8,8 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('tenants', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('domain')->unique();
-            $table->string('database')->unique();
-            $table->timestamps();
-        });
-
-        Schema::create('tenant_users', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('tenant_id')->references('id')->on('tenants');
             $table->string('name');
             $table->string('email');
             $table->string('password');
@@ -27,11 +18,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('tenant_stores', function (Blueprint $table) {
+        Schema::create('user_stores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->references('id')->on('tenants');
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('domain')->unique();
+            $table->string('database')->unique();
             $table->timestamps();
         });
 
@@ -43,7 +36,7 @@ return new class extends Migration
 
         Schema::create('store_payment_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->string('payment_type_id');
             $table->foreign('payment_type_id')->references('id')->on('payment_types');
             $table->timestamps();
@@ -57,7 +50,7 @@ return new class extends Migration
 
         Schema::create('store_delivery_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->string('delivery_type_id');
             $table->foreign('delivery_type_id')->references('id')->on('delivery_types');
             $table->timestamps();
@@ -65,7 +58,7 @@ return new class extends Migration
 
         Schema::create('store_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->text('warning')->nullable();
             $table->boolean('allow_withdrawal')->nullable();
             $table->integer('withdrawal_time')->nullable();
@@ -79,7 +72,7 @@ return new class extends Migration
 
         Schema::create('store_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->string('cep');
             $table->string('street');
             $table->string('number');
@@ -93,7 +86,7 @@ return new class extends Migration
 
         Schema::create('store_banners', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->string('name');
             $table->string('src');
             $table->unsignedTinyInteger('order');
@@ -102,7 +95,7 @@ return new class extends Migration
 
         Schema::create('store_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->string('name', 20);
             $table->unsignedInteger('order');
             $table->timestamps();
@@ -110,7 +103,7 @@ return new class extends Migration
 
         Schema::create('store_customers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->string('name');
             $table->string('document');
             $table->string('cellphone');
@@ -119,7 +112,7 @@ return new class extends Migration
 
         Schema::create('store_coupons', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->string('description')->nullable();
             $table->string('code');
             $table->double('value', 8, 2);
@@ -129,7 +122,7 @@ return new class extends Migration
 
         Schema::create('store_products', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->foreignId('category_id')->references('id')->on('store_categories');
             $table->boolean('active')->default(false);
             $table->string('name');
@@ -200,7 +193,7 @@ return new class extends Migration
 
         Schema::create('store_orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('tenant_stores');
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->foreignId('store_customer_id')->references('id')->on('store_customers');
             $table->foreignId('store_coupon_id')->references('id')->on('store_coupons');
             $table->unsignedTinyInteger('origin');

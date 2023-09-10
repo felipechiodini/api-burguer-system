@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Tenant;
+use App\Models\UserStore;
 use Illuminate\Broadcasting\BroadcastEvent;
 use Illuminate\Events\CallQueuedListener;
 use Illuminate\Mail\SendQueuedMailable;
@@ -43,7 +43,7 @@ return [
      *
      * It must be or extend `Spatie\Multitenancy\Models\Tenant::class`
      */
-    'tenant_model' => Tenant::class,
+    'tenant_model' => UserStore::class,
 
     /*
      * If there is a current tenant when dispatching a job, the id of the current tenant

@@ -14,13 +14,9 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
-        'tenant_id',
-        'email_verified_at',
         'password',
-        'root',
         'cellphone',
-        'token',
-        'token_expires_in'
+        'root'
     ];
 
     public function stores()
@@ -41,14 +37,5 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('tenant', function($query) {
-            $query->where('tenant_id', app('currentTenant')->id);
-        });
     }
 }
