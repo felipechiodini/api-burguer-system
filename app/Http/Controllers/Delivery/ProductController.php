@@ -11,13 +11,11 @@ class ProductController extends Controller
     public function index()
     {
         $products = StoreProduct::query()
-            ->select('products.id', 'products.name', 'products.description', 'categories.name as category_name')
+            ->select('store_products.id', 'store_products.name', 'store_products.description')
             ->with([
                 'mainPhoto'
             ])
-            ->join('categories', 'categories.id', '=', 'products.category_id')
             ->where('active', true)
-            ->orderBy('categories.order')
             ->get()
             ->each(function(StoreProduct $product) {
                 $product->price = $product->getCurrentPrice();
