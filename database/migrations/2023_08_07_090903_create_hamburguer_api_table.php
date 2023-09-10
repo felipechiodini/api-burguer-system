@@ -170,6 +170,7 @@ return new class extends Migration
             $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2);
+            $table->softDeletes();
             $table->timestamps();
         });
 
@@ -178,14 +179,16 @@ return new class extends Migration
             $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2);
+            $table->softDeletes();
             $table->timestamps();
         });
 
-        Schema::create('product_followup', function (Blueprint $table) {
+        Schema::create('product_follow_up', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2)->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
 
@@ -219,6 +222,14 @@ return new class extends Migration
         });
 
         Schema::create('order_product_replacements', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('store_order_id')->references('id')->on('store_orders');
+            $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
+            $table->float('value');
+            $table->timestamps();
+        });
+
+        Schema::create('order_product_follow_up', function (Blueprint $table) {
             $table->id();
             $table->foreignId('store_order_id')->references('id')->on('store_orders');
             $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
