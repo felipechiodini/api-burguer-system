@@ -19,6 +19,16 @@ class User extends Authenticatable implements JWTSubject
         'root'
     ];
 
+    protected $hidden = [
+        'password',
+        'created_at',
+        'updated_at'
+    ];
+
+    protected $casts = [
+        'root' => 'boolean'
+    ];
+
     public function stores()
     {
         return $this->hasMany(UserStore::class);

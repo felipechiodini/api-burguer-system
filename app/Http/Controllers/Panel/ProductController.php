@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\StoreProduct;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
 
@@ -15,7 +15,7 @@ class ProductController extends Controller
             'term' => 'string|nullable'
         ]);
 
-        $page = Product::query()
+        $page = StoreProduct::query()
             ->when($request->query('term'), function($query) use (&$request) {
                 $query->where('name', $request->term);
             })
@@ -26,7 +26,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $product = Product::create([
+        $product = StoreProduct::create([
             'user_store_id' => UserStore::query()->first()->id,
             'name' => $request->name,
             'category_id' => $request->category_id,
@@ -51,7 +51,7 @@ class ProductController extends Controller
 
     public function update($product, Request $request)
     {
-        $product = Product::find($product)
+        $product = StoreProduct::find($product)
             ->update($request->all());
 
         return response()->json([
@@ -59,7 +59,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function destroy(Product $product)
+    public function destroy(StoreProduct $product)
     {
         $product->delete();
 

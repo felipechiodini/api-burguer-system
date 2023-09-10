@@ -16,6 +16,11 @@ class UserStore extends ModelsTenant
         'database'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
     public function customers()
     {
         return $this->hasMany(StoreCustomer::class);

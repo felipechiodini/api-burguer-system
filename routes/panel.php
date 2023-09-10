@@ -24,7 +24,7 @@ Route::middleware('auth:api')->group(function() {
     Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
     Route::get('home', 'HomeController@get');
     Route::apiResource('store', 'UserStoreController');
-    Route::apiResource('customer', 'UserStoreController');
+    // Route::apiResource('customer', 'UserStoreController');
     Route::get('category/all', 'CategoryController@all');
     Route::apiResource('category', 'CategoryController');
     Route::apiResource('order', 'OrderController');
