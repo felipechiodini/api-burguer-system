@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentType extends Model
+class DeliveryType extends Model
 {
     use HasFactory;
 
     public $incrementing = false;
+
 }

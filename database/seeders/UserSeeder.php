@@ -14,9 +14,13 @@ use App\Models\ProductPrice;
 use App\Models\ProductReplacement;
 use App\Models\StoreCategory;
 use App\Models\StoreCustomer;
+use App\Models\StoreDeliveryType;
+use App\Models\StorePaymentType;
 use App\Models\StoreProduct;
 use App\Models\User;
 use App\Models\UserStore;
+use App\Models\UserStoreDeliveryType;
+use App\Models\UserStorePaymentType;
 use App\Models\UserSubscription;
 use App\Models\Waiter;
 use Illuminate\Database\Seeder;
@@ -42,6 +46,18 @@ class UserSeeder extends Seeder
                     ->has(StoreCustomer::factory()->count(30), 'customers')
                         ->count(1), 'stores')
                     ->create();
+
+        StorePaymentType::query()
+            ->create([
+                'user_store_id' => 1,
+                'payment_type_id' => 'pix'
+            ]);
+
+        StoreDeliveryType::query()
+            ->create([
+                'user_store_id' => 1,
+                'delivery_type_id' => 'delivery'
+            ]);
 
         StoreOrder::factory()
             ->count(50)

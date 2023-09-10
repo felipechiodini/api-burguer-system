@@ -71,7 +71,7 @@ class UserStore extends ModelsTenant
         return $this->belongsToMany(PaymentType::class, UserStorePaymentType::class);
     }
 
-    public function deliveryOptions()
+    public function deliveryTypes()
     {
         return $this->belongsToMany(DeliveryOptions::class, UserStoreDeliveryOptions::class);
     }

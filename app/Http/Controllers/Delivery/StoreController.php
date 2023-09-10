@@ -24,45 +24,11 @@ class StoreController extends Controller
                 'banners',
                 'address',
                 'categories',
-                // 'paymentTypes',
-                // 'deliveryOptions'
+                'paymentTypes',
+                'deliveryTypes'
             ])
             ->whereRaw('LOWER(slug) = ?', Str::lower($request->slug))
             ->firstOrFail();
-
-        $store->payments = [
-            [
-                'id' => 'pix',
-                'name' => 'Pix'
-            ],
-            [
-                'id' => 'cash',
-                'name' => 'Dinheiro'
-            ],
-            [
-                'id' => 'credit-card',
-                'name' => 'Cartão Crédito'
-            ],
-            [
-                'id' => 'debit-card',
-                'name' => 'Cartão Débito'
-            ]
-        ];
-
-        $store->delivery_options = [
-            [
-                'id' => 'shipping',
-                'name' => 'Entrega',
-                'icon' => 'delivery_dining',
-                'time' => '1h'
-            ],
-            [
-                'id' => 'withdraw',
-                'name' => 'Retirada',
-                'icon' => 'storefront',
-                'time' => '30m'
-            ]
-        ];
 
         $store->addresses = [
             [
