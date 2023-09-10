@@ -5,27 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class StoreOrder extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_store_id',
-        'store_card_id',
-        'customer_id',
-        'status',
+        'store_customer_id',
+        'store_coupon_id',
         'origin',
-        'coupon_id'
+        'status'
     ];
 
     public function customer()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(StoreCustomer::class);
     }
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(StoreProduct::class);
     }
 
     public function additionals()

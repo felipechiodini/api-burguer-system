@@ -13,13 +13,12 @@ class UserStore extends ModelsTenant
         'user_id',
         'name',
         'slug',
-        'domain',
         'database'
     ];
 
     public function customers()
     {
-        return $this->hasMany(Customer::class);
+        return $this->hasMany(StoreCustomer::class);
     }
 
     public function orders()
@@ -39,12 +38,12 @@ class UserStore extends ModelsTenant
 
     public function categories()
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(StoreCategory::class);
     }
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(StoreProduct::class);
     }
 
     public function banners()

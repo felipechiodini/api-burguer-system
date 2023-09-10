@@ -2,19 +2,16 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProductFactory extends Factory
+class StoreCategoryFactory extends Factory
 {
 
     public function definition()
     {
         return [
-            'category_id' => Category::all('id')->random()->id,
             'name' => $this->faker->word(),
-            'active' => true,
-            'description' => $this->faker->text()
+            'order' => rand(1, 10)
         ];
     }
 

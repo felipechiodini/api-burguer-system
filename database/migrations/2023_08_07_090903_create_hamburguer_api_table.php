@@ -23,7 +23,6 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('domain')->unique();
             $table->string('database')->unique();
             $table->timestamps();
         });
@@ -133,7 +132,7 @@ return new class extends Migration
 
         Schema::create('product_photos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->string('src');
             $table->tinyInteger('order');
             $table->timestamps();
@@ -141,7 +140,7 @@ return new class extends Migration
 
         Schema::create('product_prices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->double('value', 8, 2);
             $table->timestamp('start_date');
             $table->timestamp('end_date');
@@ -150,7 +149,7 @@ return new class extends Migration
 
         Schema::create('product_promotions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->double('value', 8, 2);
             $table->unsignedTinyInteger('type');
             $table->timestamp('start_date');
@@ -160,7 +159,7 @@ return new class extends Migration
 
         Schema::create('product_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->enum('unit_type', ['grams', 'unit'])->nullable();
             $table->tinyInteger('max_number_replacements');
             $table->tinyInteger('max_number_additionals');
@@ -169,7 +168,7 @@ return new class extends Migration
 
         Schema::create('product_additionals', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2);
             $table->timestamps();
@@ -177,7 +176,7 @@ return new class extends Migration
 
         Schema::create('product_replacements', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2);
             $table->timestamps();
@@ -185,7 +184,7 @@ return new class extends Migration
 
         Schema::create('product_followup', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2)->nullable();
             $table->timestamps();
@@ -195,7 +194,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->foreignId('store_customer_id')->references('id')->on('store_customers');
-            $table->foreignId('store_coupon_id')->references('id')->on('store_coupons');
+            $table->foreignId('store_coupon_id')->nullable()->default(null)->references('id')->on('store_coupons');
             $table->unsignedTinyInteger('origin');
             $table->unsignedTinyInteger('status');
             $table->timestamps();
