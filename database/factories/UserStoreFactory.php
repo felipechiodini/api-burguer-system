@@ -12,7 +12,7 @@ class UserStoreFactory extends Factory
         return [
             'name' => 'Plankton Burguer',
             'slug' => 'plankton',
-            'database' => 'hamburguer_api'
+            // 'database' => 'hamburguer_api'
         ];
     }
 

@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\StoreProduct;
 
 class ProductController extends Controller
 {
 
     public function index()
     {
-        $products = Product::query()
+        $products = StoreProduct::query()
             ->select('products.id', 'products.name', 'products.description', 'categories.name as category_name')
             ->with([
                 'mainPhoto'
@@ -19,7 +19,7 @@ class ProductController extends Controller
             ->where('active', true)
             ->orderBy('categories.order')
             ->get()
-            ->each(function(Product $product) {
+            ->each(function(StoreProduct $product) {
                 $product->price = $product->getCurrentPrice();
             });
 
@@ -27,7 +27,7 @@ class ProductController extends Controller
             ->json(compact('products'));
     }
 
-    public function show(Product $product)
+    public function show(StoreProduct $product)
     {
         $product->load([
             'photos',
