@@ -33,7 +33,7 @@ class ProductController extends Controller
             ->json(compact('products'));
     }
 
-    public function show(StoreProduct $product, Request $request)
+    public function show(String $tenant, StoreProduct $product, Request $request)
     {
         $product = Cache::remember($request->fullUrl(), now()->addDay(), function () use ($product) {
             $product->load([
