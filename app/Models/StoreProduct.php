@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Cart\ActiveProduct;
 use App\Utils\Helper;
+use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -66,7 +67,7 @@ class StoreProduct extends Model
 
     public function category()
     {
-        return $this->belongsTo(StoreCategory::class);
+        return $this->belongsTo(StoreCategory::class, 'store_category_id');
     }
 
     public function getCurrentPrice()

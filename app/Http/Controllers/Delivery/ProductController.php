@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Http\Controllers\Controller;
+use App\Models\StoreCategory;
 use App\Models\StoreProduct;
+use DB;
 
 class ProductController extends Controller
 {

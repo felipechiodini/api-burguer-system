@@ -24,7 +24,7 @@ class WaiterController extends Controller
         ]);
 
         $waiter = Waiter::create([
-            'store_id'=> $request->header(UserStore::HEADER_KEY),
+            'user_store_id'=> $request->header(UserStore::HEADER_KEY),
             'name' => $request->name
         ]);
 

@@ -11,7 +11,7 @@ class Waiter extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'store_id',
+        'user_store_id',
         'name'
     ];
 

@@ -22,7 +22,7 @@ class CardController extends Controller
         ]);
 
         $card = Card::create([
-            'store_id' => $request->header(UserStore::HEADER_KEY),
+            'user_store_id' => $request->header(UserStore::HEADER_KEY),
             'number' => $request->number
         ]);
 
