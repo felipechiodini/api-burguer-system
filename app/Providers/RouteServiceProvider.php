@@ -25,8 +25,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
 
             Route::middleware('api')
+                ->domain('api.burguersytem.online')
                 ->prefix('{tenant}')
-                // ->domain('api.burguersytem.online')
                 ->group(function() {
                     Route::namespace('App\Http\Controllers')
                         ->group(base_path('routes/api.php'));
