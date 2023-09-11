@@ -62,7 +62,7 @@ class StoreOrder extends Model
         parent::boot();
 
         static::addGlobalScope('store', function($query) {
-            $query->where('user_store_id', app('currentTenant')->id);
+            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
         });
     }
 }

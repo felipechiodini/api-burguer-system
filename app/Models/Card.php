@@ -19,8 +19,7 @@ class Card extends Model
         parent::boot();
 
         static::addGlobalScope('store', function($query) {
-            $query->where('user_store_id', request()->header(UserStore::HEADER_KEY));
+            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
         });
     }
-
 }

@@ -39,12 +39,6 @@ class StoreProduct extends Model
         return $this->hasMany(ProductPhoto::class);
     }
 
-    public function mainPhoto()
-    {
-        return $this->hasOne(ProductPhoto::class)
-            ->orderBy('order');
-    }
-
     public function configuration()
     {
         return $this->hasOne(ProductConfiguration::class);
@@ -104,7 +98,7 @@ class StoreProduct extends Model
         parent::boot();
 
         static::addGlobalScope('store', function($query) {
-            $query->where('user_store_id', app('currentTenant')->id);
+            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
         });
     }
 }

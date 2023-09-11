@@ -15,4 +15,9 @@ class ProductPhoto extends Model
         'order'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
 }
