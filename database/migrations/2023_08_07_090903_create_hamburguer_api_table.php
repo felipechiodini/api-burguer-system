@@ -121,7 +121,7 @@ return new class extends Migration
         Schema::create('store_products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
-            $table->foreignId('category_id')->references('id')->on('store_categories');
+            $table->foreignId('store_category_id')->references('id')->on('store_categories');
             $table->boolean('active')->default(false);
             $table->string('name');
             $table->text('description');

@@ -13,7 +13,7 @@ class StoreProduct extends Model
 
     protected $fillable = [
         'user_store_id',
-        'category_id',
+        'store_category_id',
         'active',
         'name',
         'description'
@@ -66,7 +66,7 @@ class StoreProduct extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(StoreCategory::class);
     }
 
     public function getCurrentPrice()

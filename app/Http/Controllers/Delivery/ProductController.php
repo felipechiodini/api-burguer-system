@@ -13,7 +13,8 @@ class ProductController extends Controller
         $products = StoreProduct::query()
             ->select('store_products.id', 'store_products.name', 'store_products.description')
             ->with([
-                'mainPhoto'
+                'mainPhoto',
+                'category'
             ])
             ->where('active', true)
             ->get()

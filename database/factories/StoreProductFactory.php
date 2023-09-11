@@ -12,7 +12,7 @@ class StoreProductFactory extends Factory
     public function definition()
     {
         return [
-            'category_id' => StoreCategory::all('id')->random()->id,
+            'store_category_id' => StoreCategory::query()->withoutGlobalScopes()->get()->random()->id,
             'name' => $this->faker->word(),
             'active' => true,
             'description' => $this->faker->text()

@@ -21,4 +21,12 @@ class StoreBanner extends Model
         return $this->belongsTo(UserStore::class);
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('store', function($query) {
+            $query->where('user_store_id', app('currentTenant')->id);
+        });
+    }
 }

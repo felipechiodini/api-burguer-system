@@ -24,26 +24,34 @@ class UserSeeder extends Seeder
 
     public function run()
     {
-        User::factory()
-            ->count(1)
-            ->has(
-                UserStore::factory()
-                    ->state(new Sequence(
-                        ['name' => 'Plankton Burguer', 'slug' => 'plankton'],
-                        ['name' => 'Bona Burguer', 'slug' => 'bona'],
-                    ))
-                    ->has(StoreBanner::factory()->count(3), 'banners')
-                    ->has(StoreCategory::factory()->count(10), 'categories')
-                    ->has(StoreProduct::factory()
-                        ->has(ProductPrice::factory()->count(1), 'prices')
-                        ->has(ProductConfiguration::factory()->count(1), 'configuration')
-                        ->has(ProductPhoto::factory()->count(3), 'photos')
-                        ->has(ProductAdditional::factory()->count(3), 'additionals')
-                        ->has(ProductReplacement::factory()->count(3), 'replacements')
-                            ->count(30), 'products')
-                    ->has(StoreCustomer::factory()->count(30), 'customers')
-                        ->count(2), 'stores')
-                    ->create();
+        User::factory()->count(1)->create();
+
+        $f = UserStore::query()
+                ->create([
+                    'user_id' => 1,
+                    'name' => 'Outro Burguer',
+                    'slug' => 'outro'
+                ]);
+
+        $f->makeCurrent();
+
+        UserStore::factory()
+            ->has(StoreBanner::factory()->count(3), 'banners')
+            ->has(StoreCategory::factory()->count(10), 'categories')
+            ->has(StoreCustomer::factory()->count(30), 'customers')
+            ->has(StoreProduct::factory()
+                    ->has(ProductPrice::factory()->count(1), 'prices')
+                    ->has(ProductConfiguration::factory()->count(1), 'configuration')
+                    ->has(ProductPhoto::factory()->count(3), 'photos')
+                    ->has(ProductAdditional::factory()->count(3), 'additionals')
+                    ->has(ProductReplacement::factory()->count(3), 'replacements')
+                    ->count(30), 'products')
+            ->count(2)
+            ->state(new Sequence(
+                ['name' => 'Plankton Burguer', 'slug' => 'plankton'],
+                ['name' => 'Bona Burguer', 'slug' => 'bona']
+            ))
+            ->create();
 
         StorePaymentType::query()
             ->create([
@@ -72,7 +80,7 @@ class UserSeeder extends Seeder
         StoreOrder::factory()
             ->count(50)
             ->create([
-                'user_store_id' => UserStore::first()->id
+                'user_store_id' => 2
             ]);
     }
 
