@@ -14,6 +14,7 @@ use App\Models\StoreCustomer;
 use App\Models\StoreDeliveryType;
 use App\Models\StorePaymentType;
 use App\Models\StoreProduct;
+use App\Models\StoreShippingOptions;
 use App\Models\User;
 use App\Models\UserStore;
 use Illuminate\Database\Eloquent\Factories\Sequence;
@@ -59,23 +60,17 @@ class UserSeeder extends Seeder
                 'payment_type_id' => 'pix'
             ]);
 
-        StoreDeliveryType::query()
-            ->create([
-                'user_store_id' => 1,
-                'delivery_type_id' => 'delivery'
-            ]);
-
         StorePaymentType::query()
             ->create([
                 'user_store_id' => 2,
                 'payment_type_id' => 'pix'
             ]);
 
-        StoreDeliveryType::query()
-            ->create([
-                'user_store_id' => 2,
-                'delivery_type_id' => 'delivery'
-            ]);
+        StoreDeliveryType::query()->create(['user_store_id' => 2,'delivery_type_id' => 'delivery','minutes' => 60]);
+        StoreDeliveryType::query()->create(['user_store_id' => 2,'delivery_type_id' => 'withdraw','minutes' => 30]);
+
+        StoreShippingOptions::query()->create(['user_store_id' => 2, 'name' => 'João Pessoa', 'value' => 0]);
+        StoreShippingOptions::query()->create(['user_store_id' => 2, 'name' => 'Vieiras', 'value' => 3]);
 
         StoreOrder::factory()
             ->count(50)

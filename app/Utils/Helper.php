@@ -131,4 +131,13 @@ class Helper {
     {
         return bin2hex(random_bytes($length));
     }
+
+    public static function formatTime($minutes)
+    {
+        if ($minutes > 59) {
+            return $minutes / 60 . "h";
+        }
+
+        return $minutes . "min";
+    }
 }

@@ -43,7 +43,13 @@ class UserStore extends ModelsTenant
 
     public function categories()
     {
-        return $this->hasMany(StoreCategory::class);
+        return $this->hasMany(StoreCategory::class)
+            ->orderBy('order');
+    }
+
+    public function shippingOptions()
+    {
+        return $this->hasMany(StoreShippingOptions::class);
     }
 
     public function products()
@@ -53,7 +59,8 @@ class UserStore extends ModelsTenant
 
     public function banners()
     {
-        return $this->hasMany(StoreBanner::class);
+        return $this->hasMany(StoreBanner::class)
+            ->orderBy('order');
     }
 
     public function configuration()
@@ -66,13 +73,13 @@ class UserStore extends ModelsTenant
         return $this->hasOne(StoreAddress::class);
     }
 
-    public function payment()
+    public function paymentOptions()
     {
         return $this->belongsToMany(PaymentType::class, StorePaymentType::class);
     }
 
-    public function delivery()
+    public function deliveryOptions()
     {
-        return $this->belongsToMany(DeliveryType::class, StoreDeliveryType::class);
+        return $this->belongsToMany(DeliveryType::class, StoreDeliveryType::class)->withPivot('minutes');
     }
 }

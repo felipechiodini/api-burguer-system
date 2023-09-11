@@ -20,7 +20,7 @@ class ProductController extends Controller
                     $join->on('store_categories.id', 'store_products.store_category_id');
                 })
                 ->orderBy('store_categories.order')
-                ->get(['store_products.name', 'store_products.description', 'store_products.store_category_id', 'store_categories.name as category_name'])
+                ->get(['store_products.id', 'store_products.name', 'store_products.description', 'store_products.store_category_id', 'store_categories.name as category_name'])
                 ->each(function(StoreProduct $product) {
                     $product->price = $product->getCurrentPrice();
                     $product->photo = ProductPhoto::query()

@@ -11,4 +11,15 @@ class DeliveryType extends Model
 
     public $incrementing = false;
 
+    protected $fillable = [
+        'id',
+        'name',
+        'icon'
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
 }

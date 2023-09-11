@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Delivery;
 
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Utils\Helper;
@@ -11,34 +12,32 @@ class StoreController extends Controller
 
     public function get(Request $request)
     {
-        $store = app('currentTenant')
-            ->load([
-                'configuration',
-                'banners',
-                'address',
-                'categories',
-                'payment',
-                'delivery'
-            ]);
+        $store = Cache::remember($request->fullUrl(), now()->addDay(), function () {
+            $store = app('currentTenant')
+                ->load([
+                    'configuration',
+                    'banners',
+                    'address',
+                    'categories',
+                    'paymentOptions',
+                    'deliveryOptions',
+                    'shippingOptions'
+                ])
+                ->toArray();
 
-        $store->addresses = [
-            [
-                'id' => 1,
-                'name' => 'João Pessoa'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Vieiras'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Jaraguá Esquerdo'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Barra do Rio Cerro'
-            ]
-        ];
+            foreach ($store['delivery_options'] as $key => $option) {
+                $new = [
+                    'id' => $option['id'],
+                    'name' => $option['name'],
+                    'icon' => $option['icon'],
+                    'time' => Helper::formatTime($option['pivot']['minutes'])
+                ];
+
+                $store['delivery_options'][$key] = $new;
+            }
+
+            return $store;
+        });
 
         return response()
             ->json(compact('store'));

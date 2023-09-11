@@ -16,8 +16,8 @@ class PaymentTypeSeeder extends Seeder
         PaymentType::create(['id' => 'credit-card', 'name' => 'Cartão de Crédito']);
         PaymentType::create(['id' => 'debit-card', 'name' => 'Cartão de Débito']);
 
-        DeliveryType::create(['id' => 'delivery', 'name' => 'Entrega']);
-        DeliveryType::create(['id' => 'withdraw', 'name' => 'Retirada']);
+        DeliveryType::create(['id' => 'delivery', 'name' => 'Entrega', 'icon' => 'delivery_dining']);
+        DeliveryType::create(['id' => 'withdraw', 'name' => 'Retirada', 'icon' => 'storefront']);
     }
 
 }

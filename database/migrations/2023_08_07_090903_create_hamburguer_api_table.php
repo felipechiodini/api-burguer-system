@@ -43,6 +43,7 @@ return new class extends Migration
         Schema::create('delivery_types', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');
+            $table->string('icon');
             $table->timestamps();
         });
 
@@ -50,6 +51,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->string('delivery_type_id');
+            $table->unsignedInteger('minutes');
             $table->foreign('delivery_type_id')->references('id')->on('delivery_types');
             $table->timestamps();
         });
@@ -79,6 +81,14 @@ return new class extends Migration
             $table->string('state');
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('store_shipping_options', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->string('name');
+            $table->float('value');
             $table->timestamps();
         });
 
