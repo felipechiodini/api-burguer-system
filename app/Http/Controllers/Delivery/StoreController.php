@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Http\Controllers\Controller;
+use App\Models\StoreAddress;
 use App\Utils\Helper;
 use Illuminate\Http\Request;
 
@@ -58,7 +59,7 @@ class StoreController extends Controller
         $distance = Helper::distanceBetweenTwoCoordinates($request->latitude, $request->longitude, $address->latitude, $address->longitude);
 
         return response()->json([
-            'distance' => number_format($distance, 1)
+            'distance' => number_format($distance, 1, ',')
         ]);
     }
 }

@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
             PaymentTypeSeeder::class,
             UserSeeder::class,
             // StoreScheduleSeeder::class,
-            // StoreAddressSeeder::class,
-            // StoreConfigurationSeeder::class
+            StoreAddressSeeder::class,
+            StoreConfigurationSeeder::class
         ]);
     }
 

@@ -10,6 +10,7 @@ class StoreConfiguration extends Model
     protected $table = 'store_configurations';
 
     protected $fillable = [
+        'user_store_id',
         'warning',
         'allow_withdrawal',
         'withdrawal_time',
