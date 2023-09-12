@@ -20,7 +20,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             Route::middleware('web')
-                ->domain('www.burguersytem.local')
+                ->domain(config('app.web'))
                 ->namespace('App\Http\Controllers\Site')
                 ->group(base_path('routes/web.php'));
 
