@@ -41,5 +41,4 @@ class CustomerController extends Controller
         ]);
 
     }
-
 }

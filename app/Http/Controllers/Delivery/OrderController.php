@@ -56,5 +56,4 @@ class OrderController extends Controller
         return response()
             ->json(['message' => 'Pedido realizado com sucesso!']);
     }
-
 }

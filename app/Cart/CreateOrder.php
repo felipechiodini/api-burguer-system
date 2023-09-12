@@ -4,17 +4,17 @@ namespace App\Cart;
 
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
-use App\Models\Customer;
 use App\Models\DeliveryAddress;
-use App\Models\Order;
 use App\Models\OrderDelivery;
 use App\Models\OrderPayment;
 use App\Models\OrderProduct;
 use App\Models\OrderProductAdditional;
 use App\Models\OrderProductReplacement;
-use App\Utils\Helper;
+use App\Models\StoreCustomer;
+use App\Models\StoreOrder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use App\Utils\Helper;
 
 class CreateOrder {
 
@@ -73,12 +73,12 @@ class CreateOrder {
 
     public function create()
     {
-        $customer = Customer::query()
+        $customer = StoreCustomer::query()
             ->create(array_merge($this->customer, [
                 'user_store_id' => '18d61b11-2f3e-34db-93ad-6e3692cac7e8',
             ]));
 
-        $order = Order::query()
+        $order = StoreOrder::query()
             ->create([
                 'user_store_id' => '18d61b11-2f3e-34db-93ad-6e3692cac7e8',
                 'customer_id' => $customer->id,
