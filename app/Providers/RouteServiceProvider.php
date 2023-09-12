@@ -21,7 +21,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             Route::middleware('web')
                 ->domain(config('app.web'))
-                ->namespace('App\Http\Controllers\Site')
+                ->namespace('App\Http\Controllers\Company')
                 ->group(base_path('routes/web.php'));
 
             Route::middleware('api')
