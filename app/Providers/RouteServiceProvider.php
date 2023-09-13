@@ -25,12 +25,12 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
 
             Route::middleware('api')
-                ->prefix('{tenant}')
                 ->group(function() {
                     Route::namespace('App\Http\Controllers')
                         ->group(base_path('routes/api.php'));
 
-                    Route::prefix('delivery')
+                    Route::middleware('tenant')
+                        ->prefix('delivery/{tenant}')
                         ->namespace('App\Http\Controllers\Delivery')
                         ->group(base_path('routes/delivery.php'));
 

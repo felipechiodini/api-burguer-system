@@ -7,13 +7,13 @@ use Spatie\Multitenancy\Models\Tenant;
 use Spatie\Multitenancy\TenantFinder\TenantFinder;
 use Illuminate\Http\Request;
 
-class SubDomainTenantFinder extends TenantFinder {
-
+class SubDomainTenantFinder extends TenantFinder
+{
     use UsesTenantModel;
 
     public function findForRequest(Request $request): ?Tenant
     {
-        $slug = explode('/', $request->getPathInfo())[1];
+        $slug = explode('/', $request->getPathInfo())[2];
 
         return $this->getTenantModel()::where('slug', $slug)->first();
     }
