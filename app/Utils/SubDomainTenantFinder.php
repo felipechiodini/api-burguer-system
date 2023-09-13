@@ -13,7 +13,7 @@ class SubDomainTenantFinder extends TenantFinder
 
     public function findForRequest(Request $request): ?Tenant
     {
-        $slug = explode('/', $request->getPathInfo())[2];
+        $slug = explode('/', $request->getPathInfo())[2] ?? null;
 
         return $this->getTenantModel()::where('slug', $slug)->first();
     }
