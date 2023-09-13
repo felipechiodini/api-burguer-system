@@ -10,6 +10,17 @@ use Illuminate\Support\Str;
 
 class UserStoreController extends Controller
 {
+
+    public function all(Request $request)
+    {
+        $stores = UserStore::query()
+            ->where('user_id', $request->user()->id)
+            ->get();
+
+        return response()
+            ->json(compact('stores'));
+    }
+
     public function index(Request $request)
     {
         $user = $request->user();

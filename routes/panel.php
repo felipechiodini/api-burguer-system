@@ -15,6 +15,8 @@ Route::group(['prefix' => 'auth'], function() {
 // Route::post('mail-reset-password', 'UserController@sendMailResetPassword');
 // Route::post('reset-password-token', 'UserController@resetPasswordByToken');
 
+Route::get('store/all', 'UserStoreController@all');
+
 Route::middleware(['tenant', 'auth:api'])->group(function() {
     Route::get('home', 'HomeController@get');
     Route::get('address', 'StoreAddressController@get');
