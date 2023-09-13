@@ -265,5 +265,14 @@ return new class extends Migration
             $table->string('number');
             $table->timestamps();
         });
+
+        Schema::create('contacts', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('cellphone');
+            $table->string('email');
+            $table->string('message');
+            $table->timestamps();
+        });
     }
 };
