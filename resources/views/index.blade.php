@@ -31,7 +31,6 @@
 
         .button-create {
             width: 100%;
-            border: none;
             border-radius: 25px;
             padding: 15px;
             background-color: #ea1d2c;
@@ -46,6 +45,15 @@
 
         .text-primary {
             color: #ea1d2c;
+        }
+
+        .ihawiodahiw {
+            border-radius: 30px;
+            background-color: #ea1d2c;
+            color: #fff;
+            text-transform: uppercase;
+            padding: 20px;
+            text-decoration: none;
         }
 
     </style>
@@ -92,7 +100,7 @@
         <section style="margin: 10px; color: #fff">
             <h3>Aplicativo para Delivery</h3>
             <p>Plano gratuito para quem está começando</p>
-            <button class="button-create">Criar Agora</button>
+            <a class="ihawiodahiw" href="/criar-conta">Criar Conta</a>
         </section>
     </div>
 
