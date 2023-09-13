@@ -15,7 +15,7 @@ Route::group(['prefix' => 'auth'], function() {
 // Route::post('mail-reset-password', 'UserController@sendMailResetPassword');
 // Route::post('reset-password-token', 'UserController@resetPasswordByToken');
 
-Route::middleware('tenant')->middleware('auth:api')->group(function() {
+Route::middleware(['tenant', 'auth:api'])->group(function() {
     Route::get('home', 'HomeController@get');
     Route::get('address', 'StoreAddressController@get');
     Route::post('address', 'StoreAddressController@updateOrCreate');
@@ -23,7 +23,7 @@ Route::middleware('tenant')->middleware('auth:api')->group(function() {
     Route::post('schedule', 'StoreScheduleController@createOrUpdate');
     Route::get('configuration', 'StoreConfigurationController@get');
     Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
-    Route::apiResource('user', 'UserStoreController');
+    Route::post('store/status', 'UserStoreController@setStatus');
     Route::get('category/all', 'CategoryController@all');
     Route::apiResource('category', 'CategoryController');
     Route::apiResource('banner', 'BannerController');
@@ -38,7 +38,6 @@ Route::middleware('tenant')->middleware('auth:api')->group(function() {
     Route::apiResource('combo/{combo}/option', 'ComboOptionController');
     Route::apiResource('card', 'CardController');
     Route::apiResource('waiter', 'WaiterController');
-    // Route::apiResource('customer', 'UserStoreController');
     // Route::apiResource('combo/{combo}/product', 'ComboProductController');
     // Route::apiResource('order/{order}/sub-order', 'SubOrderController');
 });

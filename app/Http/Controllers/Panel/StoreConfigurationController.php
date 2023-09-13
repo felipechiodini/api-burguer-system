@@ -21,11 +21,7 @@ class StoreConfigurationController extends Controller
     {
         $request->validate([
             'warning' => 'string|nullable',
-            'allow_withdrawal' => 'boolean',
-            'withdrawal_time' => 'numeric',
-            'delivery_time' => 'numeric',
             'minimum_order_value' => 'numeric',
-            'delivery_price_per_km' => 'numeric'
         ]);
 
         StoreConfiguration::updateOrCreate([

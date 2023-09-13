@@ -18,12 +18,14 @@ class StoreController extends Controller
                     'configuration',
                     'banners',
                     'address',
-                    'categories',
                     'paymentOptions',
                     'deliveryOptions',
                     'shippingOptions'
-                ])
-                ->toArray();
+                ]);
+
+            $store->open = $store->isOpen();
+
+            $store =  $store->toArray();
 
             foreach ($store['delivery_options'] as $key => $option) {
                 $new = [

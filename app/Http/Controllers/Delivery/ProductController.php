@@ -40,6 +40,7 @@ class ProductController extends Controller
                 'photos',
                 'additionals',
                 'replacements',
+                'configuration',
                 'followup'
             ]);
 

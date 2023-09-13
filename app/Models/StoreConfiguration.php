@@ -12,19 +12,17 @@ class StoreConfiguration extends Model
     protected $fillable = [
         'user_store_id',
         'warning',
-        'allow_withdrawal',
-        'withdrawal_time',
-        'delivery_time',
         'minimum_order_value',
-        'delivery_price_per_km',
-        'force_store_open',
-        'force_store_close'
+        'store_open',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
     ];
 
     protected $casts = [
-        'allow_withdrawal' => 'boolean',
-        'force_store_open' => 'boolean',
-        'force_store_close' => 'boolean'
+        'store_open' => 'boolean',
     ];
 
 }

@@ -81,10 +81,16 @@ class StoreProduct extends Model
             ->first();
 
         if ($modelPromotion) {
-            return Helper::calculateDiscount($modelPrice->value, $modelPromotion->value, $modelPromotion->type);
+            return (object) [
+                'current' => $modelPrice->value - Helper::calculatePercentDiscount($modelPrice->value, $modelPromotion->value),
+                'previous' => $modelPrice->value
+            ];
         }
 
-        return $modelPrice->value;
+        return (object) [
+            'current' => $modelPrice->value,
+            'previous' => null
+        ];
     }
 
     public function active()

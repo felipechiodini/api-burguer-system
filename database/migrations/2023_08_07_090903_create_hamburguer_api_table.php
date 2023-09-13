@@ -60,13 +60,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->text('warning')->nullable();
-            $table->boolean('allow_withdrawal')->nullable();
-            $table->integer('withdrawal_time')->nullable();
-            $table->integer('delivery_time')->nullable();
             $table->double('minimum_order_value', 8, 2)->nullable();
-            $table->double('delivery_price_per_km', 8, 2)->nullable();
-            $table->boolean('force_store_open')->default(false);
-            $table->boolean('force_store_close')->default(false);
+            $table->boolean('store_open')->default(false);
             $table->timestamps();
         });
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class UserStoreController extends Controller
@@ -33,5 +34,22 @@ class UserStoreController extends Controller
         ]);
 
         return response()->json(['message' => 'Loja criada com sucesso!']);
+    }
+
+    public function setStatus(Request $request)
+    {
+        $request->validate([
+            'status' => 'required|boolean'
+        ]);
+
+        app('currentTenant')->configuration()
+            ->update([
+                'store_open' => $request->status
+            ]);
+
+        Cache::flush();
+
+        return response()
+            ->json(['message' => 'Sucesso!']);
     }
 }

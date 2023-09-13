@@ -82,4 +82,9 @@ class UserStore extends ModelsTenant
     {
         return $this->belongsToMany(DeliveryType::class, StoreDeliveryType::class)->withPivot('minutes');
     }
+
+    public function isOpen()
+    {
+        return $this->configuration->store_open === true;
+    }
 }
