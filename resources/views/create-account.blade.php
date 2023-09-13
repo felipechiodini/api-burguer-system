@@ -86,12 +86,12 @@
                 <input name="name" id="name" type="text">
             </div>
             <div class="input-group">
-                <label for="name">E-mail</label>
-                <input name="name" placeholder="Seu principal e-mail" id="email" type="email">
+                <label for="email">E-mail</label>
+                <input name="email" placeholder="Seu principal e-mail" id="email" type="email">
             </div>
             <div class="input-group">
-                <label for="name">Senha</label>
-                <input name="name" placeholder="Defina sua senha" id="name" type="text">
+                <label for="password">Senha</label>
+                <input name="password" placeholder="Defina sua senha" id="password" type="password">
             </div>
             <div class="mb-2" style="margin-bottom: 20px;">
                 <input type="checkbox" name="terms" id="terms">

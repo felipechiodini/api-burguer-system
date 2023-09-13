@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('password');
-            $table->string('cellphone');
+            $table->string('cellphone')->nullable();
             $table->boolean('root')->default(false);
             $table->timestamps();
         });
