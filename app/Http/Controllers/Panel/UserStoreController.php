@@ -34,17 +34,18 @@ class UserStoreController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'slug' => 'required|string'
         ]);
 
         UserStore::create([
-            'id' => Str::uuid(),
             'user_id' => auth()->user()->id,
             'name' => $request->name,
-            'slug' => Str::slug($request->name)
+            'slug' => Str::lower($request->slug)
         ]);
 
-        return response()->json(['message' => 'Loja criada com sucesso!']);
+        return response()
+            ->json(['message' => 'Loja criada com sucesso!']);
     }
 
     public function setStatus(Request $request)
@@ -53,12 +54,12 @@ class UserStoreController extends Controller
             'status' => 'required|boolean'
         ]);
 
-        app('currentTenant')->configuration()
+        UserStore::query()
+            ->find(app('currentTenant')->id)
+            ->configuration()
             ->update([
                 'store_open' => $request->status
             ]);
-
-        Cache::flush();
 
         return response()
             ->json(['message' => 'Sucesso!']);

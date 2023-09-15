@@ -10,7 +10,11 @@ class HomeController extends Controller
 
     public function get()
     {
-        return response()->json(Home::get());
+        $home = (new Home())
+            ->get();
+
+        return response()
+            ->json(compact('home'));
     }
 
 }

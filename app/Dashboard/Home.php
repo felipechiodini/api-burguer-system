@@ -10,26 +10,15 @@ class Home {
 
     private $store;
 
-    private function __construct()
+    public function __construct()
     {
-        $this->store = UserStore::find(request()->header(UserStore::HEADER_KEY));
+        $this->store = app('currentTenant');
     }
 
-    public static function get()
-    {
-        $static = new static();
-        return $static->mountData();
-    }
-
-    private function mountData()
+    public function get()
     {
         return [
-            'store_status' => $this->store->open,
-            'dashboard' => [
-                'charts' => [
-                    $this->ordersToday()
-                ]
-            ]
+            'store_status' => $this->store->isOpen()
         ];
     }
 
