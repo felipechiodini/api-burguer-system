@@ -12,8 +12,8 @@ Route::group(['prefix' => 'auth'], function() {
 // Route::post('register', 'UserController@register');
 // Route::delete('register', 'UserController@deleteAccount');
 // Route::post('subscribe', 'UserController@subscribe');
-// Route::post('mail-reset-password', 'UserController@sendMailResetPassword');
-// Route::post('reset-password-token', 'UserController@resetPasswordByToken');
+Route::post('mail-reset-password', 'UserController@sendMailResetPassword');
+Route::post('reset-password-token', 'UserController@resetPasswordByToken');
 
 Route::get('store/all', 'UserStoreController@all');
 
