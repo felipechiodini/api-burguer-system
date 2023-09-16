@@ -1,7 +1,8 @@
-@extends('base')
+@extends('layout')
 
-@include('header')
+@section('title', 'Aplicativo de Delivery')
 
+@section('content')
 <style>
     .main-section {
         display: flex;
@@ -19,6 +20,7 @@
 
     .main-section img {
         height: 450px;
+        width: 100%;
         object-fit: contain;
     }
 
@@ -40,7 +42,4 @@
     <img src="{{ asset('images/cellphone.png') }}" alt="cellphone">
     <a href="/criar-conta">Criar Conta Grátis</a>
 </section>
-
-@include('footer')
-
-@include('cookies')
+@endsection
