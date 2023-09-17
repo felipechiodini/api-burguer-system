@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 
 class ProductConfigurationController extends Controller
 {
+
+    public function get(String $nente, StoreProduct $product)
+    {
+        $configuration = $product->configuration()
+            ->first();
+
+        return response()
+            ->json(compact('configuration'));
+    }
+
     public function createOrUpdate(StoreProduct $product, Request $request)
     {
         $request->validate([

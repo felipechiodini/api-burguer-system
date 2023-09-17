@@ -38,6 +38,7 @@ Route::middleware('auth:api')->group(function() {
             Route::apiResource('product/{product}/prices', 'ProductPriceController');
             Route::apiResource('product/{product}/additionals', 'ProductAdditionalController');
             Route::apiResource('product/{product}/replacements', 'ProductReplacementController');
+            Route::get('product/{product}/configuration', 'ProductConfigurationController@get');
             Route::post('product/{product}/configuration', 'ProductConfigurationController@createOrUpdate');
             Route::apiResource('combo', 'ComboController');
             Route::apiResource('combo/{combo}/option', 'ComboOptionController');

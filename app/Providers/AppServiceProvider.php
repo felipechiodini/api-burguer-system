@@ -2,13 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\StoreProduct;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         $this->app->singleton(\Faker\Generator::class, function () {
@@ -16,11 +14,12 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        //
+        StoreProduct::observe(\App\Observers\StoreProductObserver::class);
+        StoreProduct::observe(\App\Observers\ProductPhoto::class);
+        StoreProduct::observe(\App\Observers\ProductPrice::class);
+        StoreProduct::observe(\App\Observers\ProductAdditional::class);
+        StoreProduct::observe(\App\Observers\ProductReplacement::class);
     }
 }

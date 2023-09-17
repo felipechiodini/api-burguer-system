@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductPhotoController extends Controller
 {
-    public function index(StoreProduct $product)
+    public function index(String $tenant, StoreProduct $product)
     {
         $page = $product->photos()
             ->paginate(10);

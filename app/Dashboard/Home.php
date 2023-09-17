@@ -3,7 +3,6 @@
 namespace App\Dashboard;
 
 use App\Models\StoreOrder;
-use App\Models\StoreProduct;
 
 class Home {
 
@@ -27,10 +26,12 @@ class Home {
     public function ordersToday()
     {
         $rows = StoreOrder::query()
-            ->select("COUNT(*) as quantity, DATE_FORMAT(created_at, '%d/%m/%Y') AS created_at")
-            ->where()
+            ->selectRaw('COUNT(*) as quantity')
+            ->selectRaw("DATE_FORMAT(created_at, '%d/%m/%Y') as date")
+            ->select('created_at')
+            ->where('user_store_id', '=', 2)
             ->groupBy('created_at')
-            ->orderBy('id', 'desc')
+            ->orderByDesc('created_at')
             ->limit(10)
             ->get();
 

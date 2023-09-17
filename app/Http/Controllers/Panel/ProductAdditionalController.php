@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ProductAdditionalController extends Controller
 {
-    public function index(StoreProduct $product, Request $request)
+    public function index(String $tenant, StoreProduct $product, Request $request)
     {
         $page = $product->additionals()
             ->paginate(10);

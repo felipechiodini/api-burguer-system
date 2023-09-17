@@ -40,15 +40,25 @@ class ProductController extends Controller
             ]);
     }
 
-    public function show(StoreProduct $product)
+    public function show(String $tenant, StoreProduct $product)
     {
         return response()
             ->json(compact('product'));
     }
 
-    public function update(StoreProduct $product, Request $request)
+    public function update(String $tenant, StoreProduct $product, Request $request)
     {
-        $product->update($request->all());
+        $request->validate([
+            'active' => 'required|boolean',
+            'name' => 'required|string',
+            'description' => 'required|string',
+        ]);
+
+        $product->update([
+            'active' => $request->active,
+            'name' => $request->name,
+            'description' => $request->description
+        ]);
 
         return response()
             ->json(['message' => 'Produto atualizado com sucesso']);
