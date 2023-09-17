@@ -2,9 +2,8 @@
 
 namespace App\Dashboard;
 
-use App\Models\Order;
-use App\Models\UserStore;
-use Illuminate\Support\Facades\DB;
+use App\Models\StoreOrder;
+use App\Models\StoreProduct;
 
 class Home {
 
@@ -18,20 +17,24 @@ class Home {
     public function get()
     {
         return [
-            'store_status' => $this->store->isOpen()
+            'store_status' => $this->store->isOpen(),
+            'charts' => [
+                $this->ordersToday(),
+            ]
         ];
     }
 
     public function ordersToday()
     {
-        $sql = "SELECT count(*) as quantity, DATE_FORMAT(created_at, '%d/%m/%Y') AS created_at
-            from orders where user_store_id = '{$this->store->id}'
-            GROUP BY DATE_FORMAT(created_at, '%d-%m-%Y') ORDER BY created_at DESC limit 10";
+        $rows = StoreOrder::query()
+            ->select("COUNT(*) as quantity, DATE_FORMAT(created_at, '%d/%m/%Y') AS created_at")
+            ->where()
+            ->groupBy('created_at')
+            ->orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
 
-        $rows = collect(DB::select($sql));
-        $rows->sortByDesc('created_at');
-
-        $chartOptions = [
+        $options = [
             'name' => 'Pedidos por dia',
             'config' => [
                 'width' => 500,
@@ -48,7 +51,7 @@ class Home {
             ]
         ];
 
-        return $chartOptions;
+        return $options;
     }
 
 }

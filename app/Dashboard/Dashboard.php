@@ -1,18 +1,18 @@
 <?php
 
+namespace App\Dashboard;
 
 class BaseDashboard {
 
 
-    public static function key()
+    public function dwa()
     {
 
     }
 
-    public function getConfig()
+    public function config()
     {
 
     }
-
 
 }
