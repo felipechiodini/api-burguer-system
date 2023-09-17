@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use Illuminate\Support\Facades\Cache;
 
-class StoreProductObserver
+class StoreProduct
 {
     public function created()
     {

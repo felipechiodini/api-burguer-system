@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\StoreProduct;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,10 +15,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        StoreProduct::observe(\App\Observers\StoreProductObserver::class);
-        StoreProduct::observe(\App\Observers\ProductPhoto::class);
-        StoreProduct::observe(\App\Observers\ProductPrice::class);
-        StoreProduct::observe(\App\Observers\ProductAdditional::class);
-        StoreProduct::observe(\App\Observers\ProductReplacement::class);
+        \App\Models\StoreProduct::observe(\App\Observers\StoreProduct::class);
+        \App\Models\ProductPhoto::observe(\App\Observers\ProductPhoto::class);
+        \App\Models\ProductPrice::observe(\App\Observers\ProductPrice::class);
+        \App\Models\ProductAdditional::observe(\App\Observers\ProductAdditional::class);
+        \App\Models\ProductReplacement::observe(\App\Observers\ProductReplacement::class);
     }
 }
