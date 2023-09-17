@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class StoreConfiguration extends Model
 {
-
     protected $table = 'store_configurations';
 
     protected $fillable = [

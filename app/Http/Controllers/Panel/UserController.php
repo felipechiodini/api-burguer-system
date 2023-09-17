@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\User;
 use App\Utils\Helper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
@@ -18,17 +19,17 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string',
             'cellphone' => 'required',
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        ModelsUser::query()
+        User::query()
             ->create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'cellphone' => $request->cellphone,
+                'name' => Helper::captalizeName($request->name),
+                'email' => Str::lower($request->email),
+                'cellphone' => Helper::clearAllIsNotNumber($request->cellphone),
                 'password' => Hash::make($request->password)
             ]);
 
@@ -52,12 +53,6 @@ class UserController extends Controller
             ->json([
                 'message' => 'Assinado com sucesso!'
             ]);
-    }
-
-    public function deleteAccount()
-    {
-        return response()
-            ->json(['message' => 'Conta excluída com sucesso!']);
     }
 
     public function sendMailResetPassword(Request $request)

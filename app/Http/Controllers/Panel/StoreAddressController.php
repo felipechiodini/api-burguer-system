@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\StoreAddress;
-use App\Models\UserStore;
 use Illuminate\Http\Request;
+use App\Utils\Helper;
 
 class StoreAddressController extends Controller
 {
+
     public function updateOrCreate(Request $request)
     {
         $request->validate([
@@ -21,22 +20,19 @@ class StoreAddressController extends Controller
             'state' => 'required'
         ]);
 
-        $coordinates = Helper::coordinatesByCep(Helper::clearAllIsNotNumber($request->cep));
+        app('currentTenant')
+            ->address()
+            ->updateOrCreate([
+                'cep' => Helper::clearAllIsNotNumber($request->cep),
+                'street' => $request->street,
+                'district' => $request->district,
+                'number' => $request->number,
+                'city' => $request->city,
+                'state' => $request->state,
+            ]);
 
-        StoreAddress::updateOrCreate([
-            'user_store_id' => $request->header(UserStore::HEADER_KEY)
-        ], [
-            'cep' => Helper::clearAllIsNotNumber($request->cep),
-            'street' => $request->street,
-            'district' => $request->district,
-            'number' => $request->number,
-            'city' => $request->city,
-            'state' => $request->state,
-            'latitude' => $coordinates->latitude,
-            'longitude' => $coordinates->longitude
-        ]);
-
-        return response()->json(['message' => 'Endereço salvo com sucesso!']);
+        return response()
+            ->json(['message' => 'Endereço salvo com sucesso!']);
     }
 
 }

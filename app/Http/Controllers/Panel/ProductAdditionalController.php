@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
 use App\Models\ProductAdditional;
+use App\Models\StoreProduct;
 use Illuminate\Http\Request;
 
 class ProductAdditionalController extends Controller
 {
-    public function index(Product $product, Request $request)
+    public function index(StoreProduct $product, Request $request)
     {
         $page = $product->additionals()
             ->paginate(10);
@@ -18,7 +18,7 @@ class ProductAdditionalController extends Controller
             ->json(compact('page'));
     }
 
-    public function store(Product $product, Request $request)
+    public function store(StoreProduct $product, Request $request)
     {
         $request->validate([
             'name' => 'required',
@@ -35,10 +35,10 @@ class ProductAdditionalController extends Controller
             ->json(['message' => 'Adicional salvo com sucesso!']);
     }
 
-    public function update(Product $product, ProductAdditional $productAdditional, Request $request)
+    public function update(StoreProduct $product, ProductAdditional $additional, Request $request)
     {
         $product->additionals()
-            ->find($productAdditional->id)
+            ->find($additional->id)
             ->create([
                 'name' => $request->input('name'),
                 'value' => $request->input('value')
@@ -48,10 +48,10 @@ class ProductAdditionalController extends Controller
             ->json(['message' => 'Adicional atualizado com sucesso!']);
     }
 
-    public function destroy(Product $product, ProductAdditional $productAdditional)
+    public function destroy(StoreProduct $product, ProductAdditional $additional)
     {
         $product->additionals()
-            ->find($productAdditional->id)
+            ->find($additional->id)
             ->delete();
 
         return response()

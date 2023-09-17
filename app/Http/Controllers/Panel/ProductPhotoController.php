@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
 use App\Models\ProductPhoto;
+use App\Models\StoreProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductPhotoController extends Controller
 {
-    public function index(Product $product)
+    public function index(StoreProduct $product)
     {
         $page = $product->photos()
             ->paginate(10);
@@ -19,7 +19,7 @@ class ProductPhotoController extends Controller
             ->json(compact('page'));
     }
 
-    public function store(Product $product, Request $request)
+    public function store(StoreProduct $product, Request $request)
     {
         $request->validate([
             'photo' => 'required|image'
@@ -43,13 +43,13 @@ class ProductPhotoController extends Controller
             ]);
     }
 
-    public function destroy(Product $product, ProductPhoto $productPhoto)
+    public function destroy(StoreProduct $product, ProductPhoto $photo)
     {
         Storage::disk('local')
-            ->delete($productPhoto->src);
+            ->delete($photo->src);
 
         $product->photos()
-            ->find($productPhoto->id)
+            ->find($photo->id)
             ->delete();
 
         return response()

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\StoreCategory;
-use App\Models\UserStore;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -30,14 +29,15 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $category = StoreCategory::create([
-            'user_store_id' => UserStore::query()->first()->id,
+            'user_store_id' => app('currentTenant')->id,
             'name' => $request->name
         ]);
 
-        return response()->json([
-            'message' => 'Categoria criada com sucesso!',
-            'category' => $category
-        ]);
+        return response()
+            ->json([
+                'message' => 'Categoria criada com sucesso!',
+                'category' => $category
+            ]);
     }
 
 }

@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
 use App\Models\ProductPrice;
+use App\Models\StoreProduct;
 use Illuminate\Http\Request;
 
 class ProductPriceController extends Controller
 {
 
-    public function index(Product $product, Request $request)
+    public function index(StoreProduct $product, Request $request)
     {
         $page = $product->prices()
             ->paginate(10);
@@ -19,7 +19,7 @@ class ProductPriceController extends Controller
             ->json(compact('page'));
     }
 
-    public function store(Product $product, Request $request)
+    public function store(StoreProduct $product, Request $request)
     {
         $request->validate([
             'value' => 'required',
@@ -38,7 +38,7 @@ class ProductPriceController extends Controller
             ->json(['message' => 'Preço cadastrado com sucesso!']);
     }
 
-    public function update(Product $product, ProductPrice $productPrice, Request $request)
+    public function update(StoreProduct $product, ProductPrice $price, Request $request)
     {
         $request->validate([
             'value' => 'required',
@@ -47,7 +47,7 @@ class ProductPriceController extends Controller
         ]);
 
         $product->prices()
-            ->find($productPrice->id)
+            ->find($price->id)
             ->update([
                 'value' => $request->value,
                 'start_date' => $request->start_date,
@@ -58,10 +58,10 @@ class ProductPriceController extends Controller
             ->json(['message' => 'Preço atualizado com sucesso!']);
     }
 
-    public function destroy(Product $product, ProductPrice $productPrice)
+    public function destroy(StoreProduct $product, ProductPrice $price)
     {
         $product->prices()
-            ->find($productPrice->id)
+            ->find($price->id)
             ->delete();
 
         return response()

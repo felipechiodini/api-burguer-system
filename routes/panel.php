@@ -9,13 +9,12 @@ Route::group(['prefix' => 'auth'], function() {
     Route::get('me', 'AuthController@me');
 });
 
-// Route::post('register', 'UserController@register');
-// Route::delete('register', 'UserController@deleteAccount');
-// Route::post('subscribe', 'UserController@subscribe');
+Route::post('register', 'UserController@register');
 Route::post('mail-reset-password', 'UserController@sendMailResetPassword');
 Route::post('reset-password-token', 'UserController@resetPasswordByToken');
 
 Route::middleware('auth:api')->group(function() {
+    Route::post('subscribe', 'UserController@subscribe');
     Route::get('store/all', 'UserStoreController@all');
     Route::post('store', 'UserStoreController@store');
 
@@ -34,12 +33,12 @@ Route::middleware('auth:api')->group(function() {
             Route::apiResource('category', 'CategoryController');
             Route::apiResource('banner', 'BannerController');
             Route::apiResource('order', 'OrderController');
-            Route::post('product/{product}/configuration', 'ProductConfigurationController@createOrUpdate');
             Route::apiResource('product', 'ProductController');
             Route::apiResource('product/{product}/photo', 'ProductPhotoController');
             Route::apiResource('product/{product}/prices', 'ProductPriceController');
             Route::apiResource('product/{product}/additionals', 'ProductAdditionalController');
             Route::apiResource('product/{product}/replacements', 'ProductReplacementController');
+            Route::post('product/{product}/configuration', 'ProductConfigurationController@createOrUpdate');
             Route::apiResource('combo', 'ComboController');
             Route::apiResource('combo/{combo}/option', 'ComboOptionController');
             Route::apiResource('card', 'CardController');

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserStore;
-use App\Models\Waiter;
+use App\Models\StoreWaiter;
 use Illuminate\Http\Request;
 
 class WaiterController extends Controller
@@ -12,9 +11,11 @@ class WaiterController extends Controller
 
     public function index()
     {
-        $waiters = Waiter::paginate(50);
+        $page = StoreWaiter::query()
+            ->paginate(20);
 
-        return response()->json($waiters);
+        return response()
+            ->json(compact('page'));
     }
 
     public function store(Request $request)
@@ -23,23 +24,29 @@ class WaiterController extends Controller
             'name' => 'required|string'
         ]);
 
-        $waiter = Waiter::create([
-            'user_store_id'=> $request->header(UserStore::HEADER_KEY),
+        $waiter = StoreWaiter::create([
+            'user_store_id'=> app('currentTenant')->id,
             'name' => $request->name
         ]);
 
-        return response()->json(['message' => 'Garçom registrado com sucesso', 'waiter' => $waiter]);
+        return response()
+            ->json([
+                'message' => 'Garçom registrado com sucesso',
+                'waiter' => $waiter
+            ]);
     }
 
-    public function show(Waiter $waiter)
+    public function show(StoreWaiter $waiter)
     {
-        return response()->json($waiter);
+        return response()
+            ->json(compact('waiter'));
     }
 
-    public function destroy(Waiter $waiter)
+    public function destroy(StoreWaiter $waiter)
     {
         $waiter->delete();
-        return response()->json(['message' => 'Garçom inativado']);
-    }
 
+        return response()
+            ->json(['message' => 'Garçom inativado']);
+    }
 }

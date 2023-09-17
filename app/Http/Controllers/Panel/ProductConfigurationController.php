@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\StoreProduct;
 use Illuminate\Http\Request;
 
 class ProductConfigurationController extends Controller
 {
-    public function createOrUpdate(Product $product, Request $request)
+    public function createOrUpdate(StoreProduct $product, Request $request)
     {
         $request->validate([
             'unit_type' => 'required|in:grams,unit',

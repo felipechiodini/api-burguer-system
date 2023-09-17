@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductReplacement;
+use App\Models\StoreProduct;
 use Illuminate\Http\Request;
 
 class ProductReplacementController extends Controller
 {
-    public function index(Product $product, Request $request)
+    public function index(StoreProduct $product, Request $request)
     {
         $page = $product->replacements()
             ->paginate(10);
@@ -18,7 +19,7 @@ class ProductReplacementController extends Controller
             ->json(compact('page'));
     }
 
-    public function store(Product $product, Request $request)
+    public function store(StoreProduct $product, Request $request)
     {
         $request->validate([
             'name' => 'required|string',
@@ -35,7 +36,7 @@ class ProductReplacementController extends Controller
             ->json(['message' => 'Substituição salva com sucesso!']);
     }
 
-    public function update(Product $product, ProductReplacement $productReplacement, Request $request)
+    public function update(StoreProduct $product, ProductReplacement $replacement, Request $request)
     {
         $request->validate([
             'name' => 'string',
@@ -43,7 +44,7 @@ class ProductReplacementController extends Controller
         ]);
 
         $product->replacements()
-            ->find($productReplacement->id)
+            ->find($replacement->id)
             ->update([
                 'name' => $request->name,
                 'value' => $request->value
@@ -53,10 +54,10 @@ class ProductReplacementController extends Controller
             ->json(['message' => 'Substituição salva com sucesso!']);
     }
 
-    public function destroy(Product $product, ProductReplacement $productReplacement)
+    public function destroy(StoreProduct $product, ProductReplacement $replacement)
     {
         $product->replacements()
-            ->find($productReplacement->id)
+            ->find($replacement->id)
             ->delete();
 
         return response()
