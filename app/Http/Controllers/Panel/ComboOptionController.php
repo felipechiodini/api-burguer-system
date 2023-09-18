@@ -27,8 +27,6 @@ class ComboOptionController extends Controller
 
         $order = $combo->options()->max('order') ?? 1;
 
-        // dd($combo);
-
         $combo->options()
             ->create([
                 'combo_id' => $combo->id,
