@@ -20,7 +20,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $page = StoreCategory::query()
-            ->paginate(10);
+            ->paginate($request->per_page);
 
         return response()
             ->json(compact('page'));
@@ -38,16 +38,14 @@ class CategoryController extends Controller
             'name' => 'required|string'
         ]);
 
-        $category = StoreCategory::create([
+        StoreCategory::create([
             'user_store_id' => app('currentTenant')->id,
-            'name' => $request->name
+            'name' => $request->name,
+            'order' => StoreCategory::query()->max('order')
         ]);
 
         return response()
-            ->json([
-                'message' => 'Categoria criada com sucesso!',
-                'category' => $category
-            ]);
+            ->json(['message' => 'Categoria criada com sucesso!']);
     }
 
     public function update(String $tenant, StoreCategory $category, Request $request)
