@@ -11,19 +11,19 @@ services:
       - ./:/var/www/html
       - ./.deploy/default.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - experience
+      - default
   php:
     build:
       context: .
       dockerfile: Dockerfile
-    image: php-experience
+    image: php
     container_name: php
     restart: unless-stopped
     working_dir: /var/www/html/
     volumes:
       - ./:/var/www/html
     networks:
-      - experience
+      - default
   db:
     image: mysql:8.0
     container_name: mysql
@@ -32,19 +32,19 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE_EXPERIENCE}
-      MYSQL_USER: ${DB_USERNAME_EXPERIENCE}
-      MYSQL_PASSWORD: ${DB_PASSWORD_EXPERIENCE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_EXPERIENCE}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
       - ./docker-compose/mysql:/docker-entrypoint-initdb.d
     networks:
-      - experience
+      - default
   redis:
     image: redis:alpine
-    container_name: redis-experience
+    container_name: redis
     command: redis-server
     restart: unless-stopped
     ports:
@@ -55,8 +55,8 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
     networks:
-      - experience
+      - default
 
 networks:
-  experience:
+  default:
     driver: bridge
