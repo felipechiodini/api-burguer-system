@@ -10,9 +10,14 @@ class OrderProductAdditional extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_id',
+        'order_product_id',
         'product_additional_id',
         'value',
         'amount',
     ];
+
+    public function additional()
+    {
+        return $this->belongsTo(ProductAdditional::class, 'product_additional_id');
+    }
 }

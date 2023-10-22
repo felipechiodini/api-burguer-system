@@ -219,7 +219,7 @@ return new class extends Migration
 
         Schema::create('order_product_additionals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_order_id')->references('id')->on('store_orders');
+            $table->foreignId('order_product_id')->references('id')->on('order_products');
             $table->foreignId('product_additional_id')->references('id')->on('product_additionals');
             $table->float('value');
             $table->unsignedTinyInteger('amount');
@@ -228,7 +228,7 @@ return new class extends Migration
 
         Schema::create('order_product_replacements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_order_id')->references('id')->on('store_orders');
+            $table->foreignId('order_product_id')->references('id')->on('order_products');
             $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
             $table->float('value');
             $table->timestamps();

@@ -10,8 +10,13 @@ class OrderProductReplacement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_id',
-        'replacement_id',
+        'order_product_id',
+        'product_replacement_id',
         'value',
     ];
+
+    public function replacement()
+    {
+        return $this->belongsTo(ProductReplacement::class, 'product_replacement_id');
+    }
 }

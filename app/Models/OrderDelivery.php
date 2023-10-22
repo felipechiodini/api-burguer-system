@@ -18,6 +18,6 @@ class OrderDelivery extends Model
 
     public function address()
     {
-        return $this->hasOne(DeliveryAddress::class);
+        return $this->hasOne(DeliveryAddress::class, 'delivery_id');
     }
 }

@@ -44,6 +44,7 @@ Route::middleware('auth:api')->group(function() {
             Route::apiResource('combo/{combo}/option', 'ComboOptionController');
             Route::apiResource('card', 'CardController');
             Route::apiResource('waiter', 'WaiterController');
+            Route::get('order-manager', 'OrderManagerController@index');
             // Route::apiResource('combo/{combo}/product', 'ComboProductController');
             // Route::apiResource('order/{order}/sub-order', 'SubOrderController');
     });
