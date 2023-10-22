@@ -34,13 +34,13 @@ class UserStoreController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'slug' => 'required|string'
+            // 'slug' => 'required|string'
         ]);
 
         UserStore::create([
             'user_id' => auth()->user()->id,
             'name' => $request->name,
-            'slug' => Str::lower($request->slug)
+            'slug' => Str::slug(Str::lower($request->name))
         ]);
 
         return response()
