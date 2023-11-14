@@ -19,7 +19,7 @@ class ProductReplacementController extends Controller
             ->json(compact('page'));
     }
 
-    public function store(StoreProduct $product, Request $request)
+    public function store(String $tenant, StoreProduct $product, Request $request)
     {
         $request->validate([
             'name' => 'required|string',
@@ -36,7 +36,7 @@ class ProductReplacementController extends Controller
             ->json(['message' => 'Substituição salva com sucesso!']);
     }
 
-    public function update(StoreProduct $product, ProductReplacement $replacement, Request $request)
+    public function update(String $tenant, StoreProduct $product, ProductReplacement $replacement, Request $request)
     {
         $request->validate([
             'name' => 'string',

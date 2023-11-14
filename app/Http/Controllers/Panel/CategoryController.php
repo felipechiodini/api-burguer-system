@@ -20,7 +20,8 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $page = StoreCategory::query()
-            ->paginate($request->per_page);
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
         return response()
             ->json(compact('page'));

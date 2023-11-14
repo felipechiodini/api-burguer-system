@@ -10,7 +10,7 @@ class ProductPhoto extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
+        'store_product_id',
         'src',
         'order'
     ];

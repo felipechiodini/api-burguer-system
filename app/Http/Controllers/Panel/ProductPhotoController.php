@@ -19,14 +19,13 @@ class ProductPhotoController extends Controller
             ->json(compact('page'));
     }
 
-    public function store(StoreProduct $product, Request $request)
+    public function store(String $tenant, StoreProduct $product, Request $request)
     {
         $request->validate([
-            'photo' => 'required|image'
+            'photo' => 'required'
         ]);
 
-        $path = Storage::disk('local')
-            ->put('products', $request->file('photo'));
+        $path = Storage::put('products', $request->file('photo'));
 
         $order = $product->photos()->max('order') ?? 1;
 
@@ -43,10 +42,9 @@ class ProductPhotoController extends Controller
             ]);
     }
 
-    public function destroy(StoreProduct $product, ProductPhoto $photo)
+    public function destroy(String $tenant, StoreProduct $product, ProductPhoto $photo)
     {
-        Storage::disk('local')
-            ->delete($photo->src);
+        Storage::delete($photo->src);
 
         $product->photos()
             ->find($photo->id)

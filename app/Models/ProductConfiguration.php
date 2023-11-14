@@ -10,7 +10,7 @@ class ProductConfiguration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
+        'store_product_id',
         'unit_type',
         'max_number_replacements',
         'max_number_additionals',

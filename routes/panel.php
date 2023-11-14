@@ -31,6 +31,7 @@ Route::middleware('auth:api')->group(function() {
             Route::post('store/status', 'UserStoreController@setStatus');
             Route::get('category/all', 'CategoryController@all');
             Route::apiResource('category', 'CategoryController');
+            Route::apiResource('customer', 'CustomerController');
             Route::apiResource('banner', 'BannerController');
             Route::apiResource('order', 'OrderController');
             Route::apiResource('product', 'ProductController');

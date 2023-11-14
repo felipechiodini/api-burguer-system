@@ -31,7 +31,6 @@ class OrderController extends Controller
 
         $products = collect();
         foreach ($request->products as $product) {
-
             $diowjfoajfoawi = new Product(StoreProduct::find($product['id']));
 
             foreach ($product['additionals'] as $additional) {
