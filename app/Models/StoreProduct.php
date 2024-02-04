@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Cart\ActiveProduct;
 use App\Utils\Helper;
-use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -73,8 +71,6 @@ class StoreProduct extends Model
             ->where('end_date', '>', $now)
             ->first();
 
-        if ($modelPrice === null) return null;
-
         $modelPromotion = $this->promotion()
             ->where('start_date', '<', $now)
             ->where('end_date', '>', $now)
@@ -95,8 +91,25 @@ class StoreProduct extends Model
 
     public function active()
     {
-        (new ActiveProduct($this))
-            ->active();
+        $errors = collect([]);
+
+        if ($this->prices->count() < 0) {
+            $errors->push('O produto precisa de ao menos um preço');
+        }
+
+        if ($this->product->photos()->count() === 0) {
+            $errors->push('É necessário que o produto tenha uma foto');
+        }
+
+        if ($this->product->category() === null) {
+            $errors->push('O produto não possue categoria');
+        }
+
+        if ($errors->count() > 0) {
+            return $errors;
+        }
+
+        $this->update(['active' => true]);
     }
 
 }

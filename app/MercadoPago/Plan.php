@@ -2,7 +2,7 @@
 
 namespace App\MercadoPago;
 
-use App\Cart\User;
+use App\Order\User;
 
 class Plan {
 

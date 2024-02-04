@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Cart;
+namespace App\Order;
 
 use App\Models\StoreCustomer;
 use App\Types\Cellphone;
@@ -40,7 +40,7 @@ class CreateCustomer {
     {
         return StoreCustomer::query()
             ->create([
-                'user_store_id' => 'dwaofjwafwa',
+                'user_store_id' => 1,
                 'name' => $this->name,
                 'document' => $this->document,
                 'cellphone' => $this->cellphone

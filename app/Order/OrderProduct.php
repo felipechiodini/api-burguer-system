@@ -10,6 +10,7 @@ class OrderProduct {
     public $amount;
     public $additionals;
     public $replacements;
+    public $observation;
 
     public function __construct(StoreProduct $product, Int $amount = 1)
     {
@@ -53,7 +54,7 @@ class OrderProduct {
             $replacementPrice =+ $replacement->getValue();
         }
 
-        return $this->model->getCurrentPrice() + $additionalPrice + $replacementPrice;
+        return $this->model->getCurrentPrice()->current + $additionalPrice + $replacementPrice;
     }
 
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Delivery;
 
-use App\Cart\CreateCustomer;
-use App\Cart\CreateOrder;
+use App\Order\CreateCustomer;
+use App\Order\CreateOrder;
 use App\Http\Controllers\Controller;
 use App\Models\StoreProduct;
 use App\Models\ProductAdditional;
@@ -12,8 +12,10 @@ use App\Order\Additional;
 use App\Order\OrderProduct;
 use App\Order\Replacement;
 use App\Types\Cellphone;
+use App\Types\Delivery;
 use App\Types\Document;
 use App\Types\Name;
+use App\Types\Payment;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -23,14 +25,14 @@ class OrderController extends Controller
     {
         $request->validate([
             'customer.name' => 'required',
-            'customer.cpf' => 'required',
-            'customer.email' => 'email',
+            'customer.document' => '',
+            'customer.cellphone' => 'required',
             'address.street' => 'required',
             'address.number' => 'required',
-            'payment.id' => 'required',
+            'payment.type' => 'required',
             'delivery.type' => 'required',
+            'delivery.observation' => 'string',
             'products' => 'required',
-            'observation' => 'nullable|string'
         ]);
 
         $customer = CreateCustomer::make()
@@ -41,9 +43,8 @@ class OrderController extends Controller
 
         $orderBuilder = CreateOrder::make()
             ->setCustomer($customer)
-            ->setDelivery($request->json('delivery.type'), $request->json('delivery.observation'))
-            ->setAddress($request->json('address'))
-            ->setPayment($request->json('payment.id'));
+            ->setDelivery(new Delivery($request->json('delivery.type')), $request->json('delivery.observation'))
+            ->setPayment(new Payment($request->json('payment.type')));
 
         foreach ($request->products as $product) {
             $orderProduct = new OrderProduct(
@@ -51,20 +52,24 @@ class OrderController extends Controller
                 $product['amount']
             );
 
-            foreach ($product['additionals'] as $additional) {
-                $orderProduct->addAdditional(
-                    new Additional(ProductAdditional::find($additional['id']),
-                    $additional['amount'])
-                );
+            if (@$product['additionals'] !== null) {
+                foreach ($product['additionals'] as $additional) {
+                    $orderProduct->addAdditional(
+                        new Additional(ProductAdditional::find($additional['id']),
+                        $additional['amount'])
+                    );
+                }
             }
 
-            foreach ($product['replacements'] as $replacement) {
-                $orderProduct->addReplacement(
-                    new Replacement(ProductReplacement::find($replacement['id']))
-                );
+            if (@$product['replacements'] !== null) {
+                foreach ($product['replacements'] as $replacement) {
+                    $orderProduct->addReplacement(
+                        new Replacement(ProductReplacement::find($replacement['id']))
+                    );
+                }
             }
 
-            $orderBuilder->addProduct($product);
+            $orderBuilder->addProduct($orderProduct);
         }
 
         $orderBuilder->create();
@@ -72,4 +77,5 @@ class OrderController extends Controller
         return response()
             ->json(['message' => 'Pedido realizado com sucesso!']);
     }
+
 }

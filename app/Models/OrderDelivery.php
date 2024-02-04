@@ -10,8 +10,7 @@ class OrderDelivery extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_id',
-        'delivery_address_id',
+        'store_order_id',
         'type',
         'observation'
     ];

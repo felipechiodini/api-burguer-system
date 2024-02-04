@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Cart;
+namespace App\Order;
 
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
 use App\Models\DeliveryAddress;
 use App\Models\OrderDelivery;
 use App\Models\OrderPayment;
-use App\Models\OrderProduct;
+use App\Models\OrderProduct as ModelsOrderProduct;
 use App\Models\OrderProductAdditional;
 use App\Models\OrderProductReplacement;
 use App\Models\StoreCustomer;
 use App\Models\StoreOrder;
 use App\Order\Additional;
-use App\Order\OrderProduct as OrderOrderProduct;
+use App\Order\OrderProduct;
 use App\Order\Replacement;
+use App\Types\Delivery;
+use App\Types\Payment;
 
 class CreateOrder {
 
@@ -40,16 +42,7 @@ class CreateOrder {
         return $this;
     }
 
-    public function setPayment($type)
-    {
-        $this->payment = [
-            'payment_type_id' => $type
-        ];
-
-        return $this;
-    }
-
-    public function setDelivery($type, ?String $observation = null)
+    public function setDelivery(Delivery $type, String $observation)
     {
         $this->delivery = [
             'type' => $type,
@@ -61,15 +54,20 @@ class CreateOrder {
 
     public function setAddress($address)
     {
-        $this->address = [
-            'street' => $address['street'],
-            'number' => $address['number'],
+        $this->address = $address;
+        return $this;
+    }
+
+    public function setPayment(Payment $type)
+    {
+        $this->payment = [
+            'payment_type_id' => $type
         ];
 
         return $this;
     }
 
-    public function addProduct(OrderOrderProduct $product)
+    public function addProduct(OrderProduct $product)
     {
         $this->products->push($product);
         return $this;
@@ -79,20 +77,21 @@ class CreateOrder {
     {
         $order = StoreOrder::query()
             ->create([
-                'user_store_id' => '18d61b11-2f3e-34db-93ad-6e3692cac7e8',
-                'customer_id' => $this->customer->id,
+                'user_store_id' => 1,
+                'store_customer_id' => $this->customer->id,
                 'status' => OrderStatus::OPEN,
                 'origin' => OrderOrigin::APP
             ]);
 
         $this->products
-            ->each(function(OrderOrderProduct $product) use($order) {
-                OrderProduct::query()
+            ->each(function(OrderProduct $product) use($order) {
+                ModelsOrderProduct::query()
                     ->create([
-                        'order_id' => $order->id,
-                        'product_id' => $product->model->id,
+                        'store_order_id' => $order->id,
+                        'store_product_id' => $product->model->id,
+                        'value' => $product->getValue(),
                         'amount' => $product->amount,
-                        'value' => $product->getValue()
+                        'observation' => $product->observation
                     ]);
 
                 $product->additionals
@@ -119,7 +118,7 @@ class CreateOrder {
 
         $delivery = OrderDelivery::query()
             ->create(array_merge($this->delivery, [
-                'order_id' => $order->id
+                'store_order_id' => $order->id
             ]));
 
         DeliveryAddress::query()
@@ -129,7 +128,7 @@ class CreateOrder {
 
         OrderPayment::query()
             ->create(array_merge($this->payment, [
-                'order_id' => $order->id
+                'store_order_id' => $order->id
             ]));
     }
 

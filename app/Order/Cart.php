@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Cart;
+namespace App\Order;
 
 use App\Discount\DiscountInterface;
 use App\Models\Cart as ModelsCart;

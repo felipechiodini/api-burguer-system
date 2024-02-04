@@ -17,10 +17,7 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        $this->routes(function () {
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-
+        $this->routes(function() {
             Route::middleware('api')
                 ->group(function() {
                     Route::namespace('App\Http\Controllers')
@@ -30,9 +27,7 @@ class RouteServiceProvider extends ServiceProvider
                         ->namespace('App\Http\Controllers\Panel')
                         ->group(base_path('routes/panel.php'));
 
-                    Route::middleware('tenant')
-                        ->prefix('delivery/{tenant}')
-                        ->namespace('App\Http\Controllers\Delivery')
+                    Route::namespace('App\Http\Controllers\Delivery')
                         ->group(base_path('routes/delivery.php'));
                 });
         });
