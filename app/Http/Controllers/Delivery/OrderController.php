@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Delivery;
 
-use App\Cart\Order;
+use App\Cart\CreateCustomer;
+use App\Cart\CreateOrder;
 use App\Http\Controllers\Controller;
 use App\Models\StoreProduct;
 use App\Models\ProductAdditional;
 use App\Models\ProductReplacement;
-use App\Product\Additional;
-use App\Product\Product;
-use App\Product\Replacement;
+use App\Order\Additional;
+use App\Order\OrderProduct;
+use App\Order\Replacement;
+use App\Types\Cellphone;
+use App\Types\Document;
+use App\Types\Name;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -29,28 +33,41 @@ class OrderController extends Controller
             'observation' => 'nullable|string'
         ]);
 
-        $products = collect();
+        $customer = CreateCustomer::make()
+            ->setName(new Name($request->json('customer.name')))
+            ->setDocument(new Document($request->json('customer.document')))
+            ->setCellphone(new Cellphone($request->json('customer.cellphone')))
+            ->create();
+
+        $orderBuilder = CreateOrder::make()
+            ->setCustomer($customer)
+            ->setDelivery($request->json('delivery.type'), $request->json('delivery.observation'))
+            ->setAddress($request->json('address'))
+            ->setPayment($request->json('payment.id'));
+
         foreach ($request->products as $product) {
-            $diowjfoajfoawi = new Product(StoreProduct::find($product['id']));
+            $orderProduct = new OrderProduct(
+                StoreProduct::find($product['id']),
+                $product['amount']
+            );
 
             foreach ($product['additionals'] as $additional) {
-                $diowjfoajfoawi->addAdditional(new Additional(ProductAdditional::find($additional['id']), $additional['amount']));
+                $orderProduct->addAdditional(
+                    new Additional(ProductAdditional::find($additional['id']),
+                    $additional['amount'])
+                );
             }
 
             foreach ($product['replacements'] as $replacement) {
-                $diowjfoajfoawi->addReplacement(new Replacement(ProductReplacement::find($replacement['id'])));
+                $orderProduct->addReplacement(
+                    new Replacement(ProductReplacement::find($replacement['id']))
+                );
             }
 
-            $products->push($diowjfoajfoawi);
+            $orderBuilder->addProduct($product);
         }
 
-        Order::create()
-            ->setCustomer($request->json('customer'))
-            ->setDelivery($request->json('delivery.type'), $request->json('delivery.observation'))
-            ->setAddress($request->json('address'))
-            ->setPayment($request->json('payment.id'))
-            ->setProducts($products)
-            ->create();
+        $orderBuilder->create();
 
         return response()
             ->json(['message' => 'Pedido realizado com sucesso!']);

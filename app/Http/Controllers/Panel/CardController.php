@@ -3,24 +3,16 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Card;
 use App\Models\StoreCategory;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class CardController extends Controller
 {
-
-    public function all(Request $request)
-    {
-        $page = StoreCategory::query()
-            ->paginate();
-
-        return response()
-            ->json(compact('page'));
-    }
 
     public function index(Request $request)
     {
-        $page = StoreCategory::query()
+        $page = Card::query()
             ->orderBy('id', 'desc')
             ->paginate(10);
 

@@ -1,37 +1,22 @@
 <?php
 
-namespace App\Product;
+namespace App\Order;
 
-use App\Models\Product as ModelsProduct;
+use App\Models\StoreProduct;
 
-class Product {
+class OrderProduct {
 
     public $model;
     public $amount;
     public $additionals;
     public $replacements;
 
-    public function __construct(ModelsProduct $product, Int $amount = 1)
+    public function __construct(StoreProduct $product, Int $amount = 1)
     {
         $this->model = $product;
         $this->amount = $amount;
         $this->additionals = collect([]);
         $this->replacements = collect([]);
-    }
-
-    public function getValue()
-    {
-        $additionalPrice = 0;
-        foreach ($this->additionals as $additional) {
-            $additionalPrice =+ $additional->getValue();
-        }
-
-        $replacementPrice = 0;
-        foreach ($this->replacements as $replacement) {
-            $replacementPrice =+ $replacement->getValue();
-        }
-
-        return $this->model->getCurrentPrice() + $additionalPrice + $replacementPrice;
     }
 
     public function addAdditional(Additional $additional)
@@ -55,4 +40,20 @@ class Product {
     {
         return $this->additionals->count() > 0;
     }
+
+    public function getValue()
+    {
+        $additionalPrice = 0;
+        foreach ($this->additionals as $additional) {
+            $additionalPrice =+ $additional->getValue();
+        }
+
+        $replacementPrice = 0;
+        foreach ($this->replacements as $replacement) {
+            $replacementPrice =+ $replacement->getValue();
+        }
+
+        return $this->model->getCurrentPrice() + $additionalPrice + $replacementPrice;
+    }
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Product;
+namespace App\Order;
 
 use App\Models\ProductReplacement;
 
@@ -17,4 +17,5 @@ class Replacement {
     {
         return $this->model->value;
     }
+
 }

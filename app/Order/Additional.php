@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Product;
+namespace App\Order;
 
 use App\Models\ProductAdditional;
 

@@ -21,16 +21,11 @@ class ProductController extends Controller
         ]);
 
         $page = StoreProduct::query()
-            ->with(['photos'])
             ->when($request->query('term'), function($query, String $term) {
                 $query->where('name', $term);
             })
             ->orderBy('id', 'desc')
-            ->paginate(20);
-
-        foreach ($page->items() as $item) {
-            $item->image = @$item->photos[0]->src;
-        }
+            ->paginate();
 
         return response()
             ->json(compact('page'));

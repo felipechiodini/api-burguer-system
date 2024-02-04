@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -15,8 +16,9 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Email ou senha incorretos'], 401);
+        if (!$token = auth()->attempt($credentials)) {
+            return response()
+                ->json(['message' => 'Email ou senha incorretos'], 401);
         }
 
         return $this->respondWithToken($token);

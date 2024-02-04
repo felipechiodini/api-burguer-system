@@ -6,7 +6,7 @@ use BenSampo\Enum\Enum;
 
 final class OrderOrigin extends Enum
 {
-    const CUSTOMER = 1;
+    const APP = 1;
     const WAITER = 2;
     const ADMIN = 3;
 }
