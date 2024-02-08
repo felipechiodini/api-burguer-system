@@ -4,17 +4,23 @@ namespace App\Http\Controllers\Delivery;
 
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
+use App\Models\ProductPhoto;
+use App\Models\StoreProduct;
+use App\Models\UserStore;
 use Illuminate\Http\Request;
 use App\Utils\Helper;
 
 class StoreController extends Controller
 {
 
-    public function get(Request $request)
+    public function get(String $slug, Request $request)
     {
-        $store = Cache::remember($request->fullUrl(), now()->addDay(), function () {
-            $store = app('currentTenant')
+        $store = Cache::remember($request->fullUrl(), now()->addDay(), function () use ($slug) {
+            $store = UserStore::query()
+                ->where('slug', $slug)
+                ->first()
                 ->load([
+                    'categories',
                     'configuration',
                     'banners',
                     'address',
@@ -37,6 +43,27 @@ class StoreController extends Controller
 
                 $store['delivery_options'][$key] = $new;
             }
+
+            $store['products'] = StoreProduct::query()
+                ->select(['store_products.id', 'store_products.name', 'store_products.description', 'store_products.store_category_id', 'store_categories.name as category_name'])
+                ->where('active', true)
+                ->join('store_categories', function($join) {
+                    $join->on('store_categories.id', 'store_products.store_category_id');
+                })
+                ->orderBy('store_categories.order')
+                ->get()
+                ->map(function(StoreProduct $product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'description' => $product->description,
+                        'store_category_id' => $product->store_category_id,
+                        'price' => $product->getCurrentPrice(),
+                        'photo' => ProductPhoto::query()
+                            ->orderBy('order')
+                            ->first()
+                    ];
+                });
 
             return $store;
         });

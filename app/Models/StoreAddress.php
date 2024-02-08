@@ -21,12 +21,12 @@ class StoreAddress extends Model
         'longitude'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::addGlobalScope('store', function($query) {
-            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
-        });
-    }
+    //     static::addGlobalScope('store', function($query) {
+    //         $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
+    //     });
+    // }
 }

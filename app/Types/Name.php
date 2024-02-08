@@ -8,16 +8,12 @@ class Name {
 
     public function __construct(String $name)
     {
-        if ($this->isValid($name) === false) {
-            throw new \Exception('Nome inválido');
-        }
-
         $this->name = $name;
     }
 
-    public function isValid($name): bool
+    public function isValid(): bool
     {
-        return true;
+        return count(explode(' ', $this->name)) > 1;
     }
 
     private function captalize($name): string

@@ -16,4 +16,13 @@ class StoreCustomer extends Model
         'cellphone'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('store', function($query) {
+            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
+        });
+    }
+
 }

@@ -27,7 +27,8 @@ class RouteServiceProvider extends ServiceProvider
                         ->namespace('App\Http\Controllers\Panel')
                         ->group(base_path('routes/panel.php'));
 
-                    Route::namespace('App\Http\Controllers\Delivery')
+                    Route::prefix('delivery')
+                        ->namespace('App\Http\Controllers\Delivery')
                         ->group(base_path('routes/delivery.php'));
                 });
         });

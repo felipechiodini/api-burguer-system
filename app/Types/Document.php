@@ -8,16 +8,12 @@ class Document {
 
     public function __construct(String $document)
     {
-        if ($this->isValid($document) === false) {
-            throw new \Exception('Documento inválido');
-        }
-
         $this->document = preg_replace('/[^0-9]/', '', $document);
     }
 
-    public function isValid($document): bool
+    public function isValid(): bool
     {
-        $document = preg_replace('/[^0-9]/', '', $document);
+        $document = preg_replace('/[^0-9]/', '', $this->document);
 
         if (strlen($document) != 11) {
             return false;

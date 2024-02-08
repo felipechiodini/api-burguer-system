@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {

@@ -8,16 +8,12 @@ class Cellphone {
 
     public function __construct(String $cellphone)
     {
-        if ($this->isValid($cellphone) === false) {
-            throw new \Exception('Celular inválido');
-        }
-
         $this->cellphone = preg_replace('/[^0-9]/', '', $cellphone);
     }
 
-    private function isValid($value): Bool
+    public function isValid(): Bool
     {
-        $phone = preg_replace('/[^0-9]/', '', $value);
+        $phone = preg_replace('/[^0-9]/', '', $this->cellphone);
         return strlen($phone) === 10 || strlen($phone) === 11;
     }
 

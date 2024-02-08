@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\StoreCategory;
+use App\Table\Table;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -20,12 +21,14 @@ class CategoryController extends Controller
 
     public function index(Request $request)
     {
-        $page = StoreCategory::query()
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+        $table = Table::make()
+            ->setQuery(StoreCategory::query())
+            ->addColumn('name', 'Nome')
+            ->setPerPage($request->per_page)
+            ->get();
 
         return response()
-            ->json(compact('page'));
+            ->json($table);
     }
 
     public function show(String $tenant, StoreCategory $category)
