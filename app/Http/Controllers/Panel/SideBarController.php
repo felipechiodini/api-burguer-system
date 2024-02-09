@@ -26,8 +26,7 @@ class SideBarController extends Controller
             ['label' => 'Comandas', 'name' => 'card.index', 'icon' => 'fa-regular fa-address-card'],
             ['label' => 'Banners', 'name' => 'banner.index', 'icon' => 'fa-regular fa-images'],
             ['label' => 'Produtos', 'name' => 'product.index', 'icon' => 'fa-solid fa-bag-shopping'],
-            ['label' => 'Horários', 'name' => 'schedule.index', 'icon' => 'fa-solid fa-clock'],
-
+            ['label' => 'Horários', 'name' => 'schedule.index', 'icon' => 'fa-solid fa-burger'],
 
             // ['label' => 'Pedidos', 'name' => 'order.index', 'icon' => 'fa-solid fa-users'],
             // ['label' => 'Configurações', 'name' => 'configuration.index', 'icon' => 'fa-solid fa-users'],

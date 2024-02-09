@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Panel;
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\StoreOrder;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use DB;
 
 class OrderManagerController extends Controller
 {
@@ -14,74 +14,92 @@ class OrderManagerController extends Controller
     public function index(Request $request)
     {
         $orders = StoreOrder::query()
-            ->with([
-                'customer',
-                'delivery.address',
-                'payment',
-                'items.product',
-                'items.additionals.additional',
-                'items.replacements.replacement'
-            ])
-            ->when($request->has('status'), function($query) use(&$request) {
+            ->select(['id', 'store_customer_id', 'origin', 'status', 'created_at'])
+            ->with('customer:id,name,cellphone')
+            ->when($request->query('status'), function($query) use(&$request) {
                 $query->where('status', $request->query('status'));
             })
-            ->when($request->has('id'), function($query) use(&$request) {
+            ->when($request->query('id'), function($query) use(&$request) {
                 $query->where('id', $request->query('id'));
             })
-            ->where('id', 1)
+            ->orderBy('id', 'desc')
             ->get()
-            ->map(function($order) {
-                return $order;
+            ->transform(function(StoreOrder $order) {
+                return [
+                    'id' => $order->id,
+                    'total' => 'R$ 35,00',
+                    'status' => $order->status,
+                    'status_label' => OrderStatus::fromValue($order->status)->description,
+                    'ordered_since' => 'Pedido realizado ' . Carbon::parse($order->created_at)->diffForHumans(now()),
+                    'customer' => [
+                        'name' => $order->customer->name,
+                        'cellphone' => $order->customer->cellphone
+                    ]
+                ];
             });
 
         return response()
             ->json(compact('orders'));
     }
 
-    public function preparation(Request $request)
+    public function show(String $slug, StoreOrder $order)
     {
-        DB::beginTransaction();
+        $order->load('customer');
+        $order->created_at_label = Carbon::parse($order->created_at)->translatedFormat('H\hm');
 
-        StoreOrder::query()
-            ->find($request->order_id)
-            ->update([
-                'status' => OrderStatus::PREPARATION
-            ]);
-
-        DB::commit();
 
         return response()
-            ->json(['message' => 'Status alterado para em preparação.']);
+            ->json(compact('order'));
     }
 
-    public function shipped(Request $request)
+    public function confirm(String $slug, StoreOrder $order)
     {
-        DB::beginTransaction();
+        if ($order->status !== OrderStatus::OPEN) {
+            throw new \Exception('Operação inválida para este status');
+        }
 
-        StoreOrder::query()->find($request->order_id)
-            ->update([
-                'status' => OrderStatus::SHIPPED
-            ]);
+        $newStatus = OrderStatus::PREPARATION;
 
-        DB::commit();
+        $order->update([
+            'status' => $newStatus
+        ]);
 
         return response()
-            ->json(['message' => 'Status alterado para enviado.']);
+            ->json([
+                'message' => 'Pedido confirmado',
+                'status' => $newStatus,
+                'label' => OrderStatus::getDescription($newStatus)
+            ]);
     }
 
-    public function canceled(Request $request)
+    public function dispatchOrder(String $slug, StoreOrder $order)
     {
-        DB::beginTransaction();
+        if ($order->status !== OrderStatus::PREPARATION) {
+            throw new \Exception('Operação inválida para este status');
+        }
 
-        StoreOrder::query()->find($request->order_id)
-            ->update([
-                'status' => OrderStatus::CANCELED
-            ]);
+        $newStatus = OrderStatus::DISPATCHED;
 
-        DB::commit();
+        $order->update([
+            'status' => $newStatus
+        ]);
 
         return response()
-            ->json(['message' => 'Status alterado para enviado.']);
+            ->json([
+                'message' => 'Pedido despachado',
+                'status' => $newStatus,
+                'label' => OrderStatus::getDescription($newStatus)
+            ]);
+    }
+
+    public function cancel(String $slug, StoreOrder $order)
+    {
+        $order->update([
+            'status' => OrderStatus::CANCELED
+        ]);
+
+        return response()
+            ->json(['message' => 'Pedido cancelado']);
     }
 
 }
