@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Order\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderPaymentFactory extends Factory
@@ -10,7 +11,7 @@ class OrderPaymentFactory extends Factory
     public function definition()
     {
         return [
-            'value' => $this->faker->numberBetween(10, 500)
+            'type' => Payment::getRandomValue()
         ];
     }
 

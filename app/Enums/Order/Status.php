@@ -1,11 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace App\Enums;
+namespace App\Enums\Order;
 
 use BenSampo\Enum\Enum;
 use BenSampo\Enum\Attributes\Description;
 
-final class OrderStatus extends Enum
+final class Status extends Enum
 {
     #[Description('Em Aberto')]
     const OPEN = 1;

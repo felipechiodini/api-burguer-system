@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\OrderAddress;
+use App\Models\OrderDelivery;
+use App\Models\OrderPayment;
+use App\Models\OrderProduct;
 use App\Models\StoreBanner;
 use App\Models\StoreOrder;
 use App\Models\ProductAdditional;
@@ -74,9 +78,11 @@ class UserSeeder extends Seeder
 
         StoreOrder::factory()
             ->count(50)
-            ->create([
-                'user_store_id' => 2
-            ]);
+            // ->has(OrderProduct::factory()->count(1), 'products')
+            ->has(OrderAddress::factory()->count(1), 'address')
+            ->has(OrderDelivery::factory()->count(1), 'delivery')
+            ->has(OrderPayment::factory()->count(1), 'payment')
+            ->create();
     }
 
 }

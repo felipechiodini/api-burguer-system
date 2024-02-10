@@ -202,6 +202,10 @@ return new class extends Migration
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->foreignId('store_customer_id')->references('id')->on('store_customers');
             $table->foreignId('store_coupon_id')->nullable()->default(null)->references('id')->on('store_coupons');
+            $table->float('products_total');
+            $table->float('delivery_fee');
+            $table->float('discount');
+            $table->float('total');
             $table->unsignedTinyInteger('origin');
             $table->unsignedTinyInteger('status');
             $table->timestamps();
@@ -246,23 +250,25 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->foreignId('store_order_id')->references('id')->on('store_orders');
             $table->unsignedTinyInteger('type');
-            $table->tinyText('observation')->nullable()->default(null);
             $table->timestamps();
         });
 
         Schema::create('order_payments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('store_order_id')->references('id')->on('store_orders');
-            $table->string('payment_type_id')->index('order_payments_payment_type_id_foreign');
-            $table->double('value')->nullable();
+            $table->unsignedTinyInteger('type');
             $table->timestamps();
         });
 
-        Schema::create('delivery_addresses', function (Blueprint $table) {
+        Schema::create('order_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('delivery_id')->references('id')->on('order_deliveries');
+            $table->foreignId('store_order_id')->references('id')->on('store_orders');
+            $table->string('cep');
             $table->string('street');
             $table->string('number');
+            $table->string('neighborhood');
+            $table->string('city');
+            $table->string('complement')->nullable();
             $table->timestamps();
         });
 

@@ -11,12 +11,7 @@ class OrderDelivery extends Model
 
     protected $fillable = [
         'store_order_id',
-        'type',
-        'observation'
+        'type'
     ];
 
-    public function address()
-    {
-        return $this->hasOne(DeliveryAddress::class, 'delivery_id');
-    }
 }

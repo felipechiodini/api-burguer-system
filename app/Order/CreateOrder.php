@@ -2,8 +2,8 @@
 
 namespace App\Order;
 
-use App\Enums\OrderOrigin;
-use App\Enums\OrderStatus;
+use App\Enums\Order\Origin;
+use App\Enums\Order\Status;
 use App\Models\DeliveryAddress;
 use App\Models\OrderDelivery;
 use App\Models\OrderPayment;
@@ -77,10 +77,9 @@ class CreateOrder {
     {
         $order = StoreOrder::query()
             ->create([
-                'user_store_id' => 1,
                 'store_customer_id' => $this->customer->id,
-                'status' => OrderStatus::OPEN,
-                'origin' => OrderOrigin::APP
+                'status' => Status::OPEN,
+                'origin' => Origin::APP
             ]);
 
         $this->products

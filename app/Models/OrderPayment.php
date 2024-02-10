@@ -11,8 +11,7 @@ class OrderPayment extends Model
 
     protected $fillable = [
         'store_order_id',
-        'payment_type_id',
-        'value'
+        'type'
     ];
 
 }

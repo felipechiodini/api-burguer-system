@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ProductPhoto
 {
+
     public function created()
     {
         Cache::clear();

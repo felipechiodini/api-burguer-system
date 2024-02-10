@@ -13,6 +13,10 @@ class StoreOrder extends Model
         'user_store_id',
         'store_customer_id',
         'store_coupon_id',
+        'products_total',
+        'delivery_fee',
+        'discount',
+        'total',
         'origin',
         'status'
     ];
@@ -22,7 +26,7 @@ class StoreOrder extends Model
         return $this->belongsTo(StoreCustomer::class, 'store_customer_id');
     }
 
-    public function items()
+    public function products()
     {
         return $this->hasMany(OrderProduct::class, 'store_order_id');
     }
@@ -40,6 +44,11 @@ class StoreOrder extends Model
     public function delivery()
     {
         return $this->hasOne(OrderDelivery::class, 'store_order_id');
+    }
+
+    public function address()
+    {
+        return $this->hasOne(OrderAddress::class, 'store_order_id');
     }
 
     public function payment()

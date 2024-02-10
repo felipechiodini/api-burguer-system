@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Enums\OrderOrigin;
-use App\Enums\OrderStatus;
+use App\Enums\Order\Origin;
+use App\Enums\Order\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StoreOrderFactory extends Factory
@@ -13,8 +13,12 @@ class StoreOrderFactory extends Factory
     {
         return [
             'store_customer_id' => 1,
-            'status' => OrderStatus::OPEN,
-            'origin' => OrderOrigin::CUSTOMER
+            'status' => Status::OPEN,
+            'origin' => Origin::APP,
+            'products_total' => 100,
+            'delivery_fee' => 10,
+            'discount' => 10,
+            'total' => 100,
         ];
     }
 

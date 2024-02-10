@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Enums\OrderStatus;
+use App\Enums\Order\Delivery;
+use App\Enums\Order\Payment;
+use App\Enums\Order\Status;
 use App\Http\Controllers\Controller;
+use App\Models\OrderAddress;
+use App\Models\OrderDelivery;
+use App\Models\OrderPayment;
+use App\Models\OrderProduct;
+use App\Models\StoreCustomer;
 use App\Models\StoreOrder;
+use App\Utils\Helper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,7 +22,7 @@ class OrderManagerController extends Controller
     public function index(Request $request)
     {
         $orders = StoreOrder::query()
-            ->select(['id', 'store_customer_id', 'origin', 'status', 'created_at'])
+            ->select(['id', 'store_customer_id', 'origin', 'status', 'total', 'created_at'])
             ->with('customer:id,name,cellphone')
             ->when($request->query('status'), function($query) use(&$request) {
                 $query->where('status', $request->query('status'));
@@ -27,10 +35,13 @@ class OrderManagerController extends Controller
             ->transform(function(StoreOrder $order) {
                 return [
                     'id' => $order->id,
-                    'total' => 'R$ 35,00',
+                    'total' => Helper::formatCurrency($order->total),
                     'status' => $order->status,
-                    'status_label' => OrderStatus::fromValue($order->status)->description,
+                    'status_label' => Status::fromValue($order->status)->description,
                     'ordered_since' => 'Pedido realizado ' . Carbon::parse($order->created_at)->diffForHumans(now()),
+                    'neighborhood' => 'João Pessoa',
+                    'distance' => '5km',
+                    'payment_type' => 'Cartão de Crédito',
                     'customer' => [
                         'name' => $order->customer->name,
                         'cellphone' => $order->customer->cellphone
@@ -44,21 +55,79 @@ class OrderManagerController extends Controller
 
     public function show(String $slug, StoreOrder $order)
     {
-        $order->load('customer');
-        $order->created_at_label = Carbon::parse($order->created_at)->translatedFormat('H\hm');
+        $products = OrderProduct::query()
+            ->select([
+                'store_products.name',
+                'store_products.description',
+                'order_products.amount',
+                'order_products.value',
+                'order_products.observation',
+            ])
+            ->join('store_products', fn ($join) => $join->on('store_products.id', 'order_products.store_product_id'))
+            ->where('store_order_id', $order->id)
+            ->get()
+            ->map(function($order) {
+                return [
+                    'name' => $order->name,
+                    'description' => $order->description,
+                    'amount' => $order->amount,
+                    'value' => Helper::formatCurrency($order->value),
+                    'observation' => $order->observation,
+                ];
+            });
 
+        $customer = StoreCustomer::query()
+            ->select('name', 'cellphone')
+            ->where('id', $order->store_customer_id)
+            ->first();
+
+        $address = OrderAddress::query()
+            ->select('cep', 'street', 'number', 'neighborhood', 'city', 'complement')
+            ->where('store_order_id', $order->id)
+            ->first();
+
+        $delivery = OrderDelivery::query()
+            ->select('type')
+            ->where('store_order_id', $order->id)
+            ->first();
+
+        $payment = OrderPayment::query()
+            ->select('type')
+            ->where('store_order_id', $order->id)
+            ->first();
+
+        $response = [
+            'id' => $order->id,
+            'status' => $order->status,
+            'created_at' => Carbon::parse($order->created_at)->translatedFormat('H\hm'),
+            'products_total' => Helper::formatCurrency(200),
+            'delivery_fee' => Helper::formatCurrency($order->delivery_fee),
+            'discount' => Helper::formatCurrency($order->discount),
+            'total' => Helper::formatCurrency($order->total),
+            'customer' => $customer,
+            'address' => $address,
+            'products' => $products,
+            'delivery' => [
+                'type' => $delivery->type,
+                'type_label' => Delivery::fromValue($delivery->type)->description
+            ],
+            'payment' => [
+                'type' => $payment->type,
+                'type_label' => Payment::fromValue($payment->type)->description
+            ],
+        ];
 
         return response()
-            ->json(compact('order'));
+            ->json(['order' => $response]);
     }
 
     public function confirm(String $slug, StoreOrder $order)
     {
-        if ($order->status !== OrderStatus::OPEN) {
+        if ($order->status !== Status::OPEN) {
             throw new \Exception('Operação inválida para este status');
         }
 
-        $newStatus = OrderStatus::PREPARATION;
+        $newStatus = Status::PREPARATION;
 
         $order->update([
             'status' => $newStatus
@@ -68,17 +137,17 @@ class OrderManagerController extends Controller
             ->json([
                 'message' => 'Pedido confirmado',
                 'status' => $newStatus,
-                'label' => OrderStatus::getDescription($newStatus)
+                'label' => Status::getDescription($newStatus)
             ]);
     }
 
     public function dispatchOrder(String $slug, StoreOrder $order)
     {
-        if ($order->status !== OrderStatus::PREPARATION) {
+        if ($order->status !== Status::PREPARATION) {
             throw new \Exception('Operação inválida para este status');
         }
 
-        $newStatus = OrderStatus::DISPATCHED;
+        $newStatus = Status::DISPATCHED;
 
         $order->update([
             'status' => $newStatus
@@ -88,14 +157,14 @@ class OrderManagerController extends Controller
             ->json([
                 'message' => 'Pedido despachado',
                 'status' => $newStatus,
-                'label' => OrderStatus::getDescription($newStatus)
+                'label' => Status::getDescription($newStatus)
             ]);
     }
 
     public function cancel(String $slug, StoreOrder $order)
     {
         $order->update([
-            'status' => OrderStatus::CANCELED
+            'status' => Status::CANCELED
         ]);
 
         return response()
