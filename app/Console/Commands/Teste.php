@@ -12,6 +12,6 @@ class Teste extends Command
 
     public function handle()
     {
-        //
+        event(new \App\Events\SendMessage('Hello'));
     }
 }
