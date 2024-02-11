@@ -2,26 +2,21 @@
 
 namespace App\Dashboard;
 
-class Chart {
+use JsonSerializable;
 
-    private $value;
-    private $name;
+abstract class Chart implements JsonSerializable {
+    abstract public function getName(): string;
+    abstract public function getConfiguration(): array;
+    abstract public function getOptions(): array;
+    abstract public function getSeries(): array;
 
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function serialize()
+    public function jsonSerialize(): array
     {
         return [
-            'name' => $this->name,
-            'value' => $this->value
+            'name' => $this->getName(),
+            'config' => $this->getConfiguration(),
+            'options' => $this->getOptions(),
+            'series' => $this->getSeries()
         ];
     }
 

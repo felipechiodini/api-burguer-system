@@ -21,6 +21,11 @@ class StoreOrder extends Model
         'status'
     ];
 
+    public function store()
+    {
+        return $this->belongsTo(UserStore::class);
+    }
+
     public function customer()
     {
         return $this->belongsTo(StoreCustomer::class, 'store_customer_id');

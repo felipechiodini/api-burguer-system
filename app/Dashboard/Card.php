@@ -2,26 +2,17 @@
 
 namespace App\Dashboard;
 
-class Card {
+use JsonSerializable;
 
-    private $value;
-    private $name;
+abstract class Card implements JsonSerializable {
+    abstract public function getName(): string;
+    abstract public function getValue();
 
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function serialize()
+    public function jsonSerialize(): array
     {
         return [
-            'name' => $this->name,
-            'value' => $this->value
+            'name' => $this->getName(),
+            'value' => $this->getValue()
         ];
     }
 

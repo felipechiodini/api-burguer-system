@@ -6,10 +6,12 @@ use App\Enums\Order\Delivery;
 use App\Enums\Order\Payment;
 use App\Enums\Order\Status;
 use App\Http\Controllers\Controller;
+use App\Maps\Maps;
 use App\Models\OrderAddress;
 use App\Models\OrderDelivery;
 use App\Models\OrderPayment;
 use App\Models\OrderProduct;
+use App\Models\StoreAddress;
 use App\Models\StoreCustomer;
 use App\Models\StoreOrder;
 use App\Utils\Helper;
@@ -33,15 +35,29 @@ class OrderManagerController extends Controller
             ->orderBy('id', 'desc')
             ->get()
             ->transform(function(StoreOrder $order) {
+                $address = OrderAddress::query()
+                    ->select('cep', 'street', 'number', 'neighborhood', 'city', 'complement')
+                    ->where('store_order_id', $order->id)
+                    ->first();
+
+                $payment = OrderPayment::query()
+                    ->select('type')
+                    ->where('store_order_id', $order->id)
+                    ->first();
+
+                $storeAddress = StoreAddress::query()
+                    ->select('cep')
+                    ->first();
+
                 return [
                     'id' => $order->id,
                     'total' => Helper::formatCurrency($order->total),
                     'status' => $order->status,
                     'status_label' => Status::fromValue($order->status)->description,
-                    'ordered_since' => 'Pedido realizado ' . Carbon::parse($order->created_at)->diffForHumans(now()),
-                    'neighborhood' => 'João Pessoa',
-                    'distance' => '5km',
-                    'payment_type' => 'Cartão de Crédito',
+                    'ordered_since' => Carbon::parse($order->created_at)->diffInSeconds(now()),
+                    'neighborhood' => $address->neighborhood,
+                    'distance' => Maps::getDistance($storeAddress->cep, $address->cep)->text,
+                    'payment_type' => Payment::getDescription($payment->type),
                     'customer' => [
                         'name' => $order->customer->name,
                         'cellphone' => $order->customer->cellphone
@@ -100,9 +116,8 @@ class OrderManagerController extends Controller
             'id' => $order->id,
             'status' => $order->status,
             'created_at' => Carbon::parse($order->created_at)->translatedFormat('H\hm'),
-            'products_total' => Helper::formatCurrency(200),
+            'products_total' => Helper::formatCurrency($order->products_total),
             'delivery_fee' => Helper::formatCurrency($order->delivery_fee),
-            'discount' => Helper::formatCurrency($order->discount),
             'total' => Helper::formatCurrency($order->total),
             'customer' => $customer,
             'address' => $address,
@@ -116,6 +131,10 @@ class OrderManagerController extends Controller
                 'type_label' => Payment::fromValue($payment->type)->description
             ],
         ];
+
+        if ($order->discount > 0) {
+            $response['discount'] = Helper::formatCurrency($order->discount);
+        }
 
         return response()
             ->json(['order' => $response]);

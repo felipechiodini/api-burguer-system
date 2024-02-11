@@ -23,7 +23,7 @@ Route::middleware('auth:api')
         Route::get('store', 'SideBarController@get');
         Route::get('store/all', 'UserStoreController@all');
         Route::post('store', 'UserStoreController@store');
-        Route::get('home', 'HomeController@get');
+        Route::get('dashboard', 'DashboardController@get');
         Route::get('address', 'StoreAddressController@get');
         Route::post('address', 'StoreAddressController@updateOrCreate');
         Route::get('schedule', 'StoreScheduleController@get');

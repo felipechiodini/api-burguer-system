@@ -78,7 +78,7 @@ class UserSeeder extends Seeder
 
         StoreOrder::factory()
             ->count(50)
-            // ->has(OrderProduct::factory()->count(1), 'products')
+            ->has(OrderProduct::factory()->count(1), 'products')
             ->has(OrderAddress::factory()->count(1), 'address')
             ->has(OrderDelivery::factory()->count(1), 'delivery')
             ->has(OrderPayment::factory()->count(1), 'payment')

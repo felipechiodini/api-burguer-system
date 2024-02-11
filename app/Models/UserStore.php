@@ -21,6 +21,11 @@ class UserStore extends ModelsTenant
         'updated_at'
     ];
 
+    public function address()
+    {
+        return $this->hasOne(StoreAddress::class);
+    }
+
     public function customers()
     {
         return $this->hasMany(StoreCustomer::class);
@@ -66,11 +71,6 @@ class UserStore extends ModelsTenant
     public function configuration()
     {
         return $this->hasOne(StoreConfiguration::class);
-    }
-
-    public function address()
-    {
-        return $this->hasOne(StoreAddress::class);
     }
 
     public function paymentOptions()
