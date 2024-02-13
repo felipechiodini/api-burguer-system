@@ -14,7 +14,7 @@ class StoreProductFactory extends Factory
             'store_category_id' => StoreCategory::all()->random()->id,
             'name' => collect(['Fritas', 'Hamburguer Duplo', 'Hamburguer', 'Coca-Cola', 'Skol'])->random(),
             'active' => true,
-            'description' => $this->faker->text(50)
+            'description' => $this->faker->text(200)
         ];
     }
 

@@ -64,8 +64,7 @@ class UserStore extends ModelsTenant
 
     public function banners()
     {
-        return $this->hasMany(StoreBanner::class)
-            ->orderBy('order');
+        return $this->hasMany(StoreBanner::class);
     }
 
     public function configuration()
@@ -83,7 +82,7 @@ class UserStore extends ModelsTenant
         return $this->belongsToMany(DeliveryType::class, StoreDeliveryType::class)->withPivot('minutes');
     }
 
-    public function isOpen()
+    public function isOpen(): Bool
     {
         return $this->configuration->store_open === true;
     }

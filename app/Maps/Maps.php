@@ -9,7 +9,7 @@ class Maps {
 
     public static function getDistance(String $origin, String $destiny)
     {
-        return Cache::remember("{$origin}-{$destiny}", now()->addDay(), function() use ($origin, $destiny) {
+        return Cache::remember("{$origin}-{$destiny}", now()->addYear(), function() use ($origin, $destiny) {
             $request = Http::baseUrl('https://maps.googleapis.com')
                 ->get('maps/api/distancematrix/json', [
                     'units' => 'metric',
@@ -22,7 +22,7 @@ class Maps {
                 return null;
             }
 
-            return (new MatrixResponse($request->object()))->getDistance();
+            return (new MatrixResponse($request->object()))->getDistanceFake();
         });
     }
 

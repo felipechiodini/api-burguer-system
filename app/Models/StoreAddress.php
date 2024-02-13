@@ -14,7 +14,7 @@ class StoreAddress extends Model
         'cep',
         'street',
         'number',
-        'district',
+        'neighborhood',
         'city',
         'state',
         'latitude',

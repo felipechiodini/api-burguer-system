@@ -15,13 +15,8 @@ class StoreConfiguration extends Model
         'store_open',
     ];
 
-    protected $hidden = [
-        'created_at',
-        'updated_at'
-    ];
-
     protected $casts = [
-        'store_open' => 'boolean',
+        'store_open' => 'boolean'
     ];
 
 }

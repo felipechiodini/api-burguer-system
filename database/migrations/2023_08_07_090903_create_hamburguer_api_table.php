@@ -61,7 +61,6 @@ return new class extends Migration
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->text('warning')->nullable();
             $table->double('minimum_order_value', 8, 2)->nullable();
-            $table->boolean('store_open')->default(false);
             $table->timestamps();
         });
 
@@ -71,7 +70,7 @@ return new class extends Migration
             $table->string('cep');
             $table->string('street');
             $table->string('number');
-            $table->string('district');
+            $table->string('neighborhood');
             $table->string('city');
             $table->string('state');
             $table->string('latitude')->nullable();

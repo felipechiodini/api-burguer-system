@@ -4,7 +4,12 @@ namespace App\Http\Controllers\Delivery;
 
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
+use App\Maps\Maps;
 use App\Models\ProductPhoto;
+use App\Models\StoreAddress;
+use App\Models\StoreBanner;
+use App\Models\StoreCategory;
+use App\Models\StoreConfiguration;
 use App\Models\StoreProduct;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
@@ -18,38 +23,41 @@ class StoreController extends Controller
         $store = Cache::remember($request->fullUrl(), now()->addDay(), function () use ($slug) {
             $store = UserStore::query()
                 ->where('slug', $slug)
-                ->first()
-                ->load([
-                    'categories',
-                    'configuration',
-                    'banners',
-                    'address',
-                    'paymentOptions',
-                    'deliveryOptions',
-                    'shippingOptions'
-                ]);
+                ->first();
 
-            $store->open = $store->isOpen();
+            $configuration = StoreConfiguration::query()
+                ->select('warning', 'minimum_order_value')
+                ->first();
 
-            $store =  $store->toArray();
+            $banners = StoreBanner::query()
+                ->select('src')
+                ->orderBy('order')
+                ->get()
+                ->map(function($banner) {
+                    return [
+                        'src' => $banner->src
+                    ];
+                });
 
-            foreach ($store['delivery_options'] as $key => $option) {
-                $new = [
-                    'id' => $option['id'],
-                    'name' => $option['name'],
-                    'icon' => $option['icon'],
-                    'time' => Helper::formatTime($option['pivot']['minutes'])
-                ];
+            $categories = StoreCategory::query()
+                ->select('name')
+                ->orderBy('order')
+                ->get();
 
-                $store['delivery_options'][$key] = $new;
-            }
+            $address = StoreAddress::query()
+                ->select('cep', 'street', 'number', 'neighborhood', 'city', 'state', 'latitude', 'longitude')
+                ->first();
 
-            $store['products'] = StoreProduct::query()
-                ->select(['store_products.id', 'store_products.name', 'store_products.description', 'store_products.store_category_id', 'store_categories.name as category_name'])
+            $products = StoreProduct::query()
+                ->select(
+                    'store_products.id',
+                    'store_products.name',
+                    'store_products.description',
+                    'store_products.store_category_id',
+                    'store_categories.name as category_name'
+                )
                 ->where('active', true)
-                ->join('store_categories', function($join) {
-                    $join->on('store_categories.id', 'store_products.store_category_id');
-                })
+                ->join('store_categories', fn ($join) => $join->on('store_categories.id', 'store_products.store_category_id'))
                 ->orderBy('store_categories.order')
                 ->get()
                 ->map(function(StoreProduct $product) {
@@ -57,15 +65,26 @@ class StoreController extends Controller
                         'id' => $product->id,
                         'name' => $product->name,
                         'description' => $product->description,
-                        'store_category_id' => $product->store_category_id,
-                        'price' => $product->getCurrentPrice(),
+                        'category_name' => $product->category_name,
+                        'price' => Helper::formatCurrency(40),
                         'photo' => ProductPhoto::query()
                             ->orderBy('order')
                             ->first()
                     ];
                 });
 
-            return $store;
+            return [
+                'name' => $store->name,
+                'open' => $store->isOpen(),
+                'configuration' => [
+                    'minimum_order_value' => Helper::formatCurrency($configuration->minimum_order_value),
+                    'warning' => $configuration->warning
+                ],
+                'banners' => $banners,
+                'categories' => $categories,
+                'address' => $address,
+                'products' => $products
+            ];
         });
 
         return response()
@@ -79,14 +98,18 @@ class StoreController extends Controller
             'longitude' => 'required'
         ]);
 
-        $address = app('currentTenant')
-            ->address()
-            ->first();
+        $address = StoreAddress::query()
+            ->first('latitude', 'longitude');
 
-        $distance = Helper::distanceBetweenTwoCoordinates($request->latitude, $request->longitude, $address->latitude, $address->longitude);
+        $distance = Maps::getDistance(
+            $request->latitude,
+            $request->longitude,
+            // $address->latitude,
+            // $address->longitude
+        );
 
-        return response()->json([
-            'distance' => number_format($distance, 1)
-        ]);
+        return response()
+            ->json(compact('distance'));
     }
+
 }

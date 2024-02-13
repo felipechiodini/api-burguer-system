@@ -13,6 +13,7 @@ use App\Models\ProductConfiguration;
 use App\Models\ProductPhoto;
 use App\Models\ProductPrice;
 use App\Models\ProductReplacement;
+use App\Models\StoreAddress;
 use App\Models\StoreCategory;
 use App\Models\StoreCustomer;
 use App\Models\StoreDeliveryType;
@@ -40,41 +41,58 @@ class UserSeeder extends Seeder
 
         $f->makeCurrent();
 
-        UserStore::factory()
-            ->has(StoreBanner::factory()->count(3), 'banners')
-            ->has(StoreCategory::factory()->count(10), 'categories')
-            ->has(StoreCustomer::factory()->count(30), 'customers')
-            ->has(StoreProduct::factory()
-                    ->has(ProductPrice::factory()->count(1), 'prices')
-                    ->has(ProductConfiguration::factory()->count(1), 'configuration')
-                    ->has(ProductPhoto::factory()->count(3), 'photos')
-                    ->has(ProductAdditional::factory()->count(3), 'additionals')
-                    ->has(ProductReplacement::factory()->count(3), 'replacements')
-                    ->count(30), 'products')
-            ->count(2)
-            ->state(new Sequence(
-                ['name' => 'Plankton Burguer', 'slug' => 'plankton'],
-                ['name' => 'Bona Burguer', 'slug' => 'bona']
-            ))
+        // UserStore::factory()
+        //     ->has(StoreBanner::factory()->count(3), 'banners')
+        //     ->has(StoreCategory::factory()->count(10), 'categories')
+        //     ->has(StoreCustomer::factory()->count(30), 'customers')
+        //     ->has(StoreProduct::factory()
+        //             ->has(ProductPrice::factory()->count(1), 'prices')
+        //             ->has(ProductConfiguration::factory()->count(1), 'configuration')
+        //             ->has(ProductPhoto::factory()->count(3), 'photos')
+        //             ->has(ProductAdditional::factory()->count(3), 'additionals')
+        //             ->has(ProductReplacement::factory()->count(3), 'replacements')
+        //             ->count(30), 'products')
+        //     ->count(2)
+        //     ->state(new Sequence(
+        //         ['name' => 'Plankton Burguer', 'slug' => 'plankton'],
+        //         ['name' => 'Bona Burguer', 'slug' => 'bona']
+        //     ))
+        //     ->create();
+
+        // StorePaymentType::query()
+        //     ->create([
+        //         'user_store_id' => 1,
+        //         'payment_type_id' => 'pix'
+        //     ]);
+
+        // StorePaymentType::query()
+        //     ->create([
+        //         'user_store_id' => 2,
+        //         'payment_type_id' => 'pix'
+        //     ]);
+
+        // StoreDeliveryType::query()->create(['user_store_id' => 2,'delivery_type_id' => 'delivery','minutes' => 60]);
+        // StoreDeliveryType::query()->create(['user_store_id' => 2,'delivery_type_id' => 'withdraw','minutes' => 30]);
+
+        // StoreShippingOptions::query()->create(['user_store_id' => 2, 'name' => 'João Pessoa', 'value' => 0]);
+        // StoreShippingOptions::query()->create(['user_store_id' => 2, 'name' => 'Vieiras', 'value' => 3]);
+
+        $categories = ['Entradas', 'Smashs', 'Frango', 'Churrasco', 'Kids', 'Porções', 'Combos', 'Bebidas', 'Milk', 'Cervejas'];
+        foreach ($categories as $key => $value) {
+            StoreCategory::create(['name' => $value, 'order' => $key]);
+        }
+
+        StoreAddress::factory()->count(1)->create();
+        StoreBanner::factory()->count(3)->create();
+        StoreCustomer::factory()->count(30)->create();
+        StoreProduct::factory()
+            ->has(ProductPrice::factory()->count(1), 'prices')
+            ->has(ProductConfiguration::factory()->count(1), 'configuration')
+            ->has(ProductPhoto::factory()->count(3), 'photos')
+            ->has(ProductAdditional::factory()->count(3), 'additionals')
+            ->has(ProductReplacement::factory()->count(3), 'replacements')
+            ->count(30)
             ->create();
-
-        StorePaymentType::query()
-            ->create([
-                'user_store_id' => 1,
-                'payment_type_id' => 'pix'
-            ]);
-
-        StorePaymentType::query()
-            ->create([
-                'user_store_id' => 2,
-                'payment_type_id' => 'pix'
-            ]);
-
-        StoreDeliveryType::query()->create(['user_store_id' => 2,'delivery_type_id' => 'delivery','minutes' => 60]);
-        StoreDeliveryType::query()->create(['user_store_id' => 2,'delivery_type_id' => 'withdraw','minutes' => 30]);
-
-        StoreShippingOptions::query()->create(['user_store_id' => 2, 'name' => 'João Pessoa', 'value' => 0]);
-        StoreShippingOptions::query()->create(['user_store_id' => 2, 'name' => 'Vieiras', 'value' => 3]);
 
         StoreOrder::factory()
             ->count(50)
