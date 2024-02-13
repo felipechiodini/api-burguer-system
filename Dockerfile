@@ -26,5 +26,7 @@ USER www
 USER $user
 
 EXPOSE 9000
+EXPOSE 6001
 
 CMD ["php-fpm"]
+# CMD ["/usr/bin/supervisorctl", "start", "all"]
