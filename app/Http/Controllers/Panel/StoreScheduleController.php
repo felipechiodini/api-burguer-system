@@ -11,12 +11,13 @@ use Illuminate\Http\Request;
 class StoreScheduleController extends Controller
 {
 
-    public function get(Request $request)
+    public function get()
     {
-        $schedules = StoreSchedule::where('user_store_id', $request->header(UserStore::HEADER_KEY))
+        $schedules = StoreSchedule::query()
             ->get();
 
-        return response()->json($schedules);
+        return response()
+            ->json(compact('schedules'));
     }
 
     public function createOrUpdate(Request $request)
@@ -32,26 +33,6 @@ class StoreScheduleController extends Controller
         }
 
         return response()->json(['message' => 'Horário salvo com sucesso!']);
-    }
-
-    public function forceStoreOpen()
-    {
-        StoreConfiguration::first()->update([
-            'force_store_open' => true,
-            'force_store_close' => false,
-        ]);
-
-        return response()->json(['message' => 'Loja aberta']);
-    }
-
-    public function forceStoreClose()
-    {
-        StoreConfiguration::first()->update([
-            'force_store_open' => false,
-            'force_store_close' => true,
-        ]);
-
-        return response()->json(['message' => 'Loja fechada']);
     }
 
 }

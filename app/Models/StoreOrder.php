@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\OrderCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,10 @@ class StoreOrder extends Model
         'total',
         'origin',
         'status'
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => OrderCreated::class
     ];
 
     public function store()

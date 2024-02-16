@@ -2,26 +2,25 @@
 
 namespace App\Events;
 
+use App\Models\StoreOrder;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class SendMessage implements ShouldBroadcast
+class OrderCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $msg;
-
-    public function __construct($msg)
+    public function __construct(StoreOrder $order)
     {
-        $this->$msg = $msg;
+        //
     }
 
     public function broadcastOn()
     {
-        return new Channel('messages');
+        return new Channel('notifications');
     }
 
 }

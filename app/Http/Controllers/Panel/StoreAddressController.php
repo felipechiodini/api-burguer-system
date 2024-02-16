@@ -3,32 +3,51 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\StoreAddress;
+use App\Types\Cep;
 use Illuminate\Http\Request;
-use App\Utils\Helper;
 
 class StoreAddressController extends Controller
 {
 
-    public function updateOrCreate(Request $request)
+    public function get()
+    {
+        $address = StoreAddress::query()
+            ->select('cep', 'street', 'number', 'neighborhood', 'city', 'state', 'latitude', 'longitude')
+            ->first();
+
+        return response()
+            ->json(['address' => [
+                'cep' => Cep::formatCep($address->cep),
+                'street' => $address->street,
+                'number' => $address->number,
+                'neighborhood' => $address->neighborhood,
+                'city' => $address->city,
+                'state' => $address->state,
+                'latitude' => $address->latitude,
+                'longitude' => $address->longitude,
+            ]]);
+    }
+
+    public function update(Request $request)
     {
         $request->validate([
             'cep' => 'required',
             'street' => 'required',
             'number' => 'required',
-            'district' => 'required',
+            'neighborhood' => 'required',
             'city' => 'required',
             'state' => 'required'
         ]);
 
-        app('currentTenant')
-            ->address()
-            ->updateOrCreate([
-                'cep' => Helper::clearAllIsNotNumber($request->cep),
+        StoreAddress::query()
+            ->update([
+                'cep' => new Cep($request->cep),
                 'street' => $request->street,
-                'district' => $request->district,
                 'number' => $request->number,
+                'neighborhood' => $request->neighborhood,
                 'city' => $request->city,
-                'state' => $request->state,
+                'state' => $request->state
             ]);
 
         return response()

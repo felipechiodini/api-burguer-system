@@ -15,13 +15,19 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
+
     public function index(Request $request)
     {
+        $builder = StoreCustomer::query()
+            ->select('id', 'name', 'cellphone', 'document');
+
         $table = Table::make()
-            ->setQuery(StoreCustomer::query())
-            ->addColumn('name', 'Nome', fn($value) => (new TypesName($value))->__toString())
-            ->addColumn('document', 'Documento', fn($value) => (new TypesDocument($value))->getFormated())
-            ->addColumn('cellphone', 'Telefone', fn($value) => (new TypesCellphone($value))->getFormated())
+            ->setEloquentBuilder($builder)
+            ->addColumn('Nome')
+            ->addColumn('Documento')
+            ->addColumn('Celular')
+            ->addModifier('document', fn($value) => TypesDocument::format($value))
+            ->addModifier('cellphone', fn($value) => TypesCellphone::format($value))
             ->setPerPage($request->per_page)
             ->get();
 

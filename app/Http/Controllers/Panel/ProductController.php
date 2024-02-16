@@ -4,44 +4,46 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProductPhoto;
-use App\Models\ProductPrice;
 use App\Models\StoreProduct;
-use DB;
+use App\Table\Table;
+use App\Utils\Helper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use DB;
 
 class ProductController extends Controller
 {
 
     public function index(Request $request)
     {
-        $request->validate([
-            'term' => 'string|nullable'
-        ]);
+        $builder = StoreProduct::query()
+            ->select('id', 'name', 'price_from', 'price_to');
 
-        $page = StoreProduct::query()
-            ->when($request->query('term'), function($query, String $term) {
-                $query->where('name', $term);
-            })
-            ->orderBy('id', 'desc')
-            ->paginate();
+        $table = Table::make()
+            ->setEloquentBuilder($builder)
+            ->addColumn('Nome')
+            ->addColumn('Preço de')
+            ->addColumn('Preço por')
+            ->addModifier('price_from', fn($value) => Helper::formatCurrency($value))
+            ->addModifier('price_to', fn($value) => Helper::formatCurrency($value))
+            ->setPerPage($request->per_page)
+            ->get();
 
         return response()
-            ->json(compact('page'));
+            ->json($table);
     }
 
     public function store(Request $request)
     {
         DB::beginTransaction();
 
-        $product = StoreProduct::create([
-            'user_store_id' => app('currentTenant')->id,
-            'store_category_id' => $request->category_id,
-            'name' => $request->name,
-            'category_id' => $request->category_id,
-            'description' => $request->description
-        ]);
+        $product = StoreProduct::query()
+            ->create([
+                'store_category_id' => $request->category_id,
+                'name' => $request->name,
+                'category_id' => $request->category_id,
+                'description' => $request->description
+            ]);
 
         foreach ($request->photos as $index => $photo) {
             $path = Storage::put('products', $photo);
@@ -53,14 +55,6 @@ class ProductController extends Controller
                     'order' => $index + 1
                 ]);
         }
-
-        ProductPrice::query()
-            ->create([
-                'store_product_id' => $product->id,
-                'value' => $request->price,
-                'start_date' => now(),
-                'end_date' => now()
-            ]);
 
         DB::commit();
 

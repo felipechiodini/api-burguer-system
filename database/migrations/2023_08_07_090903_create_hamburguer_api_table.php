@@ -122,12 +122,23 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('user_notifications', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->string('title');
+            $table->tinyText('body');
+            $table->boolean('read')->default(false);
+            $table->timestamps();
+        });
+
         Schema::create('store_products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->foreignId('store_category_id')->references('id')->on('store_categories');
             $table->boolean('active')->default(false);
             $table->string('name');
+            $table->float('price_from')->nullable();
+            $table->float('price_to');
             $table->text('description');
             $table->softDeletes();
             $table->timestamps();

@@ -2,19 +2,22 @@
 
 namespace App\Table;
 
+use Closure;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
-class Table {
-
-    private $query;
+class Table
+{
+    private $eloquentBuilder;
     private $columns;
     private $perPage;
     private $filters;
+    private $modifiers;
 
     public function __construct()
     {
         $this->columns = collect([]);
+        $this->modifiers = collect([]);
+        $this->filters = collect([]);
     }
 
     public static function make()
@@ -22,19 +25,21 @@ class Table {
         return new static();
     }
 
-    public function setQuery(Builder $query)
+    public function setEloquentBuilder(Builder $eloquentBuilder)
     {
-        $this->query = $query;
+        $this->eloquentBuilder = $eloquentBuilder;
         return $this;
     }
 
-    public function addColumn($name, $label, $modifier = null)
+    public function addModifier(String $column, Closure $closure): Self
     {
-        $this->columns->put($name, [
-            'label' => $label,
-            'modifier' => $modifier
-        ]);
+        $this->modifiers->put($column, $closure);
+        return $this;
+    }
 
+    public function addColumn(String $label): Self
+    {
+        $this->columns->push($label);
         return $this;
     }
 
@@ -44,51 +49,47 @@ class Table {
         return $this;
     }
 
-    public function setFilters($filters)
+    public function addFilter(Filter $filter)
     {
-        $this->filters = $filters;
+        $this->filters->push($filter);
         return $this;
+    }
+
+    private function getEloquentWithFilters(): Builder
+    {
+        $this->filters
+            ->each(function(Filter $filter) {
+                if ($filter->hasValue()) {
+                    $filter->apply($this->eloquentBuilder);
+                }
+            });
+
+        return $this->eloquentBuilder;
     }
 
     public function get()
     {
-        $query = $this->query
-            ->select($this->columns->keys()->toArray());
-
-        if ($this->filters !== null) {
-            foreach ($this->filters as $filter) {
-                $filter = json_decode($filter);
-                $where = new WhereResolver($filter->operator, $filter->value);
-                $query->where($filter->name, $where->getOperator(), $where->getValue());
-            }
-        }
-
-        $page = $query->orderBy('id', 'desc')
+        $page = $this->getEloquentWithFilters()
             ->paginate($this->perPage ?? 10);
 
-        foreach ($page->items() as $item) {
-            $this->columns->keys()
-                ->each(function($key) use($item) {
-                    $callback = $this->columns->get($key)['modifier'];
+        $page->transform(function($model) {
+            $this->modifiers
+                ->keys()
+                ->each(function($key) use($model) {
+                    $callback = $this->modifiers->get($key);
 
                     if ($callback !== null) {
-                        $item[$key] = $callback($item[$key]);
+                        $model[$key] = $callback($model[$key]);
                     }
                 });
-        }
 
-        $columns = $this->columns
-            ->keys()
-            ->map(function($key) {
-                return [
-                    'name' => $key,
-                    'label' => $this->columns->get($key)['label']
-                ];
-            });
+            return $model;
+        });
 
         return [
             'page' => $page,
-            'columns' => $columns
+            'columns' => $this->columns,
+            'filters' => $this->filters
         ];
     }
 

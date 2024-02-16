@@ -47,4 +47,9 @@ class Document {
         return $this->document;
     }
 
+    public static function format(String $document)
+    {
+        return (new static($document))->getFormated();
+    }
+
 }

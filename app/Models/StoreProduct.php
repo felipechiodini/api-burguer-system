@@ -15,6 +15,8 @@ class StoreProduct extends Model
         'store_category_id',
         'active',
         'name',
+        'price_from',
+        'price_to',
         'description'
     ];
 

@@ -12,18 +12,22 @@ class CategoryController extends Controller
 
     public function all(Request $request)
     {
-        $page = StoreCategory::query()
-            ->paginate();
+        $categories = StoreCategory::query()
+            ->select('id', 'name')
+            ->get();
 
         return response()
-            ->json(compact('page'));
+            ->json(compact('categories'));
     }
 
     public function index(Request $request)
     {
+        $builder = StoreCategory::query()
+            ->select('id', 'name');
+
         $table = Table::make()
-            ->setQuery(StoreCategory::query())
-            ->addColumn('name', 'Nome')
+            ->setEloquentBuilder($builder)
+            ->addColumn('Nome')
             ->setPerPage($request->per_page)
             ->get();
 

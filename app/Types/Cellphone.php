@@ -27,4 +27,9 @@ class Cellphone {
         return $this->cellphone;
     }
 
+    public static function format(String $cellphone)
+    {
+        return (new static($cellphone))->getFormated();
+    }
+
 }
