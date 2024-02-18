@@ -28,6 +28,7 @@ class ProductController extends Controller
             ->addColumn('Preço de')
             ->addColumn('Preço por')
             ->addFilter(new Text('name', 'Nome'))
+            ->addFilter(new Text('src', 'Imagem'))
             ->addModifier('price_from', fn($value) => Helper::formatCurrency($value))
             ->addModifier('price_to', fn($value) => Helper::formatCurrency($value))
             ->setPerPage($request->per_page)
