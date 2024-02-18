@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\StoreBanner;
-use App\Table\Filter;
+use App\Table\Filters\Text;
+use App\Table\Modifiers\ImagePathComplete;
 use App\Table\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -22,8 +23,8 @@ class BannerController extends Controller
             ->setEloquentBuilder($builder)
             ->addColumn('Nome')
             ->addColumn('Imagem')
-            ->addFilter(new Filter('name', 'Nome'))
-            ->addModifier('src', fn($value) => "https://d2sbwe6sqww2sr.cloudfront.net/$value")
+            ->addFilter(new Text('name', 'Nome'))
+            ->addModifier('src', new ImagePathComplete)
             ->setPerPage($request->per_page)
             ->get();
 

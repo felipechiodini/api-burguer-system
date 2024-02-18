@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\ProductPhoto;
 use App\Models\StoreProduct;
+use App\Table\Filters\Text;
 use App\Table\Table;
 use App\Utils\Helper;
 use Illuminate\Http\Request;
@@ -17,13 +18,16 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $builder = StoreProduct::query()
-            ->select('id', 'name', 'price_from', 'price_to');
+            ->select('store_products.id', 'store_products.name', 'product_photos.src', 'price_from', 'price_to')
+            ->leftJoin('product_photos', fn($join) => $join->on('product_photos.store_product_id', 'store_products.id'));
 
         $table = Table::make()
             ->setEloquentBuilder($builder)
+            ->addColumn('Imagem')
             ->addColumn('Nome')
             ->addColumn('Preço de')
             ->addColumn('Preço por')
+            ->addFilter(new Text('name', 'Nome'))
             ->addModifier('price_from', fn($value) => Helper::formatCurrency($value))
             ->addModifier('price_to', fn($value) => Helper::formatCurrency($value))
             ->setPerPage($request->per_page)

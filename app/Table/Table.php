@@ -4,6 +4,8 @@ namespace App\Table;
 
 use Closure;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Table\Filters\Filter;
+use App\Table\Modifiers\Modifier;
 
 class Table
 {
@@ -31,7 +33,7 @@ class Table
         return $this;
     }
 
-    public function addModifier(String $column, Closure $closure): Self
+    public function addModifier(String $column, Closure|Modifier $closure): Self
     {
         $this->modifiers->put($column, $closure);
         return $this;
@@ -79,8 +81,13 @@ class Table
                     $callback = $this->modifiers->get($key);
 
                     if ($callback !== null) {
+                        if ($callback instanceof Modifier) {
+                            $callback = $callback->getClosure();
+                        }
+
                         $model[$key] = $callback($model[$key]);
                     }
+
                 });
 
             return $model;
