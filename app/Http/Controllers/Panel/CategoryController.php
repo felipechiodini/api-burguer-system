@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\StoreCategory;
+use App\Table\Filters\Text;
 use App\Table\Table;
 use Illuminate\Http\Request;
 
@@ -28,6 +29,7 @@ class CategoryController extends Controller
         $table = Table::make()
             ->setEloquentBuilder($builder)
             ->addColumn('Nome')
+            ->addFilter(new Text('name', 'Nome'))
             ->setPerPage($request->per_page)
             ->get();
 

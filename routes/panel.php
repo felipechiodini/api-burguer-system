@@ -12,25 +12,24 @@ Route::group(['prefix' => 'auth'], function() {
 
 Route::middleware('auth:api')
     ->group(function() {
-        Route::get('stores', 'UserStoreController@all');
+        Route::get('stores', 'StoreController@all');
         Route::get('store', 'SideBarController@get');
+        Route::post('store', 'StoreController@store');
     });
 
 Route::middleware('auth:api')
     ->middleware('tenant')
     ->prefix('{tenant}')
     ->group(function() {
-        Route::get('store', 'SideBarController@get');
-        Route::get('store/all', 'UserStoreController@all');
-        Route::post('store', 'UserStoreController@store');
         Route::get('dashboard', 'DashboardController@get');
+        Route::get('store', 'StoreController@get');
+        Route::get('sidebar', 'SideBarController@get');
         Route::get('address', 'StoreAddressController@get');
         Route::post('address', 'StoreAddressController@update');
         Route::get('schedule', 'StoreScheduleController@get');
         Route::post('schedule', 'StoreScheduleController@createOrUpdate');
         Route::get('configuration', 'StoreConfigurationController@get');
         Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
-        Route::post('store/status', 'UserStoreController@setStatus');
         Route::get('category/all', 'CategoryController@all');
         Route::apiResource('category', 'CategoryController');
         Route::apiResource('customer', 'CustomerController');

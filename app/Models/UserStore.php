@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Multitenancy\Models\Tenant as ModelsTenant;
 
@@ -84,6 +85,26 @@ class UserStore extends ModelsTenant
 
     public function isOpen(): Bool
     {
-        return $this->configuration->store_open === true;
+        $dayOfWeek = Carbon::today()->dayOfWeek + 1;
+
+        $withinSchedule = StoreSchedule::query()
+            ->where('week_day', $dayOfWeek)
+            ->where('start', '<=', now()->toTimeString())
+            ->where('end', '>=', now()->toTimeString())
+            ->exists();
+
+        $hasProgramedPause = StoreScheduledBreak::query()
+            ->where('start', '<=', now()->toDateTimeString())
+            ->where('end', '>=', now()->toDateTimeString())
+            ->exists();
+
+        $hasEmergencyClose = StoreEmergencyClose::query()
+            ->where('ends_at', '>=', now()->toDateTimeString())
+            ->exists();
+
+        return $withinSchedule === true &&
+            $hasEmergencyClose === false &&
+            $hasProgramedPause === false;
     }
+
 }

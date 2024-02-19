@@ -12,13 +12,8 @@ class StoreSchedule extends Model
     protected $fillable = [
         'user_store_id',
         'week_day',
-        'open_at',
-        'close_at',
-        'closed'
-    ];
-
-    protected $casts = [
-        'closed' => 'boolean'
+        'start',
+        'end'
     ];
 
     protected static function boot()

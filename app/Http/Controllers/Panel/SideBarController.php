@@ -20,12 +20,11 @@ class SideBarController extends Controller
             ['label' => 'Banners', 'name' => 'banner.index', 'icon' => 'fa-regular fa-images'],
             ['label' => 'Produtos', 'name' => 'product.index', 'icon' => 'fa-solid fa-bag-shopping'],
             ['label' => 'Horários', 'name' => 'schedule.index', 'icon' => 'fa-solid fa-burger'],
+            ['label' => 'Configurações', 'name' => 'configuration.index', 'icon' => 'fa-solid fa-gear'],
         ];
 
-        $store = app('currentTenant');
-
         return response()
-            ->json(compact('sidebar', 'store'));
+            ->json(compact('sidebar'));
     }
 
 }

@@ -144,6 +144,27 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('store_schedules', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->unsignedTinyInteger('week_day');
+            $table->time('start');
+            $table->time('end');
+        });
+
+        Schema::create('store_scheduled_breaks', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->timestamp('start');
+            $table->timestamp('end');
+        });
+
+        Schema::create('store_emergency_closes', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->timestamp('ends_at');
+        });
+
         Schema::create('product_photos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('store_product_id')->references('id')->on('store_products');

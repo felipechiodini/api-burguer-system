@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\StoreConfiguration;
 use App\Models\StoreSchedule;
-use App\Models\UserStore;
 use Illuminate\Http\Request;
 
 class StoreScheduleController extends Controller
@@ -32,7 +30,8 @@ class StoreScheduleController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Horário salvo com sucesso!']);
+        return response()
+            ->json(['message' => 'Horário salvo com sucesso!']);
     }
 
 }
