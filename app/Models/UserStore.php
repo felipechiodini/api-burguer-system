@@ -14,7 +14,7 @@ class UserStore extends ModelsTenant
         'user_id',
         'name',
         'slug',
-        'database'
+        'logo'
     ];
 
     protected $hidden = [

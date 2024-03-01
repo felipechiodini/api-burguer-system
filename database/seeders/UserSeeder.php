@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\OrderAddress;
+use App\Models\DeliveryAddress;
 use App\Models\OrderDelivery;
 use App\Models\OrderPayment;
 use App\Models\OrderProduct;
@@ -16,13 +16,9 @@ use App\Models\ProductReplacement;
 use App\Models\StoreAddress;
 use App\Models\StoreCategory;
 use App\Models\StoreCustomer;
-use App\Models\StoreDeliveryType;
-use App\Models\StorePaymentType;
 use App\Models\StoreProduct;
-use App\Models\StoreShippingOptions;
 use App\Models\User;
 use App\Models\UserStore;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -36,7 +32,8 @@ class UserSeeder extends Seeder
                 ->create([
                     'user_id' => 1,
                     'name' => 'Outro Burguer',
-                    'slug' => 'outro'
+                    'slug' => 'outro',
+                    'logo' => 'logo.png'
                 ]);
 
         $f->makeCurrent();
@@ -94,13 +91,12 @@ class UserSeeder extends Seeder
             ->count(30)
             ->create();
 
-        StoreOrder::factory()
-            ->count(50)
-            ->has(OrderProduct::factory()->count(1), 'products')
-            ->has(OrderAddress::factory()->count(1), 'address')
-            ->has(OrderDelivery::factory()->count(1), 'delivery')
-            ->has(OrderPayment::factory()->count(1), 'payment')
-            ->create();
+        // StoreOrder::factory()
+        //     ->count(50)
+        //     ->has(OrderProduct::factory(1), 'products')
+        //     ->has(OrderDelivery::factory(1), 'delivery')
+        //     ->has(OrderPayment::factory(1), 'payment')
+        //     ->create();
     }
 
 }

@@ -11,7 +11,7 @@ class StoreDeliveryType extends Model
 
     protected $fillable = [
         'user_store_id',
-        'delivery_type_id',
+        'delivery_type',
         'minutes'
     ];
 

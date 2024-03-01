@@ -56,11 +56,6 @@ class StoreOrder extends Model
         return $this->hasOne(OrderDelivery::class, 'store_order_id');
     }
 
-    public function address()
-    {
-        return $this->hasOne(OrderAddress::class, 'store_order_id');
-    }
-
     public function payment()
     {
         return $this->hasOne(OrderPayment::class, 'store_order_id');

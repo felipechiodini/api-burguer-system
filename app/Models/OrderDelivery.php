@@ -9,9 +9,13 @@ class OrderDelivery extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'store_order_id',
-        'type'
+        'type',
+        'target_type',
+        'target_id',
     ];
 
 }

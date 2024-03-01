@@ -9,5 +9,5 @@ Route::middleware('tenant')
         Route::get('distance', 'StoreController@distance');
         Route::get('products', 'ProductController@get');
         Route::get('product/{product}', 'ProductController@show');
-        Route::post('cart/finish', 'OrderController@create');
+        Route::post('order/place', 'OrderController@create');
     });

@@ -11,6 +11,6 @@ class StorePaymentType extends Model
 
     protected $fillable = [
         'user_store_id',
-        'payment_type_id',
+        'payment_type',
     ];
 }

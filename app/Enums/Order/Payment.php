@@ -10,7 +10,7 @@ final class Payment extends Enum
     #[Description('Dinheiro')]
     const CASH = 1;
     #[Description('Cartão de Crédito')]
-    const CREDIT_cARD = 2;
+    const CREDIT_CARD = 2;
     #[Description('Cartão Débito')]
     const DEBIT_CARD = 3;
     #[Description('Pix')]

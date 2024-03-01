@@ -2,29 +2,25 @@
 
 namespace App\Types;
 
-use App\Enums\DeliveryType as EnumsDeliveryType;
+use App\Enums\Order\Delivery as OrderDelivery;
 
 class Delivery {
 
     private $type;
 
-    public function __construct(String $type)
+    public function __construct(OrderDelivery $type)
     {
-        if ($this->isValid($type) === false) {
-            throw new \Exception('Tipo de entrega inválido');
-        }
-
         $this->type = $type;
     }
 
-    public function isValid(String $type): bool
+    public function isValid($type): bool
     {
-        return EnumsDeliveryType::hasValue($type);
+        return OrderDelivery::hasValue($type);
     }
 
-    public function getEnum(): EnumsDeliveryType
+    public function getEnum(): OrderDelivery
     {
-        return EnumsDeliveryType::fromValue($this->type);
+        return OrderDelivery::fromValue($this->type);
     }
 
     public function __toString()

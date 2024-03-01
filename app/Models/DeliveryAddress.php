@@ -10,14 +10,13 @@ class DeliveryAddress extends Model
     use HasFactory;
 
     protected $fillable = [
-        'delivery_id',
+        'order_delivery_id',
         'cep',
         'street',
         'number',
-        'district',
+        'neighborhood',
         'city',
-        'state',
-        'latitude',
-        'longitude'
+        'complement'
     ];
+
 }

@@ -64,33 +64,6 @@ class StoreProduct extends Model
         return $this->belongsTo(StoreCategory::class, 'store_category_id');
     }
 
-    public function getCurrentPrice()
-    {
-        $now = now();
-
-        $modelPrice = $this->prices()
-            ->where('start_date', '<', $now)
-            ->where('end_date', '>', $now)
-            ->first();
-
-        $modelPromotion = $this->promotion()
-            ->where('start_date', '<', $now)
-            ->where('end_date', '>', $now)
-            ->first();
-
-        if ($modelPromotion) {
-            return (object) [
-                'current' => $modelPrice->value - Helper::calculatePercentDiscount($modelPrice->value, $modelPromotion->value),
-                'previous' => $modelPrice->value
-            ];
-        }
-
-        return (object) [
-            'current' => $modelPrice->value,
-            'previous' => null
-        ];
-    }
-
     public function active()
     {
         $errors = collect([]);

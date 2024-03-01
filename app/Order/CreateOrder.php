@@ -2,7 +2,9 @@
 
 namespace App\Order;
 
+use App\Enums\Order\Delivery as EnumsOrderDelivery;
 use App\Enums\Order\Origin;
+use App\Enums\Order\Payment as EnumsOrderPayment;
 use App\Enums\Order\Status;
 use App\Models\DeliveryAddress;
 use App\Models\OrderDelivery;
@@ -42,7 +44,7 @@ class CreateOrder {
         return $this;
     }
 
-    public function setDelivery(Delivery $type, String $observation)
+    public function setDelivery(EnumsOrderDelivery $type, ?String $observation)
     {
         $this->delivery = [
             'type' => $type,
@@ -58,10 +60,10 @@ class CreateOrder {
         return $this;
     }
 
-    public function setPayment(Payment $type)
+    public function setPayment(EnumsOrderPayment $type)
     {
         $this->payment = [
-            'payment_type_id' => $type
+            'type' => $type
         ];
 
         return $this;
@@ -75,45 +77,54 @@ class CreateOrder {
 
     public function create()
     {
+        $deliveryFee = $this->getDeliveryFee();
+
+        $total = $this->products->reduce(fn($accumulator, $aaaaaa) => $accumulator += $aaaaaa->getValue());
+
         $order = StoreOrder::query()
             ->create([
                 'store_customer_id' => $this->customer->id,
                 'status' => Status::OPEN,
-                'origin' => Origin::APP
+                'origin' => Origin::APP,
+                'products_total' => $total,
+                'delivery_fee' => $deliveryFee,
+                'discount' => 0,
+                'total' => $total + $deliveryFee,
             ]);
 
-        $this->products
-            ->each(function(OrderProduct $product) use($order) {
-                ModelsOrderProduct::query()
-                    ->create([
-                        'store_order_id' => $order->id,
-                        'store_product_id' => $product->model->id,
-                        'value' => $product->getValue(),
-                        'amount' => $product->amount,
-                        'observation' => $product->observation
-                    ]);
+        $this->products->each(function(OrderProduct $product) use($order, $total) {
+            $total += $product->getValue();
 
-                $product->additionals
-                    ->each(function(Additional $additional) use($product) {
-                        OrderProductAdditional::query()
-                            ->create([
-                                'order_product_id' => $product->model->id,
-                                'product_additional_id' => $additional->model->id,
-                                'value' => $additional->getValue(),
-                                'amount' => $additional->amount
-                            ]);
-                    });
+            ModelsOrderProduct::query()
+                ->create([
+                    'store_order_id' => $order->id,
+                    'store_product_id' => $product->model->id,
+                    'value' => $product->getValue(),
+                    'amount' => $product->amount,
+                    'observation' => $product->observation
+                ]);
 
-                $product->replacements
-                    ->each(function(Replacement $replacement) use($product) {
-                        OrderProductReplacement::query()
-                            ->create([
-                                'order_product_id' => $product->model->id,
-                                'product_replacement_id' => $replacement->model->id,
-                                'value' => $replacement->getValue()
-                            ]);
+            $product->additionals
+                ->each(function(Additional $additional) use($product) {
+                    OrderProductAdditional::query()
+                        ->create([
+                            'order_product_id' => $product->model->id,
+                            'product_additional_id' => $additional->model->id,
+                            'value' => $additional->getValue(),
+                            'amount' => $additional->amount
+                        ]);
                 });
+
+            $product->replacements
+                ->each(function(Replacement $replacement) use($product) {
+                    OrderProductReplacement::query()
+                        ->create([
+                            'order_product_id' => $product->model->id,
+                            'product_replacement_id' => $replacement->model->id,
+                            'value' => $replacement->getValue()
+                        ]);
             });
+        });
 
         $delivery = OrderDelivery::query()
             ->create(array_merge($this->delivery, [
@@ -122,13 +133,20 @@ class CreateOrder {
 
         DeliveryAddress::query()
             ->create(array_merge($this->address, [
-                'delivery_id' => $delivery->id
+                'order_delivery_id' => $delivery->id
             ]));
 
         OrderPayment::query()
             ->create(array_merge($this->payment, [
                 'store_order_id' => $order->id
             ]));
+
+        return $order;
+    }
+
+    private function getDeliveryFee()
+    {
+        return 10;
     }
 
 }

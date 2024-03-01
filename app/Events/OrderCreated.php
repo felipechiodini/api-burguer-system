@@ -13,7 +13,7 @@ class OrderCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(StoreOrder $order)
+    public function __construct(public StoreOrder $order)
     {
         //
     }

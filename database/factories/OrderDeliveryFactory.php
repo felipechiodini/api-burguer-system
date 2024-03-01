@@ -10,7 +10,9 @@ class OrderDeliveryFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => Delivery::getRandomValue()
+            'type' => Delivery::getRandomValue(),
+            'target_type' => 'orderadd',
+            'target_id' => 1
         ];
     }
 }

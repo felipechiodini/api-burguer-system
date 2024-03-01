@@ -54,7 +54,7 @@ class OrderProduct {
             $replacementPrice =+ $replacement->getValue();
         }
 
-        return $this->model->getCurrentPrice()->current + $additionalPrice + $replacementPrice;
+        return ($this->model->price_to + $additionalPrice + $replacementPrice) * $this->amount;
     }
 
 }

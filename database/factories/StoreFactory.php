@@ -12,6 +12,7 @@ class StoreFactory extends Factory
         return [
             'name' => 'Plankton Burguer',
             'slug' => 'plankton',
+            'logo' => 'aaaaaaaaa'
         ];
     }
 

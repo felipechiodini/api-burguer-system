@@ -2,13 +2,13 @@
 
 namespace App\Types;
 
-use App\Enums\OrderPaymentType;
+use App\Enums\Order\Payment as OrderPayment;
 
 class Payment {
 
     private $type;
 
-    public function __construct(String $type)
+    public function __construct($type)
     {
         if ($this->isValid($type) === false) {
             throw new \Exception('Tipo de pagamento inválido');
@@ -17,14 +17,14 @@ class Payment {
         $this->type = $type;
     }
 
-    public function isValid(String $type): bool
+    public function isValid($type): Bool
     {
-        return OrderPaymentType::hasValue($type);
+        return OrderPayment::hasValue($type);
     }
 
-    public function getEnum(): OrderPaymentType
+    public function getEnum(): OrderPayment
     {
-        return OrderPaymentType::fromValue($this->type);
+        return OrderPayment::fromValue($this->type);
     }
 
     public function __toString()

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Delivery;
 
+use App\Enums\Order\Delivery as OrderDelivery;
+use App\Enums\Order\Payment as OrderPayment;
+use App\Events\OrderCreated;
 use App\Order\CreateCustomer;
 use App\Order\CreateOrder;
 use App\Http\Controllers\Controller;
@@ -12,10 +15,8 @@ use App\Order\Additional;
 use App\Order\OrderProduct;
 use App\Order\Replacement;
 use App\Types\Cellphone;
-use App\Types\Delivery;
 use App\Types\Document;
 use App\Types\Name;
-use App\Types\Payment;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -37,26 +38,29 @@ class OrderController extends Controller
 
         $customer = CreateCustomer::make()
             ->setName(new Name($request->json('customer.name')))
-            ->setDocument(new Document($request->json('customer.document')))
-            ->setCellphone(new Cellphone($request->json('customer.cellphone')))
-            ->create();
+            ->setCellphone(new Cellphone($request->json('customer.cellphone')));
+
+        if ($request->has('document')) {
+            $customer->setDocument(new Document($request->json('customer.document')));
+        }
 
         $orderBuilder = CreateOrder::make()
-            ->setCustomer($customer)
-            ->setDelivery(new Delivery($request->json('delivery.type')), $request->json('delivery.observation'))
-            ->setPayment(new Payment($request->json('payment.type')));
+            ->setCustomer($customer->create())
+            ->setDelivery(OrderDelivery::fromValue($request->json('delivery.type')), $request->json('delivery.observation'))
+            ->setPayment(OrderPayment::fromValue($request->json('payment.type')))
+            ->setAddress($request->json('address'));
 
         foreach ($request->products as $product) {
             $orderProduct = new OrderProduct(
                 StoreProduct::find($product['id']),
-                $product['amount']
+                $product['count']
             );
 
             if (@$product['additionals'] !== null) {
                 foreach ($product['additionals'] as $additional) {
                     $orderProduct->addAdditional(
                         new Additional(ProductAdditional::find($additional['id']),
-                        $additional['amount'])
+                        $additional['count'])
                     );
                 }
             }

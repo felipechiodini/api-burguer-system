@@ -7,7 +7,7 @@ use App\Enums\Order\Payment;
 use App\Enums\Order\Status;
 use App\Http\Controllers\Controller;
 use App\Maps\Maps;
-use App\Models\OrderAddress;
+use App\Models\DeliveryAddress;
 use App\Models\OrderDelivery;
 use App\Models\OrderPayment;
 use App\Models\OrderProduct;
@@ -35,9 +35,14 @@ class OrderManagerController extends Controller
             ->orderBy('id', 'desc')
             ->get()
             ->transform(function(StoreOrder $order) {
-                $address = OrderAddress::query()
-                    ->select('cep', 'street', 'number', 'neighborhood', 'city', 'complement')
-                    ->where('store_order_id', $order->id)
+                $delivery = OrderDelivery::query()
+                    ->select('id', 'type')
+                    ->Where('store_order_id', $order->id)
+                    ->first();
+
+                $address = DeliveryAddress::query()
+                    ->select('cep', 'neighborhood')
+                    ->where('order_delivery_id', $delivery->id)
                     ->first();
 
                 $payment = OrderPayment::query()
@@ -56,7 +61,7 @@ class OrderManagerController extends Controller
                     'status_label' => Status::fromValue($order->status)->description,
                     'ordered_since' => Carbon::parse($order->created_at)->diffInSeconds(now()),
                     'neighborhood' => $address->neighborhood,
-                    'distance' => Maps::getDistance($storeAddress->cep, $address->cep)->text,
+                    'distance' => 10,
                     'payment_type' => Payment::getDescription($payment->type),
                     'customer' => [
                         'name' => $order->customer->name,
@@ -97,14 +102,14 @@ class OrderManagerController extends Controller
             ->where('id', $order->store_customer_id)
             ->first();
 
-        $address = OrderAddress::query()
-            ->select('cep', 'street', 'number', 'neighborhood', 'city', 'complement')
+        $delivery = OrderDelivery::query()
+            ->select('id', 'type')
             ->where('store_order_id', $order->id)
             ->first();
 
-        $delivery = OrderDelivery::query()
-            ->select('type')
-            ->where('store_order_id', $order->id)
+        $address = DeliveryAddress::query()
+            ->select('cep', 'street', 'number', 'neighborhood', 'city', 'complement')
+            ->where('order_delivery_id', $delivery->id)
             ->first();
 
         $payment = OrderPayment::query()
