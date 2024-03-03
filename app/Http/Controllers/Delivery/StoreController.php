@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Delivery;
 
+use App\Enums\Order\Delivery;
+use App\Enums\Order\Payment;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use App\Maps\Maps;
@@ -10,6 +12,9 @@ use App\Models\StoreAddress;
 use App\Models\StoreBanner;
 use App\Models\StoreCategory;
 use App\Models\StoreConfiguration;
+use App\Models\StoreDelivery;
+use App\Models\StoreNeighborhood;
+use App\Models\StorePayment;
 use App\Models\StoreProduct;
 use App\Models\StoreTable;
 use App\Models\UserStore;
@@ -85,49 +90,43 @@ class StoreController extends Controller
                     ];
                 });
 
+            $deliveryOptions = StoreDelivery::query()
+                ->select('type', 'minutes')
+                ->get()
+                ->map(function($model) {
+                    return [
+                        'type' => $model->type,
+                        'name' => Delivery::getDescription($model->type),
+                        'minutes' => $model->minutes
+                    ];
+                });
+
+            $paymentOptions = StorePayment::query()
+                ->select('type')
+                ->get()
+                ->map(function($model) {
+                    return [
+                        'type' => $model->type,
+                        'name' => Payment::getDescription($model->type)
+                    ];
+                });
+
+            $neighborhoods = StoreNeighborhood::query()
+                ->select('id', 'name', 'price')
+                ->where('active', true)
+                ->get();
+
             return [
                 'name' => $store->name,
                 'open' => $store->isOpen(),
-                'configuration' => [
-                    'minimum_order_value' => $configuration->minimum_order_value,
-                    'warning' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ut voluptates in esse, eaque eius laborum! Hic voluptas magnam dolorum eveniet, porro dolorem architecto quaerat veritatis vel laboriosam blanditiis praesentium fugit!'
-                ],
+                'configuration' => $configuration,
                 'banners' => $banners,
                 'categories' => $categories,
                 'address' => $address,
                 'products' => $products,
-                'delivery_options' => [
-                    [
-                        'id' => 'delivery',
-                        'name' => 'Entrega',
-                        'icon' => 'fa-solid fa-motorcycle',
-                        'time' => '30'
-                    ],
-                    [
-                        'id' => 'withdraw',
-                        'name' => 'Retirada',
-                        'icon' => 'fa-solid fa-shop',
-                        'time' => '20'
-                    ]
-                ],
-                'payment_options' => [
-                    [
-                        'type' => 1,
-                        'name' => 'Dinheiro'
-                    ],
-                    [
-                        'type' => 2,
-                        'name' => 'Cartão de Crédito'
-                    ],
-                    [
-                        'type' => 3,
-                        'name' => 'Cartão de Débito'
-                    ],
-                    [
-                        'type' => 4,
-                        'name' => 'Pix'
-                    ]
-                ],
+                'neighborhood_options' => $neighborhoods,
+                'delivery_options' => $deliveryOptions,
+                'payment_options' => $paymentOptions,
             ];
         });
 

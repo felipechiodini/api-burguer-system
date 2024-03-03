@@ -27,17 +27,19 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('store_payment_types', function (Blueprint $table) {
+        Schema::create('store_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
-            $table->unsignedTinyInteger('payment_type');
+            $table->unsignedTinyInteger('type');
+            $table->boolean('active');
         });
 
-        Schema::create('store_delivery_types', function (Blueprint $table) {
+        Schema::create('store_deliveries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
-            $table->unsignedTinyInteger('delivery_type');
+            $table->unsignedTinyInteger('type');
             $table->unsignedInteger('minutes');
+            $table->boolean('active');
         });
 
         Schema::create('store_configurations', function (Blueprint $table) {
@@ -62,11 +64,20 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('store_shipping_options', function (Blueprint $table) {
+        Schema::create('store_neighborhoods', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->boolean('active');
             $table->string('name');
-            $table->float('value');
+            $table->float('price');
+        });
+
+        Schema::create('user_notifications', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->string('title');
+            $table->text('content');
+            $table->boolean('read')->default(false);
             $table->timestamps();
         });
 
@@ -109,15 +120,6 @@ return new class extends Migration
             $table->string('code');
             $table->double('value', 8, 2);
             $table->unsignedTinyInteger('type');
-            $table->timestamps();
-        });
-
-        Schema::create('user_notifications', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->string('title');
-            $table->tinyText('body');
-            $table->boolean('read')->default(false);
             $table->timestamps();
         });
 

@@ -12,7 +12,12 @@ class UserNotification extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'body',
+        'content',
         'read',
     ];
+
+    protected $casts = [
+        'read' => 'boolean'
+    ];
+
 }

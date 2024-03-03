@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreSchedule extends Model
+class StoreDelivery extends Model
 {
     use HasFactory;
 
@@ -13,9 +13,9 @@ class StoreSchedule extends Model
 
     protected $fillable = [
         'user_store_id',
-        'week_day',
-        'start',
-        'end'
+        'active',
+        'type',
+        'minutes'
     ];
 
     protected static function boot()

@@ -73,17 +73,12 @@ class UserStore extends ModelsTenant
         return $this->hasOne(StoreConfiguration::class);
     }
 
-    public function paymentOptions()
+    public function link()
     {
-        return $this->belongsToMany(PaymentType::class, StorePaymentType::class);
+        return "https://burguersystem.online/{$this->slug}";
     }
 
-    public function deliveryOptions()
-    {
-        return $this->belongsToMany(DeliveryType::class, StoreDeliveryType::class)->withPivot('minutes');
-    }
-
-    public function isOpen(): Bool
+    public function isOpen(): Array
     {
         $dayOfWeek = Carbon::today()->dayOfWeek + 1;
 
@@ -91,20 +86,35 @@ class UserStore extends ModelsTenant
             ->where('week_day', $dayOfWeek)
             ->where('start', '<=', now()->toTimeString())
             ->where('end', '>=', now()->toTimeString())
-            ->exists();
+            ->first();
 
         $hasProgramedPause = StoreScheduledBreak::query()
             ->where('start', '<=', now()->toDateTimeString())
             ->where('end', '>=', now()->toDateTimeString())
-            ->exists();
+            ->first();
 
         $hasEmergencyClose = StoreEmergencyClose::query()
             ->where('ends_at', '>=', now()->toDateTimeString())
-            ->exists();
+            ->first();
 
-        return $withinSchedule === true &&
-            $hasEmergencyClose === false &&
-            $hasProgramedPause === false;
+        $schedules = StoreSchedule::query()
+            ->orderBy('week_day', 'desc')
+            ->get();
+
+        $nextSchedule = null;
+        foreach ($schedules as $schedule) {
+            $carbon = Carbon::parse($schedule->start);
+
+            if ($carbon->isAfter(now()) === true) {
+                $nextSchedule = $carbon;
+                break;
+            }
+        }
+
+        return [
+            'is_open' => $withinSchedule && !$hasEmergencyClose && !$hasProgramedPause,
+            'open_in' => "Abre {$nextSchedule->format('l \à\s H:i\h')}"
+        ];
     }
 
 }

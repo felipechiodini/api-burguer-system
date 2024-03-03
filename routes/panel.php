@@ -15,6 +15,8 @@ Route::middleware('auth:api')
         Route::get('stores', 'StoreController@all');
         Route::get('store', 'SideBarController@get');
         Route::post('store', 'StoreController@store');
+        Route::get('notification', 'NotificationController@index');
+        Route::post('notification/{notification}/read', 'NotificationController@markAsRead');
     });
 
 Route::middleware('auth:api')
@@ -31,6 +33,10 @@ Route::middleware('auth:api')
         Route::get('configuration', 'StoreConfigurationController@get');
         Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
         Route::get('category/all', 'CategoryController@all');
+        Route::get('payment', 'PaymentController@index');
+        Route::post('payment/{key}/status', 'PaymentController@status');
+        Route::get('delivery', 'DeliveryController@index');
+        Route::post('delivery/{type}/active', 'DeliveryController@active');
         Route::apiResource('category', 'CategoryController');
         Route::apiResource('customer', 'CustomerController');
         Route::apiResource('banner', 'BannerController');

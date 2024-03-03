@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreShippingOptions extends Model
+class StoreNeighborhood extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'user_store_id',
+        'active',
         'name',
-        'value'
-    ];
-
-    protected $hidden = [
-        'created_at',
-        'updated_at'
+        'price'
     ];
 
     protected static function boot()

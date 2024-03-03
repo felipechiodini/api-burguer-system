@@ -29,7 +29,7 @@ class StoreController extends Controller
         $store = [
             'name' => app('currentTenant')->name,
             'slug' => app('currentTenant')->slug,
-            'is_open' => app('currentTenant')->isOpen()
+            'status' => app('currentTenant')->isOpen()
         ];
 
         return response()
