@@ -113,7 +113,7 @@ class UserStore extends ModelsTenant
 
         return [
             'is_open' => $withinSchedule && !$hasEmergencyClose && !$hasProgramedPause,
-            'open_in' => "Abre {$nextSchedule->format('l \à\s H:i\h')}"
+            'open_in' => $nextSchedule ? "Abre {$nextSchedule->format('l \à\s H:i\h')}" : null
         ];
     }
 

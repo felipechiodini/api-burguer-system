@@ -72,6 +72,36 @@ return new class extends Migration
             $table->float('price');
         });
 
+        Schema::create('plans', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->float('price');
+        });
+
+        Schema::create('user_subscriptions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('plan_id')->references('id')->on('plans');
+            $table->timestamp('start');
+            $table->timestamp('end');
+            $table->tinyInteger('status');
+        });
+
+        Schema::create('subscription_payments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('subscription_id')->references('id')->on('user_subscriptions');
+            $table->timestamps();
+        });
+
+        Schema::create('user_sub_users', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->boolean('active');
+            $table->string('name');
+            $table->string('email');
+            $table->string('password');
+        });
+
         Schema::create('user_notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users');

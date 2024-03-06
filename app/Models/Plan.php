@@ -11,18 +11,7 @@ class Plan extends Model
 
     protected $fillable = [
         'name',
-        'description',
-        'foreing_id'
+        'price'
     ];
-
-    public function planPrice()
-    {
-        return $this->hasMany(PlanPrice::class);
-    }
-
-    public function modules()
-    {
-        return $this->belongsToMany(Module::class, 'plan_has_modules');
-    }
 
 }

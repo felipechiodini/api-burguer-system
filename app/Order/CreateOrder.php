@@ -131,10 +131,12 @@ class CreateOrder {
                 'store_order_id' => $order->id
             ]));
 
-        DeliveryAddress::query()
-            ->create(array_merge($this->address, [
-                'order_delivery_id' => $delivery->id
-            ]));
+        if ($delivery->type === EnumsOrderDelivery::DELIVERY) {
+            DeliveryAddress::query()
+                ->create(array_merge($this->address, [
+                    'order_delivery_id' => $delivery->id
+                ]));
+        }
 
         OrderPayment::query()
             ->create(array_merge($this->payment, [
