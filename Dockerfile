@@ -21,9 +21,9 @@ RUN mkdir -p /home/$user/.composer && \
 
 WORKDIR /var/www/html
 
-RUN composer install --optimize-autoloader --no-dev
-
 COPY . .
+
+RUN composer install --optimize-autoloader --no-dev
 
 USER www
 
