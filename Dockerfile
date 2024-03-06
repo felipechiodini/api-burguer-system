@@ -19,14 +19,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-WORKDIR /var/www
+WORKDIR /var/www/html
+
+COPY . .
 
 USER www
 
 USER $user
 
 EXPOSE 9000
-EXPOSE 6001
 
 CMD ["php-fpm"]
-# CMD ["/usr/bin/supervisorctl", "start", "all"]
