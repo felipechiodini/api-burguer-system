@@ -19,11 +19,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-WORKDIR /var/www/html
-
 COPY . .
-
-RUN composer install --optimize-autoloader --no-dev
 
 USER www
 
