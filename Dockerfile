@@ -19,3 +19,5 @@ RUN mv .deploy/default.conf /etc/nginx/conf.d/
 RUN chown nginx:nginx . -R && chmod 755 -R . && chmod 777 -R storage
 
 RUN composer install --optimize-autoloader --no-dev
+
+RUN php artisan migrate --force && php artisan config:cache
