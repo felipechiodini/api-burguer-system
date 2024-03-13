@@ -1,30 +1,19 @@
-FROM php:8.1-fpm
+FROM wyveo/nginx-php-fpm:php81
 
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    supervisor
+ENV TZ="America/Sao_Paulo"
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+WORKDIR /var/www/html
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# RUN apt update && apt install -y php8.0-dev libaio-dev vim cron curl
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
+RUN apt clean && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 
-USER www
+RUN mv .deploy/default.conf /etc/nginx/conf.d/
+#     && mv .deploy/supervisord.conf /etc/ \
+#     && mv .deploy/php.ini /etc/php/8.0/fpm/
 
-USER $user
+RUN (crontab -l ; echo "* * * * * su -c \"php /var/www/html/artisan schedule:run >> /dev/null 2>&1\" -s /bin/bash nginx") | crontab
 
-EXPOSE 9000
-
-CMD ["php-fpm"]
+RUN composer install --optimize-autoloader --no-dev
