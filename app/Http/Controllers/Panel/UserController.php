@@ -9,21 +9,25 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
 
-    public function subscribe(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
-            'daw' => 'dwad'
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'password' => 'cellphone',
         ]);
 
         User::query()
-            ->create([
+            ->create($request->only([
                 'name',
                 'email',
                 'password',
                 'cellphone',
-                'root'
-            ]);
+            ]));
 
+        return response()
+            ->json(['message' => 'Usuário criado com sucesso']);
     }
 
 }

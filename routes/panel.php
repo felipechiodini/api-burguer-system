@@ -10,6 +10,8 @@ Route::group(['prefix' => 'auth'], function() {
     Route::get('me', 'AuthController@me');
 });
 
+Route::post('user', 'UserController@store');
+
 Route::middleware('auth:api')
     ->group(function() {
         Route::get('stores', 'StoreController@all');
