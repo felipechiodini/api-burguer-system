@@ -17,7 +17,6 @@ RUN mv .deploy/default.conf /etc/nginx/conf.d/
 # RUN (crontab -l ; echo "* * * * * su -c \"php /var/www/html/artisan schedule:run >> /dev/null 2>&1\" -s /bin/bash nginx") | crontab
 EXPOSE 80
 
-
 RUN chown nginx:nginx . -R && chmod 755 -R . && chmod 777 -R storage
 
 RUN composer install --optimize-autoloader --no-dev
