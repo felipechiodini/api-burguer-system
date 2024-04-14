@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\StoreDeliveryType;
-use App\Models\StorePaymentType;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
-use Storage;
 use Str;
 
 class StoreController extends Controller
@@ -22,6 +19,34 @@ class StoreController extends Controller
 
         return response()
             ->json(compact('stores'));
+    }
+
+    public function update(String $slug, Request $request)
+    {
+        $request->validate([
+            'name' => 'string',
+            'logo' => 'image'
+        ]);
+
+        $data = [];
+
+        $request->whenHas('name', function() use(&$data, &$request) {
+            $this->canUseName($request->name);
+
+            $data['name'] = $request->name;
+            $data['slug'] = Str::slug($request->name);
+        });
+
+        $request->whenHas('logo', function() use(&$data, &$request) {
+            $data['logo'] = $request->file('logo')->store();
+        });
+
+        UserStore::query()
+            ->where('slug', $slug)
+            ->update($data);
+
+        return response()
+            ->json(['message' => 'Loja atualizada com sucesso']);
     }
 
     public function get(String $slug)
@@ -45,11 +70,7 @@ class StoreController extends Controller
             'name' => 'required'
         ]);
 
-        $exists = UserStore::query()
-            ->where('slug', Str::slug($request->name))
-            ->exists();
-
-        if ($exists) throw new \Exception('Não é possivel utilizar este nome');
+        $this->canUseName($request->name);
 
         $store = UserStore::query()
             ->create([
@@ -61,6 +82,15 @@ class StoreController extends Controller
 
         return response()
             ->json(compact('store'));
+    }
+
+    private function canUseName($name)
+    {
+        $exists = UserStore::query()
+            ->where('slug', Str::slug($name))
+            ->exists();
+
+        if ($exists) throw new \Exception('Não é possivel utilizar este nome');
     }
 
 }

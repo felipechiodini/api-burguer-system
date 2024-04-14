@@ -26,6 +26,7 @@ Route::middleware('auth:api')
     ->group(function() {
         Route::get('dashboard', 'DashboardController@get');
         Route::get('store', 'StoreController@get');
+        Route::put('store', 'StoreController@update');
         Route::get('sidebar', 'SideBarController@get');
         Route::get('address', 'StoreAddressController@get');
         Route::post('address', 'StoreAddressController@update');

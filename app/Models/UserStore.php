@@ -127,6 +127,13 @@ class UserStore extends ModelsTenant
                         ->first() !== null;
                 }
             ],
+            'schedule' => [
+                'name' => 'Cadastrar Horário de Atendimento',
+                'callback' => function() {
+                    return StoreSchedule::query()
+                        ->first() !== null;
+                }
+            ],
         ]);
 
         $pendings = $checkers->map(function($checker) {
