@@ -15,7 +15,6 @@ Route::post('user', 'UserController@store');
 Route::middleware('auth:api')
     ->group(function() {
         Route::get('stores', 'StoreController@all');
-        Route::get('store', 'SideBarController@get');
         Route::post('store', 'StoreController@store');
         Route::get('notification', 'NotificationController@index');
         Route::post('notification/{notification}/read', 'NotificationController@markAsRead');

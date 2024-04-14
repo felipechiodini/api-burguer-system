@@ -117,4 +117,26 @@ class UserStore extends ModelsTenant
         ];
     }
 
+    public function isCompletedConfigured()
+    {
+        $checkers = collect([
+            'address' => [
+                'name' => 'Cadastrar Endereço da Loja',
+                'callback' => function() {
+                    return StoreAddress::query()
+                        ->first() !== null;
+                }
+            ],
+        ]);
+
+        $pendings = $checkers->map(function($checker) {
+            return [
+                'name' => $checker['name'],
+                'done' => $checker['callback']()
+            ];
+        });
+
+        return $pendings;
+    }
+
 }

@@ -26,10 +26,13 @@ class StoreController extends Controller
 
     public function get(String $slug)
     {
+        $store = app('currentTenant');
+
         $store = [
-            'name' => app('currentTenant')->name,
-            'slug' => app('currentTenant')->slug,
-            'status' => app('currentTenant')->isOpen()
+            'name' => $store->name,
+            'slug' => $store->slug,
+            'status' => $store->isOpen(),
+            'completed_configured' => $store->isCompletedConfigured()
         ];
 
         return response()
@@ -39,33 +42,25 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // 'da' => 'dwad'
+            'name' => 'required'
         ]);
+
+        $exists = UserStore::query()
+            ->where('slug', Str::slug($request->name))
+            ->exists();
+
+        if ($exists) throw new \Exception('Não é possivel utilizar este nome');
 
         $store = UserStore::query()
             ->create([
                 'user_id' => $request->user()->id,
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
-                'logo' => Storage::put('logo', $request->file('logo'))
+                'logo' => ''
             ]);
 
-        foreach ($request->delivery_types as $type) {
-            StoreDeliveryType::query()
-                ->create([
-                    'store_id' => $store->id,
-                    'delivery_type' => $type['id'],
-                    'minutes' => $type['minutes']
-                ]);
-        }
-
-        foreach ($request->payment_types as $type) {
-            StorePaymentType::query()
-                ->create([
-                    'store_id' => $store->id,
-                    'payment_type' => $type
-                ]);
-        }
+        return response()
+            ->json(compact('store'));
     }
 
 }
