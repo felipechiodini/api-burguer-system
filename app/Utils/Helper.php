@@ -49,7 +49,7 @@ class Helper {
         return number_format($value,2,",",".");
     }
 
-    public static function captalizeName($name)
+    public static function capitalizeName($name)
     {
         $name = explode(' ', mb_strtolower($name));
 
