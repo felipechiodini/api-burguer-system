@@ -40,28 +40,15 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        DB::beginTransaction();
-
         $product = StoreProduct::query()
             ->create([
                 'store_category_id' => $request->category_id,
+                'active' => true,
                 'name' => $request->name,
-                'category_id' => $request->category_id,
+                'price_from' => $request->price['from'],
+                'price_to' => $request->price['to'],
                 'description' => $request->description
             ]);
-
-        foreach ($request->photos as $index => $photo) {
-            $path = Storage::put('products', $photo);
-
-            ProductPhoto::query()
-                ->create([
-                    'store_product_id' => $product->id,
-                    'src' => $path,
-                    'order' => $index + 1
-                ]);
-        }
-
-        DB::commit();
 
         return response()
             ->json([

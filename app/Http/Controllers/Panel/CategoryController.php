@@ -50,9 +50,8 @@ class CategoryController extends Controller
         ]);
 
         StoreCategory::create([
-            'user_store_id' => app('currentTenant')->id,
             'name' => $request->name,
-            'order' => StoreCategory::query()->max('order')
+            'order' => StoreCategory::query()->max('order') + 1 ?? 1
         ]);
 
         return response()
