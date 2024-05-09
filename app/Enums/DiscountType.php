@@ -1,10 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace App\Enums;
 
-use BenSampo\Enum\Enum;
-
-final class DiscountType extends Enum
+enum DiscountType
 {
     const PERCENT = 'percent';
     const UNIT = 'unit';
