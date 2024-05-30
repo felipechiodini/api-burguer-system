@@ -8,6 +8,7 @@ RUN apk update
 RUN apk add bash
 RUN apk add curl
 RUN apk add nginx
+RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable pdo_mysql
 
 COPY . .
 
