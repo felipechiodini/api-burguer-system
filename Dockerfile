@@ -6,7 +6,8 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN mv .deploy/default.conf /etc/nginx/conf.d/
+RUN mv .deploy/default.conf /etc/nginx/conf.d/ \
+    && mv .deploy/soketi.conf /etc/nginx/conf.d/
     # && mv .deploy/supervisord.conf /etc/
     # && mv .deploy/php.ini /etc/php/8.0/fpm/
 
