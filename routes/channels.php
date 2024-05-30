@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('messages', function ($user, $id) {
-    return true;
+Broadcast::channel('notifications.{id}', function ($user, $id) {
+    return $user->id == $id;
 });

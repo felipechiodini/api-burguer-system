@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use Broadcast;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -48,5 +50,10 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    public function websocket(Request $request)
+    {
+        return Broadcast::auth($request);
     }
 }

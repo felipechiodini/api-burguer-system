@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Events\OrderCreated;
 use Illuminate\Console\Command;
 
 class Teste extends Command
@@ -12,6 +13,6 @@ class Teste extends Command
 
     public function handle()
     {
-        //
+        OrderCreated::dispatch();
     }
 }

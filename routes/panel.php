@@ -14,6 +14,7 @@ Route::post('user', 'UserController@store');
 
 Route::middleware('auth:api')
     ->group(function() {
+        Route::post('broadcast/auth', 'AuthController@websocket');
         Route::get('stores', 'StoreController@all');
         Route::post('store', 'StoreController@store');
         Route::get('notification', 'NotificationController@index');
