@@ -13,8 +13,6 @@ services:
       - 9000:80
     volumes:
       - ./:/var/www/html
-      - ./.deploy/supervisor.conf:/etc/supervisor/conf.d/supervisor.conf
-      - ./.deploy/websocket.conf:/etc/supervisor/conf.d/websocket.conf
     networks:
       - default
   db:
