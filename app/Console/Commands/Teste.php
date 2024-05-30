@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\OrderCreated;
+use App\Models\UserNotification;
 use Illuminate\Console\Command;
 
 class Teste extends Command
@@ -13,6 +14,10 @@ class Teste extends Command
 
     public function handle()
     {
-        OrderCreated::dispatch();
+        UserNotification::query()->create([
+            'user_id' => 1,
+            'title' => 'title',
+            'content' => 'content'
+        ]);
     }
 }
