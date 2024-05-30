@@ -2,7 +2,7 @@ FROM wyveo/nginx-php-fpm:php82
 
 ENV TZ="America/Sao_Paulo"
 
-WORKDIR /www/var/html
+WORKDIR /var/www/html
 
 COPY . .
 
