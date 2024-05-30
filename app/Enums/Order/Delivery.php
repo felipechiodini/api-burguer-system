@@ -1,8 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Enums\Order;
 
-enum Delivery
+use BenSampo\Enum\Enum;
+
+final class Delivery extends Enum
 {
     const DELIVERY = 1;
     const WITHDRAW = 2;

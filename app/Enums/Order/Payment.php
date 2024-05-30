@@ -1,8 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Enums\Order;
 
-enum Payment
+use BenSampo\Enum\Enum;
+
+final class Payment extends Enum
 {
     const CASH = 1;
     const CREDIT_CARD = 2;

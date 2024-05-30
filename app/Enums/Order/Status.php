@@ -1,8 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Enums\Order;
 
-enum Status
+use BenSampo\Enum\Enum;
+
+final class Status extends Enum
 {
     const OPEN = 1;
     const PREPARATION = 2;
