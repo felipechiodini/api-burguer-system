@@ -2,6 +2,8 @@ FROM wyveo/nginx-php-fpm:php82
 
 ENV TZ="America/Sao_Paulo"
 
+WORKDIR /www/var/html
+
 COPY . .
 
 RUN mv .deploy/default.conf /etc/nginx/conf.d/
