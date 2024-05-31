@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use Broadcast;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 
 class AuthController extends Controller
 {
