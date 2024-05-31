@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Models\UserStore;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -15,4 +17,11 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('notifications.{id}', function ($user, $id) {
     return $user->id == $id;
+});
+
+Broadcast::channel('stores.{slug}', function(User $user, $slug) {
+    return UserStore::query()
+        ->where('user_id', $user->id)
+        ->where('slug', $slug)
+        ->exists();
 });
