@@ -14,11 +14,30 @@ class NotificationController extends Controller
         $page = UserNotification::query()
             ->select('id', 'title', 'content', 'read', 'created_at')
             ->where('user_id', $request->user()->id)
-            ->orderBy('id', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return response()
             ->json(compact('page'));
+    }
+
+    public function markAsRead(UserNotification $userNotification)
+    {
+        $userNotification->update(['read' => true]);
+
+        return response()
+            ->noContent(200);
+    }
+
+    public function unreadMessages(Request $request)
+    {
+        $count = UserNotification::query()
+            ->where('user_id', $request->user()->id)
+            ->where('read', false)
+            ->count();
+
+        return response()
+            ->json(compact('count'));
     }
 
 }

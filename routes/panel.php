@@ -19,6 +19,7 @@ Route::middleware('auth:api')
         Route::post('store', 'StoreController@store');
         Route::get('notification', 'NotificationController@index');
         Route::post('notification/{notification}/read', 'NotificationController@markAsRead');
+        Route::get('notification/unread-count', 'NotificationController@unreadMessages');
     });
 
 Route::middleware('auth:api')

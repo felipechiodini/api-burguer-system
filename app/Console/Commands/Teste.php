@@ -16,8 +16,8 @@ class Teste extends Command
     {
         UserNotification::query()->create([
             'user_id' => 1,
-            'title' => 'title',
-            'content' => 'content'
+            'title' => 'eai irmão',
+            'content' => 'vai se foderu maluko'
         ]);
     }
 }
