@@ -10,7 +10,7 @@ RUN mv .deploy/default.conf /etc/nginx/conf.d/
     # && mv .deploy/supervisord.conf /etc/
     # && mv .deploy/php.ini /etc/php/8.0/fpm/
 
-RUN composer install
+RUN composer install --optimize-autoloader --no-dev
 
 EXPOSE 80
 
