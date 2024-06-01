@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Panel\ResetPassword;
 use App\Models\User;
 use App\Utils\Helper;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -31,6 +33,25 @@ class UserController extends Controller
 
         return response()
             ->json(['message' => 'Usuário criado com sucesso']);
+    }
+
+    public function sendMailForgetPAssword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $user = User::query()
+            ->where('email', $request->email)
+            ->first();
+
+        if ($user) {
+            Mail::to($user->email)
+                ->queue(new ResetPassword($user));
+        }
+
+        return response()
+            ->json(['message' => 'Você recebera um link para redefinir sua senha']);
     }
 
 }

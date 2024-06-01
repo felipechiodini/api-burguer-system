@@ -2,6 +2,7 @@
 
 namespace App\Mail\Panel;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,38 +14,17 @@ class ResetPassword extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
+    public function __construct(public User $user)
     {
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
-        return new Envelope(
-            subject: 'Reset Password',
-        );
+        return new Envelope('Reset Password');
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content('mail.reset-password');
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
     }
 }
