@@ -29,6 +29,7 @@ Route::middleware('auth:api')
         Route::get('dashboard', 'DashboardController@get');
         Route::get('store', 'StoreController@get');
         Route::put('store', 'StoreController@update');
+        Route::post('store/logo', 'StoreController@updateLogo');
         Route::get('sidebar', 'SideBarController@get');
         Route::get('address', 'StoreAddressController@get');
         Route::post('address', 'StoreAddressController@updateOrCreate');

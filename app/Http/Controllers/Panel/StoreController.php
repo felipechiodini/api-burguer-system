@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
-use Str;
+use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
@@ -25,26 +25,18 @@ class StoreController extends Controller
     {
         $request->validate([
             'name' => 'string',
-            'logo' => 'image'
         ]);
 
-        $data = [];
-
-        $request->whenHas('name', function() use(&$data, &$request) {
-            $this->canUseName($request->name);
-
-            $data['name'] = $request->name;
-            $data['slug'] = Str::slug($request->name);
-        });
-
-        $request->whenHas('logo', function() use(&$data, &$request) {
-            $data['logo'] = $request->file('logo')
-                ->store('logos');
-        });
+        if (UserStore::canUseName($request->name)) {
+            return response()->json(['message' => 'Não é possivel utilizar este nome'], 422);
+        }
 
         UserStore::query()
             ->where('slug', $slug)
-            ->update($data);
+            ->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name)
+            ]);
 
         return response()
             ->json(['message' => 'Loja atualizada com sucesso']);
@@ -57,6 +49,7 @@ class StoreController extends Controller
         $store = [
             'name' => $store->name,
             'slug' => $store->slug,
+            'logo' => $store->logo,
             'status' => $store->isOpen(),
             'completed_configured' => $store->isCompletedConfigured()
         ];
@@ -71,7 +64,9 @@ class StoreController extends Controller
             'name' => 'required'
         ]);
 
-        $this->canUseName($request->name);
+        if (UserStore::canUseName($request->name)) {
+            return response()->json(['message' => 'Não é possivel utilizar este nome'], 422);
+        }
 
         $store = UserStore::query()
             ->create([
@@ -85,13 +80,20 @@ class StoreController extends Controller
             ->json(compact('store'));
     }
 
-    private function canUseName($name)
+    public function updateLogo(Request $request)
     {
-        $exists = UserStore::query()
-            ->where('slug', Str::slug($name))
-            ->exists();
+        $request->validate([
+            'logo' => 'image'
+        ]);
 
-        if ($exists) throw new \Exception('Não é possivel utilizar este nome');
+        $path = $request->file('logo')
+            ->store('logos');
+
+        app('currentTenant')
+            ->update(['logo' => $path]);
+
+        return response()
+            ->json(['message' => 'Logo atualizada com sucesso']);
     }
 
 }

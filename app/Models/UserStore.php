@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Multitenancy\Models\Tenant as ModelsTenant;
+use Illuminate\Support\Str;
 
 class UserStore extends ModelsTenant
 {
@@ -32,16 +33,6 @@ class UserStore extends ModelsTenant
         return $this->hasMany(StoreCustomer::class);
     }
 
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    public function waiters()
-    {
-        return $this->hasMany(Waiter::class);
-    }
-
     public function cards()
     {
         return $this->hasMany(Card::class);
@@ -51,11 +42,6 @@ class UserStore extends ModelsTenant
     {
         return $this->hasMany(StoreCategory::class)
             ->orderBy('order');
-    }
-
-    public function shippingOptions()
-    {
-        return $this->hasMany(StoreShippingOptions::class);
     }
 
     public function products()
@@ -147,6 +133,13 @@ class UserStore extends ModelsTenant
         });
 
         return $pendings;
+    }
+
+    public static function canUseName(String $name): Bool
+    {
+        return self::query()
+            ->where('slug', Str::slug($name))
+            ->exists();
     }
 
 }
