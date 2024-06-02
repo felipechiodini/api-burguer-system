@@ -24,7 +24,7 @@ class Cep {
         return substr($cep, 0, 5) . '-' . substr($cep, 5, 3);
     }
 
-    public static function formatCep(String $cep)
+    public static function format(String $cep)
     {
         return (new static($cep))->getFormated();
     }

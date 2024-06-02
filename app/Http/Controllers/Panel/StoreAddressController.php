@@ -16,9 +16,14 @@ class StoreAddressController extends Controller
             ->select('cep', 'street', 'number', 'neighborhood', 'city', 'state', 'latitude', 'longitude')
             ->first();
 
+        if (!$address) {
+            return response()
+                ->json(['message' => 'Não possui endereço cadastrado'], 404);
+        }
+
         return response()
             ->json(['address' => [
-                'cep' => Cep::formatCep($address->cep),
+                'cep' => Cep::format($address->cep),
                 'street' => $address->street,
                 'number' => $address->number,
                 'neighborhood' => $address->neighborhood,
@@ -29,7 +34,7 @@ class StoreAddressController extends Controller
             ]]);
     }
 
-    public function update(Request $request)
+    public function updateOrCreate(Request $request)
     {
         $request->validate([
             'cep' => 'required',
@@ -41,7 +46,7 @@ class StoreAddressController extends Controller
         ]);
 
         StoreAddress::query()
-            ->update([
+            ->updateOrCreate([
                 'cep' => new Cep($request->cep),
                 'street' => $request->street,
                 'number' => $request->number,

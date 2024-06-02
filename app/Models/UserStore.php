@@ -122,6 +122,7 @@ class UserStore extends ModelsTenant
         $checkers = collect([
             'address' => [
                 'name' => 'Cadastrar Endereço da Loja',
+                'router_name' => 'address.update',
                 'callback' => function() {
                     return StoreAddress::query()
                         ->first() !== null;
@@ -129,6 +130,7 @@ class UserStore extends ModelsTenant
             ],
             'schedule' => [
                 'name' => 'Cadastrar Horário de Atendimento',
+                'router_name' => 'schedule.index',
                 'callback' => function() {
                     return StoreSchedule::query()
                         ->first() !== null;
@@ -139,6 +141,7 @@ class UserStore extends ModelsTenant
         $pendings = $checkers->map(function($checker) {
             return [
                 'name' => $checker['name'],
+                'router_name' => $checker['router_name'],
                 'done' => $checker['callback']()
             ];
         });

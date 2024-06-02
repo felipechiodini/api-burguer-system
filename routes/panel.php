@@ -31,7 +31,7 @@ Route::middleware('auth:api')
         Route::put('store', 'StoreController@update');
         Route::get('sidebar', 'SideBarController@get');
         Route::get('address', 'StoreAddressController@get');
-        Route::post('address', 'StoreAddressController@update');
+        Route::post('address', 'StoreAddressController@updateOrCreate');
         Route::get('schedule', 'StoreScheduleController@get');
         Route::post('schedule', 'StoreScheduleController@createOrUpdate');
         Route::get('configuration', 'StoreConfigurationController@get');

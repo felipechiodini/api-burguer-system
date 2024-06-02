@@ -12,7 +12,7 @@ class SideBarController extends Controller
     {
         $sidebar = [
             ['label' => 'Dashboard', 'name' => 'dashboard.index', 'icon' => 'fa-solid fa-gauge'],
-            ['label' => 'Loja', 'name' => 'store.show', 'icon' => 'fa-shop fa-list-check'],
+            ['label' => 'Loja', 'name' => 'store.show', 'icon' => 'fa-solid fa-store'],
             ['label' => 'Gerenciador de Pedidos', 'name' => 'order.manager', 'icon' => 'fa-solid fa-list-check'],
             ['label' => 'Pedidos', 'name' => 'order.index', 'icon' => 'fa-solid fa-cart-shopping'],
             ['label' => 'Clientes', 'name' => 'customer.index', 'icon' => 'fa-solid fa-users'],
