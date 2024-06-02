@@ -22,10 +22,6 @@ class StoreOrder extends Model
         'status'
     ];
 
-    protected $dispatchesEvents = [
-        'created' => OrderCreated::class
-    ];
-
     public function store()
     {
         return $this->belongsTo(UserStore::class);

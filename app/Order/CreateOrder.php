@@ -6,6 +6,7 @@ use App\Enums\Order\Delivery as EnumsOrderDelivery;
 use App\Enums\Order\Origin;
 use App\Enums\Order\Payment as EnumsOrderPayment;
 use App\Enums\Order\Status;
+use App\Events\OrderCreated;
 use App\Models\DeliveryAddress;
 use App\Models\OrderDelivery;
 use App\Models\OrderPayment;
@@ -132,7 +133,7 @@ class CreateOrder {
             ]));
 
         if ($this->delivery['type']->value === EnumsOrderDelivery::DELIVERY) {
-            DeliveryAddress::query()
+            $address = DeliveryAddress::query()
                 ->create(array_merge($this->address, [
                     'neighborhood' => "dkawdwa",
                     'order_delivery_id' => $delivery->id,
@@ -140,10 +141,12 @@ class CreateOrder {
                 ]));
         }
 
-        OrderPayment::query()
+        $payment = OrderPayment::query()
             ->create(array_merge($this->payment, [
                 'store_order_id' => $order->id
             ]));
+
+        OrderCreated::dispatch($order, $this->customer, $payment, @$address);
 
         return $order;
     }

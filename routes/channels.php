@@ -19,7 +19,7 @@ Broadcast::channel('notifications.{id}', function ($user, $id) {
     return $user->id == $id;
 });
 
-Broadcast::channel('stores.{slug}', function(User $user, $slug) {
+Broadcast::channel('orders.{slug}', function(User $user, String $slug) {
     return UserStore::query()
         ->where('user_id', $user->id)
         ->where('slug', $slug)
