@@ -38,7 +38,8 @@ class StoreController extends Controller
         });
 
         $request->whenHas('logo', function() use(&$data, &$request) {
-            $data['logo'] = $request->file('logo')->store();
+            $data['logo'] = $request->file('logo')
+                ->store('logos');
         });
 
         UserStore::query()

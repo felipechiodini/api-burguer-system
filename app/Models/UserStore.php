@@ -105,7 +105,7 @@ class UserStore extends ModelsTenant
         foreach ($schedules as $schedule) {
             $carbon = Carbon::parse($schedule->start);
 
-            if ($carbon->isAfter(now()) === true) {
+            if ($carbon->isAfter(now())) {
                 $nextSchedule = $carbon;
                 break;
             }

@@ -35,7 +35,7 @@ class UserController extends Controller
             ->json(['message' => 'Usuário criado com sucesso']);
     }
 
-    public function sendMailForgetPAssword(Request $request)
+    public function sendMailForgetPassword(Request $request)
     {
         $request->validate([
             'email' => 'required|email'
