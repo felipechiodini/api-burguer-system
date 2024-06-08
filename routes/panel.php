@@ -47,6 +47,7 @@ Route::middleware('auth:api')
         Route::apiResource('banner', 'BannerController');
         Route::apiResource('order', 'OrderController');
         Route::apiResource('product', 'ProductController');
+        Route::apiResource('neighborhood', 'NeighborhoodController');
         Route::apiResource('product/{product}/photo', 'ProductPhotoController');
         Route::apiResource('product/{product}/prices', 'ProductPriceController');
         Route::apiResource('product/{product}/additionals', 'ProductAdditionalController');

@@ -20,6 +20,7 @@ class SideBarController extends Controller
             ['label' => 'Categorias', 'name' => 'category.index', 'icon' => 'fa-solid fa-tag'],
             ['label' => 'Endereço', 'name' => 'address.index', 'icon' => 'fa-solid fa-house'],
             ['label' => 'Comandas', 'name' => 'card.index', 'icon' => 'fa-regular fa-address-card'],
+            ['label' => 'Bairros', 'name' => 'neighborhood.index', 'icon' => 'fa-regular fa-address-card'],
             ['label' => 'Banners', 'name' => 'banner.index', 'icon' => 'fa-regular fa-images'],
             ['label' => 'Produtos', 'name' => 'product.index', 'icon' => 'fa-solid fa-bag-shopping'],
             ['label' => 'Horários', 'name' => 'schedule.index', 'icon' => 'fa-regular fa-clock'],
