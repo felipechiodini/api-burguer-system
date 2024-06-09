@@ -80,19 +80,19 @@ class StoreController extends Controller
                 'logo' => ''
             ]);
 
-        foreach (Payment::asArray() as $payment) {
+        foreach (Payment::getInstances() as $payment) {
             StorePayment::query()
                 ->create([
                     'active' => false,
-                    'type' => $payment->type
+                    'type' => $payment->value
                 ]);
         }
 
-        foreach (Delivery::asArray() as $payment) {
+        foreach (Delivery::getInstances() as $delivery) {
             StoreDelivery::query()
                 ->create([
                     'active' => false,
-                    'type' => $payment->type
+                    'type' => $delivery->value
                 ]);
         }
 
