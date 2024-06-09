@@ -140,4 +140,9 @@ class Helper {
 
         return $minutes . "min";
     }
+
+    public static function translateWeekDay($a)
+    {
+        return $a;
+    }
 }
