@@ -72,6 +72,7 @@ class Table
     public function get()
     {
         $page = $this->getEloquentWithFilters()
+            ->orderByDesc('id')
             ->paginate($this->perPage ?? 10);
 
         $page->transform(function($model) {

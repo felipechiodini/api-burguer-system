@@ -64,7 +64,7 @@ class CategoryController extends Controller
     public function update(String $tenant, StoreCategory $category, Request $request)
     {
         $request->validate([
-            'name' => 'string'
+            'name' => 'required|string'
         ]);
 
         $category->update([
