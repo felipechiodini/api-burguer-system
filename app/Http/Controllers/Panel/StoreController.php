@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Enums\Order\Delivery;
+use App\Enums\Order\Payment;
 use App\Http\Controllers\Controller;
+use App\Models\StoreDelivery;
+use App\Models\StorePayment;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -75,6 +79,22 @@ class StoreController extends Controller
                 'slug' => Str::slug($request->name),
                 'logo' => ''
             ]);
+
+        foreach (Payment::asArray() as $payment) {
+            StorePayment::query()
+                ->create([
+                    'active' => false,
+                    'type' => $payment->type
+                ]);
+        }
+
+        foreach (Delivery::asArray() as $payment) {
+            StoreDelivery::query()
+                ->create([
+                    'active' => false,
+                    'type' => $payment->type
+                ]);
+        }
 
         return response()
             ->json(compact('store'));

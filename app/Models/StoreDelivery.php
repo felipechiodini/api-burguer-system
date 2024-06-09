@@ -18,6 +18,10 @@ class StoreDelivery extends Model
         'minutes'
     ];
 
+    protected $casts = [
+        'active' => 'boolean'
+    ];
+
     protected static function boot()
     {
         parent::boot();

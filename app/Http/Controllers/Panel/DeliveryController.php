@@ -5,27 +5,24 @@ namespace App\Http\Controllers\Panel;
 use App\Enums\Order\Delivery;
 use App\Http\Controllers\Controller;
 use App\Models\StoreDelivery;
-use Request;
+use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
 
     public function index()
     {
-        $deliveries = collect([]);
-
-        foreach (Delivery::getInstances() as $delivery) {
-            $model = StoreDelivery::query()
-                ->where('type', $delivery->value)
-                ->first('minutes');
-
-            $deliveries->push([
-                'name' => @$delivery->description,
-                'minutes' => @$model->minutes,
-                'active' => $model ?? false
-            ]);
-        }
-
+        $deliveries = StoreDelivery::query()
+            ->get()
+            ->map(function(StoreDelivery $storeDelivery) {
+                return [
+                    'active' => $storeDelivery->active,
+                    'type' => $storeDelivery->type,
+                    'minutes' => $storeDelivery->minutes,
+                    'name' => Delivery::getDescription($storeDelivery->type)
+                ];
+            });
+ 
         return response()
             ->json(compact('deliveries'));
     }

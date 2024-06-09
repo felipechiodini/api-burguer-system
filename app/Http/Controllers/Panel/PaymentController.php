@@ -12,25 +12,21 @@ class PaymentController extends Controller
 
     public function index()
     {
-        $payments = collect([]);
-
-        foreach (Payment::getInstances() as $payment) {
-            $exists = StorePayment::query()
-                ->where('type', $payment->value)
-                ->exists();
-
-            $payments->push([
-                'key' => $payment->key,
-                'name' => $payment->description,
-                'active' => $exists
-            ]);
-        }
-
+        $payments = StorePayment::query()
+            ->get()
+            ->map(function(StorePayment $storePayment) {
+                return [
+                    'active' => $storePayment->active,
+                    'type' => $storePayment->type,
+                    'name' => Payment::getDescription($storePayment->type)
+                ];
+            });
+ 
         return response()
             ->json(compact('payments'));
     }
 
-    public function status(String $tenant, String $key, Request $request)
+    public function update(String $tenant, String $key, Request $request)
     {
         $request->validate([
             'active' => 'required|boolean'

@@ -17,6 +17,10 @@ class StorePayment extends Model
         'type'
     ];
 
+    protected $casts = [
+        'active' => 'boolean'
+    ];
+
     protected static function boot()
     {
         parent::boot();
