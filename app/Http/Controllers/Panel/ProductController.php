@@ -40,13 +40,19 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'category_id' => 'required',
+            'name' => 'required',
+            'price' => 'required',
+            'description' => 'required'
+        ]);
+
         $product = StoreProduct::query()
             ->create([
                 'store_category_id' => $request->category_id,
                 'active' => true,
                 'name' => $request->name,
-                'price_from' => $request->price['from'],
-                'price_to' => $request->price['to'],
+                'price_from' => $request->price,
                 'description' => $request->description
             ]);
 

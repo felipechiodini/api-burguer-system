@@ -6,51 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Models\ProductPhoto;
 use App\Models\StoreProduct;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductPhotoController extends Controller
 {
-    public function index(String $tenant, StoreProduct $product)
-    {
-        $page = $product->photos()
-            ->paginate(10);
-
-        return response()
-            ->json(compact('page'));
-    }
 
     public function store(String $tenant, StoreProduct $product, Request $request)
     {
         $request->validate([
-            'photo' => 'required'
+            'photo' => 'required|image'
         ]);
 
-        $path = Storage::put('products', $request->file('photo'));
+        $path = $request->file('photo')
+            ->store('product_photos');
 
-        $order = $product->photos()->max('order') ?? 1;
-
-        $photo = $product->photos()
+        ProductPhoto::query()
             ->create([
+                'store_product_id' => $product->id,
                 'src' => $path,
-                'order' => $order
+                'order' => ProductPhoto::max('order') + 1
             ]);
 
         return response()
-            ->json([
-                'message' => 'Foto criada com sucesso!',
-                'photo' => $photo
-            ]);
+            ->json(['message' => 'Foto salva com sucesso!']);
     }
 
-    public function destroy(String $tenant, StoreProduct $product, ProductPhoto $photo)
-    {
-        Storage::delete($photo->src);
-
-        $product->photos()
-            ->find($photo->id)
-            ->delete();
-
-        return response()
-            ->json(['message' => 'Foto deletada com sucesso!']);
-    }
 }

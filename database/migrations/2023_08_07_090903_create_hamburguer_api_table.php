@@ -160,7 +160,7 @@ return new class extends Migration
             $table->boolean('active')->default(false);
             $table->string('name');
             $table->float('price_from')->nullable();
-            $table->float('price_to');
+            $table->float('price_to')->nullable();
             $table->text('description');
             $table->softDeletes();
             $table->timestamps();
@@ -192,25 +192,6 @@ return new class extends Migration
             $table->foreignId('store_product_id')->references('id')->on('store_products');
             $table->string('src');
             $table->tinyInteger('order');
-            $table->timestamps();
-        });
-
-        Schema::create('product_prices', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('store_product_id')->references('id')->on('store_products');
-            $table->double('value', 8, 2);
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
-            $table->timestamps();
-        });
-
-        Schema::create('product_promotions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('store_product_id')->references('id')->on('store_products');
-            $table->double('value', 8, 2);
-            $table->unsignedTinyInteger('type');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
             $table->timestamps();
         });
 
