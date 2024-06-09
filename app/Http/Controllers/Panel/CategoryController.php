@@ -49,13 +49,16 @@ class CategoryController extends Controller
             'name' => 'required|string'
         ]);
 
-        StoreCategory::create([
+        $category = StoreCategory::create([
             'name' => $request->name,
-            'order' => StoreCategory::query()->max('order') + 1 ?? 1
+            'order' => StoreCategory::max('order') + 1 ?? 1
         ]);
 
         return response()
-            ->json(['message' => 'Categoria criada com sucesso!']);
+            ->json([
+                'message' => 'Categoria criada com sucesso!',
+                'category' => $category
+            ]);
     }
 
     public function update(String $tenant, StoreCategory $category, Request $request)

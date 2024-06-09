@@ -23,7 +23,7 @@ class ProductPhotoController extends Controller
             ->create([
                 'store_product_id' => $product->id,
                 'src' => $path,
-                'order' => ProductPhoto::max('order') + 1
+                'order' => ProductPhoto::max('order') + 1 ?? 1
             ]);
 
         return response()
