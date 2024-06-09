@@ -30,16 +30,16 @@ return new class extends Migration
         Schema::create('store_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->boolean('active')->default(false);
             $table->unsignedTinyInteger('type');
-            $table->boolean('active');
         });
 
         Schema::create('store_deliveries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->boolean('active')->default(false);
             $table->unsignedTinyInteger('type');
-            $table->unsignedInteger('minutes');
-            $table->boolean('active');
+            $table->unsignedInteger('minutes')->nullable();
         });
 
         Schema::create('store_configurations', function (Blueprint $table) {

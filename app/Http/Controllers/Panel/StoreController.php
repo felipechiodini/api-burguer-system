@@ -78,7 +78,7 @@ class StoreController extends Controller
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
                 'logo' => ''
-            ]);
+            ])->makeCurrent();
 
         foreach (Payment::getInstances() as $payment) {
             StorePayment::query()
