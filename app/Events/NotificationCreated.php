@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\UserNotification;
+use Carbon\Carbon;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -28,5 +29,18 @@ class NotificationCreated implements ShouldBroadcast
     public function broadcastAs()
     {
         return 'notification';
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'notification' => [
+                'id' => $this->userNotification->id,
+                'title' => $this->userNotification->title,
+                'content' => $this->userNotification->content,
+                'read' => $this->userNotification->read,
+                'created_at' => Carbon::parse($this->userNotification->created_at)->format('d/m/Y H:i')
+            ]
+        ];
     }
 }

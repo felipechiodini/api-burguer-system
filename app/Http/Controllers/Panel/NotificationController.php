@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -17,13 +18,26 @@ class NotificationController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
+        $page->transform(function($model) {
+            return [
+                'id' => $model->id,
+                'title' => $model->title,
+                'content' => $model->content,
+                'read' => $model->read,
+                'created_at' => Carbon::parse($model->created_at)->format('d/m/Y H:i')
+            ];
+        });
+
         return response()
             ->json(compact('page'));
     }
 
-    public function markAsRead(UserNotification $userNotification)
+    public function markAsRead($userNotificationId)
     {
-        $userNotification->update(['read' => true]);
+        UserNotification::query()
+            ->where('user_id', auth()->user()->id)
+            ->where('id', $userNotificationId)
+            ->update(['read' => true]);
 
         return response()
             ->noContent(200);
