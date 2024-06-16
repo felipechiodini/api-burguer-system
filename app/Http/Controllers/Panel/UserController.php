@@ -7,6 +7,7 @@ use App\Mail\Panel\ResetPassword;
 use App\Models\User;
 use App\Rules\CellphoneRule;
 use App\Rules\PasswordRule;
+use App\Rules\ReCaptchaRule;
 use App\Utils\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,8 @@ class UserController extends Controller
             'name' => 'required|string|max:100|min:3',
             'email' => 'required|email',
             'password' => ['required', new PasswordRule],
-            'cellphone' => ['required', new CellphoneRule]
+            'cellphone' => ['required', new CellphoneRule],
+            'recaptcha_token' => [new ReCaptchaRule]
         ]);
 
         $user = User::query()
