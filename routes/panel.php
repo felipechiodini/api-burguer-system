@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::post('user', 'UserController@store');
+
 Route::group(['prefix' => 'auth'], function() {
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
@@ -9,8 +11,6 @@ Route::group(['prefix' => 'auth'], function() {
     Route::post('forgot-password', 'UserController@sendMailForgetPassword');
     Route::get('me', 'AuthController@me');
 });
-
-Route::post('user', 'UserController@store');
 
 Route::middleware('auth:api')
     ->group(function() {

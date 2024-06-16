@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Mail\Panel\ResetPassword;
 use App\Models\User;
+use App\Rules\CellphoneRule;
+use App\Rules\PasswordRule;
 use App\Utils\Helper;
-use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -17,11 +19,20 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'cellphone' => 'required'
+            'name' => 'required|string|max:100|min:3',
+            'email' => 'required|email',
+            'password' => ['required', new PasswordRule],
+            'cellphone' => ['required', new CellphoneRule]
         ]);
+
+        $user = User::query()
+            ->where('email', $request->email)
+            ->first();
+
+        if ($user) {
+            return response()
+                ->json(['message' => 'Email já registrado, tentou outro.'], 422);
+        }
 
         User::query()
             ->create([
