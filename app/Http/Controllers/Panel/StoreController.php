@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\StoreDelivery;
 use App\Models\StorePayment;
 use App\Models\UserStore;
+use App\Utils\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -53,7 +54,7 @@ class StoreController extends Controller
         $store = [
             'name' => $store->name,
             'slug' => $store->slug,
-            'logo' => $store->logo,
+            'logo' => Helper::makeStoragePath($store->logo),
             'status' => $store->isOpen(),
             'completed_configured' => $store->isCompletedConfigured()
         ];

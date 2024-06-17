@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Http;
 
 class Helper {
 
+    public static function makeStoragePath($path)
+    {
+        return 'https://d2sbwe6sqww2sr.cloudfront.net/' . $path;
+    }
+
     public static function calculatePercentDiscount($value, $percent)
     {
         return self::calculateDiscount($value, $percent, 'percent');
