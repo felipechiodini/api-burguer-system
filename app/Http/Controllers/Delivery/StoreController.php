@@ -118,6 +118,7 @@ class StoreController extends Controller
 
             return [
                 'name' => $store->name,
+                'logo' => Helper::makeStoragePath($store->logo),
                 'open' => $store->isOpen(),
                 'configuration' => $configuration,
                 'banners' => $banners,
