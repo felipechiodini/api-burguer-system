@@ -10,6 +10,10 @@ class Helper {
 
     public static function makeStoragePath($path)
     {
+        if (config('app.env') === 'local') {
+            return $path;
+        }
+
         return 'https://d2sbwe6sqww2sr.cloudfront.net/' . $path;
     }
 

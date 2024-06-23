@@ -48,8 +48,6 @@ Route::middleware('auth:api')
         Route::apiResource('order', 'OrderController');
         Route::apiResource('product', 'ProductController');
         Route::apiResource('neighborhood', 'NeighborhoodController');
-        Route::apiResource('product/{product}/photo', 'ProductPhotoController');
-        Route::apiResource('product/{product}/prices', 'ProductPriceController');
         Route::apiResource('product/{product}/additionals', 'ProductAdditionalController');
         Route::apiResource('product/{product}/replacements', 'ProductReplacementController');
         Route::get('product/{product}/configuration', 'ProductConfigurationController@get');

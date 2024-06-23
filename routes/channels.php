@@ -25,3 +25,7 @@ Broadcast::channel('orders.{slug}', function(User $user, String $slug) {
         ->where('slug', $slug)
         ->exists();
 });
+
+Broadcast::channel('order.{id}', function() {
+    return true;
+});

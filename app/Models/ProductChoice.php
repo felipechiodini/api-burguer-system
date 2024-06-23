@@ -5,20 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductPricePromotion extends Model
+class ProductChoice extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'product_price_id',
-        'value',
-        'start_date',
-        'end_date',
+        'product_id',
+        'quantity',
+        'required'
     ];
 
-    protected $dates = [
-        'start_date',
-        'end_date'
+    protected $casts = [
+        'required' => 'boolean'
     ];
 
 }

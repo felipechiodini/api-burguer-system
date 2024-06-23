@@ -76,10 +76,13 @@ class OrderController extends Controller
             $orderBuilder->addProduct($orderProduct);
         }
 
-        $orderBuilder->create();
+        $order = $orderBuilder->create();
 
         return response()
-            ->json(['message' => 'Pedido realizado com sucesso!']);
+            ->json([
+                'message' => 'Pedido realizado com sucesso!',
+                'order' => $order
+            ]);
     }
 
 }

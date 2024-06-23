@@ -10,9 +10,8 @@ class ProductConfigurationFactory extends Factory
     public function definition()
     {
         return [
-            'unit_type' => 'grams',
-            'max_number_replacements' => 3,
-            'max_number_additionals' => 3,
+            'warning' => null,
+            'minimum_order_value' => rand(10, 50),
         ];
     }
 

@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $builder = StoreProduct::query()
-            ->select('store_products.id', 'store_products.name', 'product_photos.src', 'price_from', 'price_to')
+            ->select('store_products.id', 'store_products.name', 'product_photos.src', 'price_from', 'price')
             ->leftJoin('product_photos', fn($join) => $join->on('product_photos.store_product_id', 'store_products.id'));
 
         $table = Table::make()
@@ -30,7 +30,7 @@ class ProductController extends Controller
             ->addFilter(new Text('name', 'Nome'))
             ->addFilter(new Text('src', 'Imagem'))
             ->addModifier('price_from', fn($value) => Helper::formatCurrency($value))
-            ->addModifier('price_to', fn($value) => Helper::formatCurrency($value))
+            ->addModifier('price', fn($value) => Helper::formatCurrency($value))
             ->setPerPage($request->per_page)
             ->get();
 

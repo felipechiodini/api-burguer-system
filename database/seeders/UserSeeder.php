@@ -2,19 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\DeliveryAddress;
-use App\Models\OrderDelivery;
-use App\Models\OrderPayment;
-use App\Models\OrderProduct;
+use App\Models\ChoiceItem;
 use App\Models\StoreBanner;
-use App\Models\StoreOrder;
 use App\Models\ProductAdditional;
-use App\Models\ProductConfiguration;
-use App\Models\ProductPhoto;
-use App\Models\ProductPrice;
+use App\Models\ProductChoice;
 use App\Models\ProductReplacement;
 use App\Models\StoreAddress;
 use App\Models\StoreCategory;
+use App\Models\StoreConfiguration;
 use App\Models\StoreCustomer;
 use App\Models\StoreDelivery;
 use App\Models\StoreNeighborhood;
@@ -30,53 +25,20 @@ class UserSeeder extends Seeder
 
     public function run()
     {
-        User::factory()->count(1)->create();
+        User::factory()
+            ->createOne();
 
-        $f = UserStore::query()
-                ->create([
-                    'user_id' => 1,
-                    'name' => 'Outro Burguer',
-                    'slug' => 'outro',
-                    'logo' => 'logo.png'
-                ]);
+        $store = UserStore::factory()
+            ->createOne([
+                'user_id' => 1,
+                'name' => 'Outro Burguer',
+                'slug' => 'outro',
+            ]);
 
-        $f->makeCurrent();
+        StoreConfiguration::factory()
+            ->makeOne(['user_store_id' => $store->id]);
 
-        // UserStore::factory()
-        //     ->has(StoreBanner::factory()->count(3), 'banners')
-        //     ->has(StoreCategory::factory()->count(10), 'categories')
-        //     ->has(StoreCustomer::factory()->count(30), 'customers')
-        //     ->has(StoreProduct::factory()
-        //             ->has(ProductPrice::factory()->count(1), 'prices')
-        //             ->has(ProductConfiguration::factory()->count(1), 'configuration')
-        //             ->has(ProductPhoto::factory()->count(3), 'photos')
-        //             ->has(ProductAdditional::factory()->count(3), 'additionals')
-        //             ->has(ProductReplacement::factory()->count(3), 'replacements')
-        //             ->count(30), 'products')
-        //     ->count(2)
-        //     ->state(new Sequence(
-        //         ['name' => 'Plankton Burguer', 'slug' => 'plankton'],
-        //         ['name' => 'Bona Burguer', 'slug' => 'bona']
-        //     ))
-        //     ->create();
-
-        // StorePaymentType::query()
-        //     ->create([
-        //         'user_store_id' => 1,
-        //         'payment_type_id' => 'pix'
-        //     ]);
-
-        // StorePaymentType::query()
-        //     ->create([
-        //         'user_store_id' => 2,
-        //         'payment_type_id' => 'pix'
-        //     ]);
-
-        // StoreDeliveryType::query()->create(['user_store_id' => 2,'delivery_type_id' => 'delivery','minutes' => 60]);
-        // StoreDeliveryType::query()->create(['user_store_id' => 2,'delivery_type_id' => 'withdraw','minutes' => 30]);
-
-        // StoreShippingOptions::query()->create(['user_store_id' => 2, 'name' => 'João Pessoa', 'value' => 0]);
-        // StoreShippingOptions::query()->create(['user_store_id' => 2, 'name' => 'Vieiras', 'value' => 3]);
+        $store->makeCurrent();
 
         $categories = ['Entradas', 'Smashs', 'Frango', 'Churrasco', 'Kids', 'Porções', 'Combos', 'Bebidas', 'Milk', 'Cervejas'];
         foreach ($categories as $key => $value) {
@@ -84,16 +46,23 @@ class UserSeeder extends Seeder
         }
 
         StoreAddress::factory()->count(1)->create();
-        StoreBanner::factory()->count(3)->create();
         StoreCustomer::factory()->count(30)->create();
         StoreProduct::factory()
-            ->has(ProductPrice::factory()->count(1), 'prices')
-            ->has(ProductConfiguration::factory()->count(1), 'configuration')
-            ->has(ProductPhoto::factory()->count(3), 'photos')
             ->has(ProductAdditional::factory()->count(3), 'additionals')
             ->has(ProductReplacement::factory()->count(3), 'replacements')
             ->count(30)
-            ->create();
+            ->create()
+            ->each(function($model) {
+                $choice = ProductChoice::factory()
+                    ->create(['product_id' => $model->id]);
+
+                ChoiceItem::query()
+                    ->create([
+                        'choice_id' => $choice->id,
+                        'name' => 'kkkkkkkkkkkkk',
+                        'value' => 20,
+                    ]);
+            });
 
         StoreSchedule::create(['week_day' => 1, 'start' => '13:00:00', 'end' => '17:00:00']);
         StoreSchedule::create(['week_day' => 2, 'start' => '13:00:00', 'end' => '17:00:00']);

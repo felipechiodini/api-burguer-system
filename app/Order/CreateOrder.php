@@ -146,7 +146,7 @@ class CreateOrder {
                 'store_order_id' => $order->id
             ]));
 
-        OrderCreated::dispatch($order, $this->customer, $payment, @$address);
+        // OrderCreated::dispatch($order, $this->customer, $payment, @$address);
 
         return $order;
     }

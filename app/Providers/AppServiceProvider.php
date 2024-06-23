@@ -25,8 +25,6 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\StoreOrder::observe(\App\Observers\StoreOrder::class);
         \App\Models\StoreCategory::observe(\App\Observers\StoreCategory::class);
         \App\Models\StoreProduct::observe(\App\Observers\StoreProduct::class);
-        \App\Models\ProductPhoto::observe(\App\Observers\ProductPhoto::class);
-        \App\Models\ProductPrice::observe(\App\Observers\ProductPrice::class);
         \App\Models\ProductAdditional::observe(\App\Observers\ProductAdditional::class);
         \App\Models\ProductReplacement::observe(\App\Observers\ProductReplacement::class);
     }

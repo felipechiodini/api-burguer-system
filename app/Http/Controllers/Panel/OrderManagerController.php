@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Enums\Order\Delivery;
 use App\Enums\Order\Payment;
 use App\Enums\Order\Status;
+use App\Events\OrderDispatched;
 use App\Http\Controllers\Controller;
 use App\Maps\Maps;
 use App\Models\DeliveryAddress;
@@ -156,6 +157,8 @@ class OrderManagerController extends Controller
         $order->update([
             'status' => $newStatus
         ]);
+
+        OrderDispatched::dispatch($order);
 
         return response()
             ->json([

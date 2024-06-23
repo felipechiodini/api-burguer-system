@@ -10,13 +10,29 @@ class StoreProductFactory extends Factory
 
     public function definition()
     {
-        return [
+        return array_merge($this->generatePrice(), [
             'store_category_id' => StoreCategory::all()->random()->id,
             'name' => collect(['Fritas', 'Hamburguer Duplo', 'Hamburguer', 'Coca-Cola', 'Skol'])->random(),
             'active' => true,
-            'price_from' => rand(50,100),
-            'price_to' => rand(0,50),
+            'image' => $this->faker->imageUrl(),
+            'price_from' => $this->faker->boolean() ? rand(10, 50) : null,
+            'price' => rand(20, 100),
             'description' => $this->faker->text(200)
+        ]);
+    }
+
+    private function generatePrice()
+    {
+        $to = rand(20, 100);
+
+        $from = null;
+        if ($this->faker->boolean()) {
+            $from = rand(10, $to);
+        }
+
+        return [
+            'price_from' => $from,
+            'price' => $to,
         ];
     }
 

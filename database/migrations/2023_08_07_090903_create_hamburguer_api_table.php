@@ -22,7 +22,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('name');
-            $table->string('logo');
+            $table->string('logo')->nullable();
+            $table->string('banner')->nullable();
             $table->string('slug')->unique();
             $table->timestamps();
         });
@@ -157,13 +158,23 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->foreignId('user_store_id')->references('id')->on('user_stores');
             $table->foreignId('store_category_id')->references('id')->on('store_categories');
+            // $table->unsignedTinyInteger('type');
+            // $table->string('type_id');
             $table->boolean('active')->default(false);
             $table->string('name');
+            $table->string('image')->nullable();
             $table->float('price_from')->nullable();
-            $table->float('price_to')->nullable();
+            $table->float('price');
             $table->text('description');
             $table->softDeletes();
             $table->timestamps();
+        });
+
+        Schema::create('product_prepared', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->unsignedTinyInteger('serves_people_count')->nullable();
+            $table->float('weight')->nullable();
         });
 
         Schema::create('store_schedules', function (Blueprint $table) {
@@ -187,20 +198,19 @@ return new class extends Migration
             $table->timestamp('ends_at');
         });
 
-        Schema::create('product_photos', function (Blueprint $table) {
+        Schema::create('product_choices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_product_id')->references('id')->on('store_products');
-            $table->string('src');
-            $table->tinyInteger('order');
+            $table->foreignId('product_id')->references('id')->on('store_products');
+            $table->unsignedTinyInteger('quantity');
+            $table->boolean('required');
             $table->timestamps();
         });
 
-        Schema::create('product_configurations', function (Blueprint $table) {
+        Schema::create('choice_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_product_id')->references('id')->on('store_products');
-            $table->enum('unit_type', ['grams', 'unit'])->nullable();
-            $table->tinyInteger('max_number_replacements');
-            $table->tinyInteger('max_number_additionals');
+            $table->foreignId('choice_id')->references('id')->on('product_choices');
+            $table->string('name');
+            $table->float('value');
             $table->timestamps();
         });
 

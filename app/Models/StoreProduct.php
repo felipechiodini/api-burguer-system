@@ -16,18 +16,13 @@ class StoreProduct extends Model
         'active',
         'name',
         'price_from',
-        'price_to',
+        'price',
         'description'
     ];
 
     protected $casts = [
         'active' => 'boolean'
     ];
-
-    public function prices()
-    {
-        return $this->hasMany(ProductPrice::class);
-    }
 
     public function promotion()
     {

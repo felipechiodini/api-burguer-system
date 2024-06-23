@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreConfiguration extends Model
+class ChoiceItem extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_store_id',
-        'warning',
-        'minimum_order_value'
+        'choice_id',
+        'name',
+        'value'
     ];
 
 }
