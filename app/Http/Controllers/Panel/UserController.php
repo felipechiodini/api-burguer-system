@@ -9,6 +9,7 @@ use App\Rules\CellphoneRule;
 use App\Utils\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -36,6 +37,8 @@ class UserController extends Controller
         $token = auth()->attempt(['email' => $request->email, 'password' => $request->password]);
 
         $user = auth()->user();
+
+        Log::channel('slack')->info('User created', ['user' => $user]);
 
         return response()
             ->json(compact('message', 'user', 'token'));
