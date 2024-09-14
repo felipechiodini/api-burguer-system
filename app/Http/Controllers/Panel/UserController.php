@@ -16,25 +16,15 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:100|min:3',
-            'email' => 'required|email',
-            'password' => ['required', new PasswordRule],
+            'email' => 'required|email|unique:users,email',
+            'password' => ['required'],
             'cellphone' => ['required', new CellphoneRule],
             'recaptcha_token' => [new ReCaptchaRule]
         ]);
-
-        $user = User::query()
-            ->where('email', $request->email)
-            ->first();
-
-        if ($user) {
-            return response()
-                ->json(['message' => 'Email já registrado, tentou outro.'], 422);
-        }
 
         User::query()
             ->create([
@@ -44,8 +34,14 @@ class UserController extends Controller
                 'cellphone' => Helper::clearAllIsNotNumber($request->cellphone)
             ]);
 
+        $message = 'Usuario criado com sucesso';
+
+        $token = auth()->attempt(['email' => $request->email, 'password' => $request->password]);
+
+        $user = auth()->user();
+
         return response()
-            ->json(['message' => 'Usuário criado com sucesso']);
+            ->json(compact('message', 'user', 'token'));
     }
 
     public function sendMailForgetPassword(Request $request)
@@ -66,5 +62,4 @@ class UserController extends Controller
         return response()
             ->json(['message' => 'Você recebera um link para redefinir sua senha']);
     }
-
 }
