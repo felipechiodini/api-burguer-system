@@ -23,7 +23,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => ['required'],
             'cellphone' => ['required', new CellphoneRule],
-            'recaptcha_token' => [new ReCaptchaRule]
+            // 'recaptcha_token' => [new ReCaptchaRule]
         ]);
 
         User::query()
