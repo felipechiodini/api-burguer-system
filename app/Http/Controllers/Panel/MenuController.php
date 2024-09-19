@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
-
     public function index(Request $request)
     {
         $menu = StoreCategory::query()
@@ -23,5 +22,4 @@ class MenuController extends Controller
         return response()
             ->json(compact('menu'));
     }
-
 }

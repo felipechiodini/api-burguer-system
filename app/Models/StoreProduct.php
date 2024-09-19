@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Utils\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,13 +10,14 @@ class StoreProduct extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_store_id',
-        'store_category_id',
+        'store_id',
+        'category_id',
         'active',
         'name',
-        'price_from',
+        'image',
         'price',
-        'description'
+        'price_from',
+        'description',
     ];
 
     protected $casts = [
@@ -87,7 +87,7 @@ class StoreProduct extends Model
         parent::boot();
 
         static::addGlobalScope('store', function($query) {
-            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
+            $query->where((new static())->getTable() . '.store_id', app('currentTenant')->id);
         });
     }
 

@@ -3,34 +3,27 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductPhoto;
 use App\Models\StoreProduct;
 use App\Table\Filters\Text;
 use App\Table\Table;
 use App\Utils\Helper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use DB;
 
 class ProductController extends Controller
 {
-
     public function index(Request $request)
     {
-        $builder = StoreProduct::query()
-            ->select('store_products.id', 'store_products.name', 'product_photos.src', 'price_from', 'price')
-            ->leftJoin('product_photos', fn($join) => $join->on('product_photos.store_product_id', 'store_products.id'));
+        $builder = StoreProduct::query();
 
         $table = Table::make()
             ->setEloquentBuilder($builder)
             ->addColumn('Imagem')
             ->addColumn('Nome')
             ->addColumn('Preço de')
-            ->addColumn('Preço por')
             ->addFilter(new Text('name', 'Nome'))
             ->addFilter(new Text('src', 'Imagem'))
-            ->addModifier('price_from', fn($value) => Helper::formatCurrency($value))
             ->addModifier('price', fn($value) => Helper::formatCurrency($value))
+            ->addModifier('price_from', fn($value) => Helper::formatCurrency($value))
             ->setPerPage($request->per_page)
             ->get();
 
@@ -41,22 +34,24 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'type' => 'required',
             'category_id' => 'required',
+            'image' => 'required|image',
             'name' => 'required',
             'price' => 'required',
             'description' => 'required'
         ]);
 
-        $path = $request->file('photo')->store('dwads');
+        $path = $request->file('image')
+            ->store('products');
 
         $product = StoreProduct::query()
             ->create([
-                'store_category_id' => $request->category_id,
-                'photo' => $path,
+                'category_id' => $request->category_id,
+                'image' => $path,
                 'active' => true,
                 'name' => $request->name,
-                'price_from' => $request->price,
+                'price' => $request->price,
+                'price_from' => $request->price_from,
                 'description' => $request->description
             ]);
 
@@ -98,5 +93,4 @@ class ProductController extends Controller
         return response()
             ->json(['message' => 'Produto deletado']);
     }
-
 }

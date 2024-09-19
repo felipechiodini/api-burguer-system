@@ -14,7 +14,6 @@ use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
-
     public function all()
     {
         $stores = UserStore::query()
@@ -28,23 +27,23 @@ class StoreController extends Controller
 
     public function update(String $slug, Request $request)
     {
-        $request->validate([
-            'name' => 'string',
-        ]);
+        $data = [
+            'name' => $request->name,
+            'slug' => Str::slug($request->name)
+        ];
 
-        if (UserStore::canUseName($request->name)) {
-            return response()->json(['message' => 'Não é possivel utilizar este nome'], 422);
+        if ($request->hasFile('logo')) {
+            $data['logo'] = $request->file('logo')->store('logos');
         }
 
         UserStore::query()
             ->where('slug', $slug)
-            ->update([
-                'name' => $request->name,
-                'slug' => Str::slug($request->name)
-            ]);
+            ->update($data);
 
         return response()
-            ->json(['message' => 'Loja atualizada com sucesso']);
+            ->json([
+                'message' => 'Loja atualizada com sucesso'
+            ]);
     }
 
     public function get(String $slug)
@@ -116,5 +115,4 @@ class StoreController extends Controller
         return response()
             ->json(['message' => 'Logo atualizada com sucesso']);
     }
-
 }

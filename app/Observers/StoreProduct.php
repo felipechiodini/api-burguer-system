@@ -10,7 +10,7 @@ class StoreProduct
 
     public function creating(ModelsStoreProduct $storeProduct): void
     {
-        $storeProduct->user_store_id = app('currentTenant')->id;
+        $storeProduct->store_id = app('currentTenant')->id;
     }
 
     public function created()

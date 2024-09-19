@@ -156,15 +156,13 @@ return new class extends Migration
 
         Schema::create('store_products', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
-            $table->foreignId('store_category_id')->references('id')->on('store_categories');
-            // $table->unsignedTinyInteger('type');
-            // $table->string('type_id');
-            $table->boolean('active')->default(false);
+            $table->foreignId('store_id')->references('id')->on('user_stores');
+            $table->foreignId('category_id')->references('id')->on('store_categories');
+            $table->boolean('active')->default(true);
             $table->string('name');
             $table->string('image')->nullable();
-            $table->float('price_from')->nullable();
             $table->float('price');
+            $table->float('price_from')->nullable();
             $table->text('description');
             $table->softDeletes();
             $table->timestamps();
