@@ -14,5 +14,4 @@ class StoreConfiguration extends Model
         'warning',
         'minimum_order_value'
     ];
-
 }

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class StoreConfigurationController extends Controller
 {
-
     public function get()
     {
         $configuration = StoreConfiguration::query()
@@ -21,11 +20,6 @@ class StoreConfigurationController extends Controller
 
     public function updateOrCreate(Request $request)
     {
-        $request->validate([
-            'warning' => 'string|nullable',
-            'minimum_order_value' => 'numeric'
-        ]);
-
         StoreConfiguration::query()
             ->updateOrCreate([
                 'user_store_id' => app('currentTenant')->id
@@ -37,5 +31,4 @@ class StoreConfigurationController extends Controller
         return response()
             ->json(['message' => 'Configurações salvas com sucesso!']);
     }
-
 }
