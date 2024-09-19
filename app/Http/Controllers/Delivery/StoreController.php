@@ -22,7 +22,6 @@ use App\Utils\Helper;
 
 class StoreController extends Controller
 {
-
     public function get(String $slug, Request $request)
     {
         $store = Cache::remember($request->fullUrl(), now()->addDay(), function () use ($slug) {
@@ -51,11 +50,11 @@ class StoreController extends Controller
                     'store_products.description',
                     'store_products.price_from',
                     'store_products.price',
-                    'store_products.store_category_id',
+                    'store_products.category_id',
                     'store_categories.name as category_name',
                 )
                 ->where('active', true)
-                ->join('store_categories', fn ($join) => $join->on('store_categories.id', 'store_products.store_category_id'))
+                ->join('store_categories', fn ($join) => $join->on('store_categories.id', 'store_products.category_id'))
                 ->orderBy('store_categories.order')
                 ->get()
                 ->map(function(StoreProduct $product) {
@@ -130,26 +129,4 @@ class StoreController extends Controller
         return response()
             ->json(compact('store'));
     }
-
-    public function distance(Request $request)
-    {
-        $request->validate([
-            'latitude' => 'required',
-            'longitude' => 'required'
-        ]);
-
-        $address = StoreAddress::query()
-            ->first('latitude', 'longitude');
-
-        $distance = Maps::getDistance(
-            $request->latitude,
-            $request->longitude,
-            // $address->latitude,
-            // $address->longitude
-        );
-
-        return response()
-            ->json(compact('distance'));
-    }
-
 }
