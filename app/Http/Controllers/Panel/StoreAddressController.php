@@ -9,29 +9,14 @@ use Illuminate\Http\Request;
 
 class StoreAddressController extends Controller
 {
-
     public function get()
     {
         $address = StoreAddress::query()
             ->select('cep', 'street', 'number', 'neighborhood', 'city', 'state', 'latitude', 'longitude')
             ->first();
 
-        if (!$address) {
-            return response()
-                ->json(['message' => 'Não possui endereço cadastrado'], 404);
-        }
-
         return response()
-            ->json(['address' => [
-                'cep' => Cep::format($address->cep),
-                'street' => $address->street,
-                'number' => $address->number,
-                'neighborhood' => $address->neighborhood,
-                'city' => $address->city,
-                'state' => $address->state,
-                'latitude' => $address->latitude,
-                'longitude' => $address->longitude,
-            ]]);
+            ->json(compact('address'));
     }
 
     public function updateOrCreate(Request $request)
