@@ -14,6 +14,6 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN composer install --optimize-autoloader --no-dev
 
-# RUN chown nginx:nginx . -R && chmod 755 -R . && chmod 777 -R storage
+RUN chown nginx:nginx . -R && chmod 755 -R . && chmod 777 -R storage
 
 # RUN (crontab -l ; echo "* * * * * su -c \"php /var/www/html/artisan schedule:run >> /dev/null 2>&1\" -s /bin/bash nginx") | crontab
