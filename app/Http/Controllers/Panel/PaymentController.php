@@ -37,10 +37,14 @@ class PaymentController extends Controller
             ->where('type', $enum->value)
             ->first();
 
-        StorePayment::query()
-            ->updateOrCreate([
-                'active' => @!$payment->active ?? true
+        if ($payment === null) {
+            StorePayment::create([
+                'type' => $enum->value,
+                'active' => true
             ]);
+        } else {
+            $payment->update(['active' => !$payment->active]);
+        }
 
         return response()
             ->json(['message' => 'Tipo de pagamento atualizado!']);
