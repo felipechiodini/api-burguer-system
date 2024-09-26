@@ -2,47 +2,47 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Enums\Order\Payment;
 use App\Http\Controllers\Controller;
 use App\Models\StorePayment;
 use Illuminate\Http\Request;
+use App\Enums\Order\Payment;
 
 class PaymentController extends Controller
 {
-
     public function index()
     {
-        $payments = StorePayment::query()
-            ->get()
-            ->map(function(StorePayment $storePayment) {
+        $payments = collect(Payment::asArray())
+            ->map(function($payment) {
+                $model = StorePayment::query()
+                    ->where('type', $payment)
+                    ->first();
+
                 return [
-                    'active' => $storePayment->active,
-                    'type' => $storePayment->type,
-                    'name' => Payment::getDescription($storePayment->type)
+                    'active' => (bool) @$model->active,
+                    'type' => $payment,
+                    'key' => Payment::getKey($payment),
+                    'name' => Payment::getDescription($payment)
                 ];
             });
- 
+
         return response()
             ->json(compact('payments'));
     }
 
-    public function update(String $tenant, String $key, Request $request)
+    public function toogleStatus(String $tenant, String $key, Request $request)
     {
-        $request->validate([
-            'active' => 'required|boolean'
-        ]);
-
         $enum = Payment::fromKey($key);
+
+        $payment = StorePayment::query()
+            ->where('type', $enum->value)
+            ->first();
 
         StorePayment::query()
             ->updateOrCreate([
-                'type' => $enum->value,
-            ], [
-                'active' => $request->boolean('active')
+                'active' => @!$payment->active ?? true
             ]);
 
         return response()
             ->json(['message' => 'Tipo de pagamento atualizado!']);
     }
-
 }

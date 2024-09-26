@@ -39,7 +39,7 @@ Route::middleware('auth:api')
         Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
         Route::get('category/all', 'CategoryController@all');
         Route::get('payment', 'PaymentController@index');
-        Route::post('payment/{key}/status', 'PaymentController@status');
+        Route::post('payment/{key}/status', 'PaymentController@toogleStatus');
         Route::get('delivery', 'DeliveryController@index');
         Route::post('delivery/{type}/active', 'DeliveryController@active');
         Route::apiResource('category', 'CategoryController');
