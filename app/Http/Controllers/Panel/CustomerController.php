@@ -11,28 +11,27 @@ use App\Table\Table;
 use App\Types\Cellphone as TypesCellphone;
 use App\Types\Document as TypesDocument;
 use App\Types\Name as TypesName;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-
     public function index(Request $request)
     {
-        $builder = StoreCustomer::query()
-            ->select('id', 'name', 'cellphone', 'document');
-
-        $table = Table::make()
-            ->setEloquentBuilder($builder)
-            ->addColumn('Nome')
-            ->addColumn('Documento')
-            ->addColumn('Celular')
-            ->addModifier('document', fn($value) => TypesDocument::format($value))
-            ->addModifier('cellphone', fn($value) => TypesCellphone::format($value))
-            ->setPerPage($request->per_page)
-            ->get();
+        $customers = StoreCustomer::query()
+            ->get()
+            ->map(function($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->name,
+                    'document' => $customer->document,
+                    'cellphone' => $customer->cellphone,
+                    'created_at' => Carbon::parse($customer->created_at)->format('d/m/Y H:i'),
+                ];
+            });
 
         return response()
-            ->json($table);
+            ->json(compact('customers'));
     }
 
     public function store(Request $request)
