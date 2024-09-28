@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Enums\Order\Delivery;
 use App\Http\Controllers\Controller;
 use App\Models\StoreDelivery;
+use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
@@ -26,6 +27,20 @@ class DeliveryController extends Controller
 
         return response()
             ->json(compact('deliveries'));
+    }
+
+    public function update(string $tenant, string $key, Request $request)
+    {
+        $delivery = StoreDelivery::query()
+            ->where('type', Delivery::fromKey($key)->value)
+            ->update([
+                'minutes' => $request->get('minutes', null),
+            ]);
+
+        $message = 'Tipo de entrega atualizado!';
+
+        return response()
+            ->json(compact('message'));
     }
 
     public function toogleStatus(string $tenant, string $key)
