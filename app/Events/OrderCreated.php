@@ -47,8 +47,7 @@ class OrderCreated implements ShouldBroadcast
             'distance' => 10,
             'payment_type' => Payment::getDescription($this->payment->type),
             'customer' => [
-                'name' => $this->customer->name,
-                'cellphone' => $this->customer->cellphone
+                'name' => explode(' ', $this->customer->name)[0],
             ]
         ];
     }
