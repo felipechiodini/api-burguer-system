@@ -19,7 +19,7 @@ class Index extends Controller
     public function __invoke(Request $request)
     {
         $orders = StoreOrder::query()
-            ->select(['id', 'store_customer_id', 'origin', 'status', 'total', 'created_at'])
+            ->select(['id', 'customer_id', 'origin', 'status', 'total', 'created_at'])
             ->with('customer:id,name,cellphone')
             ->when($request->query('status'), function($query) use(&$request) {
                 $query->where('status', $request->query('status'));

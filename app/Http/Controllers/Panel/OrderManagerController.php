@@ -7,7 +7,6 @@ use App\Enums\Order\Payment;
 use App\Enums\Order\Status;
 use App\Events\OrderDispatched;
 use App\Http\Controllers\Controller;
-use App\Maps\Maps;
 use App\Models\DeliveryAddress;
 use App\Models\OrderAddress;
 use App\Models\OrderDelivery;
@@ -26,8 +25,7 @@ class OrderManagerController extends Controller
     public function index(Request $request)
     {
         $orders = StoreOrder::query()
-            ->select(['id', 'store_customer_id', 'origin', 'status', 'total', 'created_at'])
-            ->with('customer:id,name,cellphone')
+            ->select(['id', 'customer_id', 'origin', 'status', 'total', 'created_at'])
             ->when($request->query('status'), function($query) use(&$request) {
                 $query->where('status', $request->query('status'));
             })
@@ -37,38 +35,30 @@ class OrderManagerController extends Controller
             ->orderBy('id', 'desc')
             ->get()
             ->transform(function(StoreOrder $order) {
-                $delivery = OrderDelivery::query()
-                    ->select('id', 'type')
-                    ->Where('store_order_id', $order->id)
+                $customer = StoreCustomer::query()
+                    ->select('name', 'cellphone')
+                    ->where('id', $order->customer_id)
                     ->first();
 
                 $address = OrderAddress::query()
                     ->select('cep', 'neighborhood')
-                    ->where('order_id', $delivery->id)
+                    ->where('order_id', $order->id)
                     ->first();
 
                 $payment = OrderPayment::query()
                     ->select('type')
-                    ->where('store_order_id', $order->id)
-                    ->first();
-
-                $storeAddress = StoreAddress::query()
-                    ->select('cep')
+                    ->where('order_id', $order->id)
                     ->first();
 
                 return [
                     'id' => $order->id,
                     'total' => Helper::formatCurrency($order->total),
                     'status' => $order->status,
-                    'status_label' => Status::fromValue($order->status)->description,
-                    'ordered_since' => Carbon::parse($order->created_at)->diffInSeconds(now()),
-                    'neighborhood' => $address->neighborhood,
-                    'distance' => 10,
+                    'status_label' => Status::getDescription($order->status),
+                    'ordered_since' => Carbon::parse($order->created_at)->diffForHumans(now()),
+                    'neighborhood' => @$address->neighborhood,
                     'payment_type' => Payment::getDescription($payment->type),
-                    'customer' => [
-                        'name' => $order->customer->name,
-                        'cellphone' => $order->customer->cellphone
-                    ]
+                    'customer' => $customer,
                 ];
             });
 
@@ -87,7 +77,7 @@ class OrderManagerController extends Controller
                 'order_products.observation',
             ])
             ->join('store_products', fn ($join) => $join->on('store_products.id', 'order_products.product_id'))
-            ->where('store_order_id', $order->id)
+            ->where('order_id', $order->id)
             ->get()
             ->map(function($order) {
                 return [
@@ -101,22 +91,12 @@ class OrderManagerController extends Controller
 
         $customer = StoreCustomer::query()
             ->select('name', 'cellphone')
-            ->where('id', $order->store_customer_id)
-            ->first();
-
-        $delivery = OrderDelivery::query()
-            ->select('id', 'type')
-            ->where('store_order_id', $order->id)
-            ->first();
-
-        $address = DeliveryAddress::query()
-            ->select('cep', 'street', 'number', 'neighborhood', 'city', 'complement')
-            ->where('order_delivery_id', $delivery->id)
+            ->where('id', $order->customer_id)
             ->first();
 
         $payment = OrderPayment::query()
             ->select('type')
-            ->where('store_order_id', $order->id)
+            ->where('order_id', $order->id)
             ->first();
 
         $response = [

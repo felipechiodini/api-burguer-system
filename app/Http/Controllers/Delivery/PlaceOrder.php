@@ -6,6 +6,7 @@ use App\Enums\Order\Delivery as OrderDelivery;
 use App\Enums\Order\Origin;
 use App\Enums\Order\Payment as OrderPayment;
 use App\Enums\Order\Status;
+use App\Events\OrderCreated;
 use App\Models\OrderAddress;
 use App\Models\OrderPayment as ModelsOrderPayment;
 use App\Models\OrderProduct as ModelsOrderProduct;
@@ -26,7 +27,7 @@ use App\Types\Name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class OrderController
+class PlaceOrder
 {
     public function __invoke(Request $request)
     {
@@ -71,7 +72,7 @@ class OrderController
             ]);
 
         if ($request->json('delivery.type') === OrderDelivery::DELIVERY) {
-            OrderAddress::query()
+            $address = OrderAddress::query()
                 ->create([
                     'order_id' => $order->id,
                     'cep' => $request->json('address.cep'),
@@ -83,7 +84,7 @@ class OrderController
                 ]);
         }
 
-        ModelsOrderPayment::query()
+        $payment = ModelsOrderPayment::query()
             ->create([
                 'order_id' => $order->id,
                 'type' => OrderPayment::fromValue($request->json('payment.type')),
@@ -111,6 +112,11 @@ class OrderController
             'products_total' => $total,
             'total' => $total + $order->delivery_fee,
         ]);
+
+
+        OrderCreated::dispatch($order, $customer, $payment, $address);
+
+        DB::commit();
 
         return response()
             ->json([

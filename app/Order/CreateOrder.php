@@ -84,7 +84,7 @@ class CreateOrder {
 
         $order = StoreOrder::query()
             ->create([
-                'store_customer_id' => $this->customer->id,
+                'customer_id' => $this->customer->id,
                 'status' => Status::OPEN,
                 'origin' => Origin::APP,
                 'products_total' => $total,

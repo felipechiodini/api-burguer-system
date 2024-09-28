@@ -28,7 +28,7 @@ class StoreOrder extends Model
 
     public function customer()
     {
-        return $this->belongsTo(StoreCustomer::class, 'store_customer_id');
+        return $this->belongsTo(StoreCustomer::class, 'customer_id');
     }
 
     public function products()

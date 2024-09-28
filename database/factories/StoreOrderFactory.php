@@ -34,7 +34,7 @@ class StoreOrderFactory extends Factory
         ])->random();
 
         return [
-            'store_customer_id' => StoreCustomer::all()->random()->id,
+            'customer_id' => StoreCustomer::all()->random()->id,
             'status' => Status::OPEN,
             'origin' => Origin::APP,
             'products_total' => $price['products_total'],

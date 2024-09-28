@@ -56,7 +56,7 @@ Route::middleware('auth:api')
         Route::apiResource('combo/{combo}/option', 'ComboOptionController');
         Route::apiResource('card', 'CardController');
         Route::apiResource('waiter', 'WaiterController');
-        Route::get('order-manager', 'OrderManager\Index');
+        Route::get('order-manager', 'OrderManagerController@index');
         Route::get('order-manager/{order}', 'OrderManagerController@show');
         Route::post('order-manager/{order}/confirm', 'OrderManagerController@confirm');
         Route::post('order-manager/{order}/dispatch', 'OrderManagerController@dispatchOrder');
