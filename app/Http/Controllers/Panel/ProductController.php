@@ -8,6 +8,7 @@ use App\Table\Filters\Text;
 use App\Table\Table;
 use App\Utils\Helper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -31,7 +32,7 @@ class ProductController extends Controller
             ->json($table);
     }
 
-    public function store(Request $request)
+    public function store(string $slug, Request $request)
     {
         $request->validate([
             'category_id' => 'required',
@@ -54,6 +55,8 @@ class ProductController extends Controller
                 'price_from' => $request->price_from,
                 'description' => $request->description
             ]);
+
+        Cache::forget("store-$slug");
 
         return response()
             ->json([

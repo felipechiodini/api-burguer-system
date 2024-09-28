@@ -30,7 +30,7 @@ class DeliveryController extends Controller
             ->json(compact('deliveries'));
     }
 
-    public function update(string $tenant, string $key, Request $request)
+    public function update(string $slug, string $key, Request $request)
     {
         $delivery = StoreDelivery::query()
             ->where('type', Delivery::fromKey($key)->value)
@@ -39,6 +39,8 @@ class DeliveryController extends Controller
             ]);
 
         $message = 'Tipo de entrega atualizado!';
+
+        Cache::forget("store-$slug");
 
         return response()
             ->json(compact('message'));
