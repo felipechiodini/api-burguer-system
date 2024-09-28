@@ -20,12 +20,17 @@ class StoreConfigurationController extends Controller
 
     public function updateOrCreate(Request $request)
     {
+        $request->validate([
+            'minimum_order_value' => 'nullable|numeric',
+            'warning' => 'nullable|string',
+        ]);
+
         StoreConfiguration::query()
             ->updateOrCreate([
                 'store_id' => app('currentTenant')->id
             ], [
-                'warning' => $request->warning,
-                'minimum_order_value' => $request->minimum_order_value
+                'minimum_order_value' => $request->minimum_order_value,
+                'warning' => $request->warning
             ]);
 
         return response()
