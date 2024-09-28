@@ -30,5 +30,4 @@ class StoreDelivery extends Model
             $query->where((new static())->getTable() . '.store_id', app('currentTenant')->id);
         });
     }
-
 }
