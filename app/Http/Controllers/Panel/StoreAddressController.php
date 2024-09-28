@@ -43,5 +43,4 @@ class StoreAddressController extends Controller
         return response()
             ->json(['message' => 'Endereço salvo com sucesso!']);
     }
-
 }

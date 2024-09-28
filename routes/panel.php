@@ -41,7 +41,7 @@ Route::middleware('auth:api')
         Route::get('payment', 'PaymentController@index');
         Route::post('payment/{key}/status', 'PaymentController@toogleStatus');
         Route::get('delivery', 'DeliveryController@index');
-        Route::post('delivery/{type}/active', 'DeliveryController@active');
+        Route::post('delivery/{type}/status', 'DeliveryController@toogleStatus');
         Route::apiResource('category', 'CategoryController');
         Route::apiResource('customer', 'CustomerController');
         Route::apiResource('banner', 'BannerController');

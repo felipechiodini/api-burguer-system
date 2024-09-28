@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-
     public function index(Request $request)
     {
         $page = StoreOrder::query()
@@ -18,6 +17,4 @@ class OrderController extends Controller
         return response()
             ->json(compact('page'));
     }
-
-
 }

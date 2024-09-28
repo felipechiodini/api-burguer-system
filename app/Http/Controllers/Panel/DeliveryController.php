@@ -5,23 +5,22 @@ namespace App\Http\Controllers\Panel;
 use App\Enums\Order\Delivery;
 use App\Http\Controllers\Controller;
 use App\Models\StoreDelivery;
-use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
     public function index()
     {
-        $deliveries = collect(Delivery::asArray())
-            ->map(function($type) {
+        $deliveries = collect(Delivery::getInstances())
+            ->map(function($delivery) {
                 $model = StoreDelivery::query()
-                    ->where('type', $type)
+                    ->where('type', $delivery->value)
                     ->first();
 
                 return [
                     'active' => @$model->active,
-                    'type' => $type,
+                    'key' => $delivery->key,
                     'minutes' => @$model->minutes,
-                    'name' => Delivery::getDescription($type)
+                    'name' => $delivery->description
                 ];
             });
 
@@ -29,23 +28,24 @@ class DeliveryController extends Controller
             ->json(compact('deliveries'));
     }
 
-    public function active(Int $id, Request $request)
+    public function toogleStatus(string $tenant, string $key)
     {
-        $request->validate([
-            'active' => 'required|boolean',
-            'minutes' => 'required'
-        ]);
+        $enum = Delivery::fromKey($key);
 
-        StoreDelivery::query()
-            ->updateOrCreate([
-                'type' => $id,
-            ], [
-                'active' => $request->boolean('active'),
-                'minutes' => $request->input('minutes'),
+        $delivery = StoreDelivery::query()
+            ->where('type', $enum->value)
+            ->first();
+
+        if ($delivery === null) {
+            StoreDelivery::create([
+                'type' => $enum->value,
+                'active' => true
             ]);
+        } else {
+            $delivery->update(['active' => !$delivery->active]);
+        }
 
         return response()
             ->json(['message' => 'Tipo de entrega atualizado!']);
     }
-
 }
