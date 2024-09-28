@@ -42,7 +42,7 @@ class OrderCreated implements ShouldBroadcast
             'total' => Helper::formatCurrency($this->storeOrder->total),
             'status' => $this->storeOrder->status,
             'status_label' => Status::getDescription($this->storeOrder->status),
-            'ordered_since' => Carbon::parse($this->storeOrder->created_at)->diffInSeconds(now()),
+            'ordered_since' => Carbon::parse($this->storeOrder->created_at)->diffForHumans(now()),
             'neighborhood' => @$this->address->neighborhood,
             'distance' => 10,
             'payment_type' => Payment::getDescription($this->payment->type),
