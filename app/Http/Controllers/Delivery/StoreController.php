@@ -87,7 +87,7 @@ class StoreController extends Controller
 
             $deliveryOptions = StoreDelivery::query()
                 ->select('type', 'minutes')
-                ->where('active', true)
+                // ->where('active', true)
                 ->get()
                 ->map(function($model) {
                     return [
