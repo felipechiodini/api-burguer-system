@@ -9,7 +9,7 @@ return [
         Payment::CASH => 'Dinheiro',
         Payment::CREDIT_CARD => 'Cartão de Crédito',
         Payment::DEBIT_CARD => 'Cartão de Debito',
-        Payment::PIX => 'PIX',
+        Payment::PIX => 'Pix',
     ],
     Delivery::class => [
         Delivery::DELIVERY => 'Entrega',
