@@ -9,20 +9,22 @@ use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
-
     public function index()
     {
-        $deliveries = StoreDelivery::query()
-            ->get()
-            ->map(function(StoreDelivery $storeDelivery) {
+        $deliveries = collect(Delivery::asArray())
+            ->map(function($type) {
+                $model = StoreDelivery::query()
+                    ->where('type', $type)
+                    ->first();
+
                 return [
-                    'active' => $storeDelivery->active,
-                    'type' => $storeDelivery->type,
-                    'minutes' => $storeDelivery->minutes,
-                    'name' => Delivery::getDescription($storeDelivery->type)
+                    'active' => @$model->active,
+                    'type' => $type,
+                    'minutes' => @$model->minutes,
+                    'name' => Delivery::getDescription($type)
                 ];
             });
- 
+
         return response()
             ->json(compact('deliveries'));
     }
