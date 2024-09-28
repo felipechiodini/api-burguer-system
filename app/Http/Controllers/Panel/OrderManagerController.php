@@ -101,6 +101,11 @@ class OrderManagerController extends Controller
             ->where('order_id', $order->id)
             ->first();
 
+        $address = OrderAddress::query()
+            ->select('street', 'number', 'neighborhood')
+            ->where('order_id', $order->id)
+            ->first();
+
         $response = [
             'id' => $order->id,
             'status' => $order->status,
@@ -112,8 +117,8 @@ class OrderManagerController extends Controller
             'address' => $address,
             'products' => $products,
             'delivery' => [
-                'type' => $delivery->type,
-                'type_label' => Delivery::fromValue($delivery->type)->description
+                'type' => $order->delivery,
+                'type_label' => Delivery::fromValue($order->delivery)->description
             ],
             'payment' => [
                 'type' => $payment->type,

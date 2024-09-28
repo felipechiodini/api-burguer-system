@@ -245,6 +245,7 @@ return new class extends Migration
             $table->foreignId('coupon_id')->nullable()->default(null)->references('id')->on('store_coupons');
             $table->float('products_total');
             $table->float('delivery_fee');
+            $table->unsignedTinyInteger('delivery');
             $table->float('discount');
             $table->float('total');
             $table->unsignedTinyInteger('origin');

@@ -67,6 +67,7 @@ class PlaceOrder
                 'delivery_fee' => $neighborhood->price,
                 'discount' => 0,
                 'total' => 0,
+                'delivery' => $request->json('delivery.type'),
                 'origin' => Origin::APP,
                 'status' => Status::OPEN,
             ]);

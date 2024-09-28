@@ -16,6 +16,7 @@ class StoreOrder extends Model
         'products_total',
         'delivery_fee',
         'discount',
+        'delivery',
         'total',
         'origin',
         'status'
