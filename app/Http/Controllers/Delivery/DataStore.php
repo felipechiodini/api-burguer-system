@@ -6,7 +6,6 @@ use App\Enums\Order\Delivery;
 use App\Enums\Order\Payment;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
-use App\Maps\Maps;
 use App\Models\ChoiceItem;
 use App\Models\ProductChoice;
 use App\Models\StoreAddress;
@@ -20,11 +19,11 @@ use App\Models\UserStore;
 use Illuminate\Http\Request;
 use App\Utils\Helper;
 
-class StoreController extends Controller
+class DataStore extends Controller
 {
-    public function get(String $slug, Request $request)
+    public function __invoke(String $slug, Request $request)
     {
-        $store = Cache::remember($request->fullUrl(), now()->addDay(), function () use ($slug) {
+        $store = Cache::remember("store-$slug", now()->addDay(), function () use ($slug) {
             $store = UserStore::query()
                 ->where('slug', $slug)
                 ->first();
