@@ -36,7 +36,7 @@ class OrderManagerController extends Controller
             ->get()
             ->transform(function(StoreOrder $order) {
                 $customer = StoreCustomer::query()
-                    ->select('name', 'cellphone')
+                    ->select('name')
                     ->where('id', $order->customer_id)
                     ->first();
 
@@ -58,7 +58,9 @@ class OrderManagerController extends Controller
                     'ordered_since' => Carbon::parse($order->created_at)->diffForHumans(now()),
                     'neighborhood' => @$address->neighborhood,
                     'payment_type' => Payment::getDescription($payment->type),
-                    'customer' => $customer,
+                    'customer' => [
+                        'name' => explode(' ', $customer->name)[0],
+                    ],
                 ];
             });
 
