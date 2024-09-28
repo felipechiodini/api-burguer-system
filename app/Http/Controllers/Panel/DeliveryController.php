@@ -6,6 +6,7 @@ use App\Enums\Order\Delivery;
 use App\Http\Controllers\Controller;
 use App\Models\StoreDelivery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class DeliveryController extends Controller
 {
@@ -43,7 +44,7 @@ class DeliveryController extends Controller
             ->json(compact('message'));
     }
 
-    public function toogleStatus(string $tenant, string $key)
+    public function toogleStatus(string $slug, string $key)
     {
         $enum = Delivery::fromKey($key);
 
@@ -59,6 +60,8 @@ class DeliveryController extends Controller
         } else {
             $delivery->update(['active' => !$delivery->active]);
         }
+
+        Cache::forget("store-$slug");
 
         return response()
             ->json(['message' => 'Tipo de entrega atualizado!']);

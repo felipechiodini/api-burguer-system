@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\StoreAddress;
 use App\Types\Cep;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class StoreAddressController extends Controller
 {
@@ -19,7 +20,7 @@ class StoreAddressController extends Controller
             ->json(compact('address'));
     }
 
-    public function updateOrCreate(Request $request)
+    public function updateOrCreate(string $slug, Request $request)
     {
         $request->validate([
             'cep' => 'required',
@@ -39,6 +40,8 @@ class StoreAddressController extends Controller
                 'city' => $request->city,
                 'state' => $request->state
             ]);
+
+        Cache::forget("store-$slug");
 
         return response()
             ->json(['message' => 'Endereço salvo com sucesso!']);
