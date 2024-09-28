@@ -68,7 +68,7 @@ class OrderManagerController extends Controller
             ->json(compact('orders'));
     }
 
-    public function show(String $slug, StoreOrder $order)
+    public function show(string $slug, StoreOrder $order)
     {
         $products = OrderProduct::query()
             ->select([
@@ -102,14 +102,14 @@ class OrderManagerController extends Controller
             ->first();
 
         $address = OrderAddress::query()
-            ->select('street', 'number', 'neighborhood')
+            ->select('street', 'number', 'neighborhood', 'city')
             ->where('order_id', $order->id)
             ->first();
 
         $response = [
             'id' => $order->id,
             'status' => $order->status,
-            'created_at' => Carbon::parse($order->created_at)->translatedFormat('H\hm'),
+            'created_at' => Carbon::parse($order->created_at)->translatedFormat('H:i'),
             'products_total' => Helper::formatCurrency($order->products_total),
             'delivery_fee' => Helper::formatCurrency($order->delivery_fee),
             'total' => Helper::formatCurrency($order->total),
