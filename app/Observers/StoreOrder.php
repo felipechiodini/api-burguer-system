@@ -9,7 +9,7 @@ class StoreOrder
 
     public function creating(ModelsStoreOrder $storeOrder): void
     {
-        $storeOrder->user_store_id = app('currentTenant')->id;
+        $storeOrder->store_id = app('currentTenant')->id;
     }
 
 }

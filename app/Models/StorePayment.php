@@ -12,7 +12,7 @@ class StorePayment extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'user_store_id',
+        'store_id',
         'active',
         'type'
     ];
@@ -26,7 +26,7 @@ class StorePayment extends Model
         parent::boot();
 
         static::addGlobalScope('store', function($query) {
-            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
+            $query->where((new static())->getTable() . '.store_id', app('currentTenant')->id);
         });
     }
 

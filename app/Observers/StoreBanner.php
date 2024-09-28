@@ -8,7 +8,7 @@ class StoreBanner
 {
     public function creating(ModelsStoreBanner $storeBanner): void
     {
-        $storeBanner->user_store_id = app('currentTenant')->id;
+        $storeBanner->store_id = app('currentTenant')->id;
     }
 
 }

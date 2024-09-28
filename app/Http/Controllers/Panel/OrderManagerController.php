@@ -9,6 +9,7 @@ use App\Events\OrderDispatched;
 use App\Http\Controllers\Controller;
 use App\Maps\Maps;
 use App\Models\DeliveryAddress;
+use App\Models\OrderAddress;
 use App\Models\OrderDelivery;
 use App\Models\OrderPayment;
 use App\Models\OrderProduct;
@@ -41,9 +42,9 @@ class OrderManagerController extends Controller
                     ->Where('store_order_id', $order->id)
                     ->first();
 
-                $address = DeliveryAddress::query()
+                $address = OrderAddress::query()
                     ->select('cep', 'neighborhood')
-                    ->where('order_delivery_id', $delivery->id)
+                    ->where('order_id', $delivery->id)
                     ->first();
 
                 $payment = OrderPayment::query()
@@ -85,7 +86,7 @@ class OrderManagerController extends Controller
                 'order_products.value',
                 'order_products.observation',
             ])
-            ->join('store_products', fn ($join) => $join->on('store_products.id', 'order_products.store_product_id'))
+            ->join('store_products', fn ($join) => $join->on('store_products.id', 'order_products.product_id'))
             ->where('store_order_id', $order->id)
             ->get()
             ->map(function($order) {

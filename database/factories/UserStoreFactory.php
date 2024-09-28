@@ -11,7 +11,6 @@ class UserStoreFactory extends Factory
     {
         return [
             'logo' => $this->faker->imageUrl(),
-            'banner' => $this->faker->imageUrl()
         ];
     }
 

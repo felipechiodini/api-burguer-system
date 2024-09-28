@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\OrderCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,9 +10,9 @@ class StoreOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_store_id',
-        'store_customer_id',
-        'store_coupon_id',
+        'store_id',
+        'customer_id',
+        'coupon_id',
         'products_total',
         'delivery_fee',
         'discount',
@@ -72,7 +71,7 @@ class StoreOrder extends Model
         parent::boot();
 
         static::addGlobalScope('store', function($query) {
-            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
+            $query->where((new static())->getTable() . '.store_id', app('currentTenant')->id);
         });
     }
 }

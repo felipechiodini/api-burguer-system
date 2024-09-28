@@ -22,7 +22,7 @@ class CustomerController extends Controller
 
         StoreCustomer::query()
             ->create([
-                'user_store_id' => app('currentTenant')->id,
+                'store_id' => app('currentTenant')->id,
                 'name' => Helper::capitalizeName($request->name),
                 'cpf' => Helper::clearAllIsNotNumber($request->cpf),
                 'cellphone' => Helper::clearAllIsNotNumber($request->cellphone),

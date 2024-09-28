@@ -8,7 +8,7 @@ class StoreCustomer
 {
     public function creating(ModelsStoreCustomer $storeCustomer): void
     {
-        $storeCustomer->user_store_id = app('currentTenant')->id;
+        $storeCustomer->store_id = app('currentTenant')->id;
     }
 
 }

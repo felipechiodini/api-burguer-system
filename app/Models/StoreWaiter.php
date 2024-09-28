@@ -11,7 +11,7 @@ class StoreWaiter extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_store_id',
+        'store_id',
         'name'
     ];
 
@@ -20,7 +20,7 @@ class StoreWaiter extends Model
         parent::boot();
 
         static::addGlobalScope('store', function($query) {
-            $query->where((new static())->getTable() . '.user_store_id', app('currentTenant')->id);
+            $query->where((new static())->getTable() . '.store_id', app('currentTenant')->id);
         });
     }
 }

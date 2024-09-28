@@ -9,7 +9,7 @@ class StoreCategory
 {
     public function creating(ModelsStoreCategory $storeCategory): void
     {
-        $storeCategory->user_store_id = app('currentTenant')->id;
+        $storeCategory->store_id = app('currentTenant')->id;
     }
 
     public function created()

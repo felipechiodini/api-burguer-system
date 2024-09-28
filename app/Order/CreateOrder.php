@@ -99,7 +99,7 @@ class CreateOrder {
             ModelsOrderProduct::query()
                 ->create([
                     'store_order_id' => $order->id,
-                    'store_product_id' => $product->model->id,
+                    'product_id' => $product->model->id,
                     'value' => $product->getValue(),
                     'amount' => $product->amount,
                     'observation' => $product->observation

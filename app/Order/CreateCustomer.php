@@ -40,7 +40,7 @@ class CreateCustomer {
     {
         return StoreCustomer::query()
             ->create([
-                'user_store_id' => 1,
+                'store_id' => 1,
                 'name' => $this->name,
                 'document' => $this->document,
                 'cellphone' => $this->cellphone

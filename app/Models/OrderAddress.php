@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DeliveryAddress extends Model
+class OrderAddress extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
-        'order_delivery_id',
+        'order_id',
         'cep',
         'street',
         'number',
@@ -18,5 +20,4 @@ class DeliveryAddress extends Model
         'city',
         'complement'
     ];
-
 }

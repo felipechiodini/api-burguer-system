@@ -9,9 +9,10 @@ class OrderPayment extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
-        'store_order_id',
+        'order_id',
         'type'
     ];
-
 }

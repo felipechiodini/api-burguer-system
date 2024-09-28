@@ -10,7 +10,7 @@ class StoreConfiguration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_store_id',
+        'store_id',
         'warning',
         'minimum_order_value'
     ];

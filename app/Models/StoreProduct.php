@@ -56,30 +56,7 @@ class StoreProduct extends Model
 
     public function category()
     {
-        return $this->belongsTo(StoreCategory::class, 'store_category_id');
-    }
-
-    public function active()
-    {
-        $errors = collect([]);
-
-        if ($this->prices->count() < 0) {
-            $errors->push('O produto precisa de ao menos um preço');
-        }
-
-        if ($this->product->photos()->count() === 0) {
-            $errors->push('É necessário que o produto tenha uma foto');
-        }
-
-        if ($this->product->category() === null) {
-            $errors->push('O produto não possue categoria');
-        }
-
-        if ($errors->count() > 0) {
-            return $errors;
-        }
-
-        $this->update(['active' => true]);
+        return $this->belongsTo(StoreCategory::class, 'category_id');
     }
 
     protected static function boot()
@@ -90,5 +67,4 @@ class StoreProduct extends Model
             $query->where((new static())->getTable() . '.store_id', app('currentTenant')->id);
         });
     }
-
 }

@@ -8,7 +8,7 @@ class StoreSchedule
 {
     public function creating(ModelsStoreSchedule $storeSchedule): void
     {
-        $storeSchedule->user_store_id = app('currentTenant')->id;
+        $storeSchedule->store_id = app('currentTenant')->id;
     }
 
 }

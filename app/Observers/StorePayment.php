@@ -8,7 +8,7 @@ class StorePayment
 {
     public function creating(ModelsStorePayment $storePayment): void
     {
-        $storePayment->user_store_id = app('currentTenant')->id;
+        $storePayment->store_id = app('currentTenant')->id;
     }
 
 }

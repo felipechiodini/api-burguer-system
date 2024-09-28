@@ -25,7 +25,7 @@ class WaiterController extends Controller
         ]);
 
         $waiter = StoreWaiter::create([
-            'user_store_id'=> app('currentTenant')->id,
+            'store_id'=> app('currentTenant')->id,
             'name' => $request->name
         ]);
 

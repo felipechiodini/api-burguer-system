@@ -10,7 +10,7 @@ class OrderProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'store_product_id' => StoreProduct::all()->random(),
+            'product_id' => StoreProduct::all()->random(),
             'value' => rand(10, 100),
             'amount' => rand(1, 5),
             'observation' => collect([null, 'sem cebola', 'sem tomate', 'sem ervilha'])->random(),

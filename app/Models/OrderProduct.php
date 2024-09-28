@@ -10,8 +10,8 @@ class OrderProduct extends Model
     use HasFactory;
 
     protected $fillable = [
-        'store_order_id',
-        'store_product_id',
+        'order_id',
+        'product_id',
         'value',
         'amount',
         'observation',
@@ -19,7 +19,7 @@ class OrderProduct extends Model
 
     public function product()
     {
-        return $this->belongsTo(StoreProduct::class, 'store_product_id');
+        return $this->belongsTo(StoreProduct::class, 'product_id');
     }
 
     public function additionals()

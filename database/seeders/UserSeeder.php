@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
             ]);
 
         StoreConfiguration::factory()
-            ->makeOne(['user_store_id' => $store->id]);
+            ->makeOne(['store_id' => $store->id]);
 
         $store->makeCurrent();
 
@@ -45,24 +45,28 @@ class UserSeeder extends Seeder
             StoreCategory::create(['name' => $value, 'order' => $key]);
         }
 
-        StoreAddress::factory()->count(1)->create();
-        StoreCustomer::factory()->count(30)->create();
-        StoreProduct::factory()
-            ->has(ProductAdditional::factory()->count(3), 'additionals')
-            ->has(ProductReplacement::factory()->count(3), 'replacements')
+        StoreAddress::factory()
+            ->count(1)
+            ->create();
+        StoreCustomer::factory()
             ->count(30)
-            ->create()
-            ->each(function($model) {
-                $choice = ProductChoice::factory()
-                    ->create(['product_id' => $model->id]);
+            ->create();
+        StoreProduct::factory()
+            // ->has(ProductAdditional::factory()->count(3), 'additionals')
+            // ->has(ProductReplacement::factory()->count(3), 'replacements')
+            ->count(30)
+            ->create();
+            // ->each(function($model) {
+            //     $choice = ProductChoice::factory()
+            //         ->create(['product_id' => $model->id]);
 
-                ChoiceItem::query()
-                    ->create([
-                        'choice_id' => $choice->id,
-                        'name' => 'kkkkkkkkkkkkk',
-                        'value' => 20,
-                    ]);
-            });
+            //     ChoiceItem::query()
+            //         ->create([
+            //             'choice_id' => $choice->id,
+            //             'name' => 'kkkkkkkkkkkkk',
+            //             'value' => 20,
+            //         ]);
+            // });
 
         StoreSchedule::create(['week_day' => 1, 'start' => '13:00:00', 'end' => '17:00:00']);
         StoreSchedule::create(['week_day' => 2, 'start' => '13:00:00', 'end' => '17:00:00']);

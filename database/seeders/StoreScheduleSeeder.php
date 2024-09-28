@@ -14,7 +14,7 @@ class StoreScheduleSeeder extends Seeder
         UserStore::each(function(UserStore $store) {
             for ($i = 0; $i < 7; $i++) {
                 StoreSchedule::create([
-                    'user_store_id' => $store->id,
+                    'store_id' => $store->id,
                     'week_day' => $i,
                     'open_at' => '18:00:00',
                     'close_at' => '23:00:00',

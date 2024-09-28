@@ -28,7 +28,7 @@ class ProductConfigurationController extends Controller
         ]);
 
         ProductConfiguration::query()
-            ->where('store_product_id', $product->id)
+            ->where('product_id', $product->id)
             ->update([
                 'unit_type' => $request->unit_type,
                 'max_number_replacements' => $request->max_number_replacements,

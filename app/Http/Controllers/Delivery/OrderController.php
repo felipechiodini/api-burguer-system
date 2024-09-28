@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Enums\Order\Delivery as OrderDelivery;
+use App\Enums\Order\Origin;
 use App\Enums\Order\Payment as OrderPayment;
-use App\Events\OrderCreated;
+use App\Enums\Order\Status;
+use App\Models\OrderAddress;
+use App\Models\OrderPayment as ModelsOrderPayment;
+use App\Models\OrderProduct as ModelsOrderProduct;
 use App\Order\CreateCustomer;
 use App\Order\CreateOrder;
-use App\Http\Controllers\Controller;
 use App\Models\StoreProduct;
 use App\Models\ProductAdditional;
 use App\Models\ProductReplacement;
+use App\Models\StoreCustomer;
+use App\Models\StoreNeighborhood;
+use App\Models\StoreOrder;
 use App\Order\Additional;
 use App\Order\OrderProduct;
 use App\Order\Replacement;
@@ -18,65 +24,93 @@ use App\Types\Cellphone;
 use App\Types\Document;
 use App\Types\Name;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class OrderController extends Controller
+class OrderController
 {
-
-    public function create(Request $request)
+    public function __invoke(Request $request)
     {
         $request->validate([
             'customer.name' => 'required',
             'customer.document' => '',
             'customer.cellphone' => 'required',
-            // 'address.street' => 'required',
-            // 'address.number' => 'required',
+            'address.street' => 'required',
+            'address.number' => 'required',
+            'address.neighborhood_id' => 'required',
             'payment.type' => 'required',
             'delivery.type' => 'required',
             'delivery.observation' => 'string',
             'products' => 'required',
         ]);
 
-        $customer = CreateCustomer::make()
-            ->setName(new Name($request->json('customer.name')))
-            ->setCellphone(new Cellphone($request->json('customer.cellphone')));
+        DB::beginTransaction();
 
-        if ($request->has('document')) {
-            $customer->setDocument(new Document($request->json('customer.document')));
+        $customer = StoreCustomer::query()
+            ->updateOrCreate([
+                'cellphone' => $request->json('customer.cellphone')
+            ], [
+                'name' => $request->json('customer.name'),
+                'document' => $request->json('customer.document'),
+            ]);
+
+        if ($request->json('delivery.type') === OrderDelivery::DELIVERY) {
+            $neighborhood = StoreNeighborhood::query()
+                ->where('id', request('address.neighborhood_id'))
+                ->first();
         }
 
-        $orderBuilder = CreateOrder::make()
-            ->setCustomer($customer->create())
-            ->setDelivery(OrderDelivery::fromValue($request->json('delivery.type')), $request->json('delivery.observation'))
-            ->setPayment(OrderPayment::fromValue($request->json('payment.type')))
-            ->setAddress($request->json('address'));
+        $order = StoreOrder::query()
+            ->create([
+                'customer_id' => $customer->id,
+                'products_total' => 0,
+                'delivery_fee' => $neighborhood->price,
+                'discount' => 0,
+                'total' => 0,
+                'origin' => Origin::APP,
+                'status' => Status::OPEN,
+            ]);
 
+        if ($request->json('delivery.type') === OrderDelivery::DELIVERY) {
+            OrderAddress::query()
+                ->create([
+                    'order_id' => $order->id,
+                    'cep' => $request->json('address.cep'),
+                    'street' => $request->json('address.street'),
+                    'number' => $request->json('address.number'),
+                    'neighborhood' => $neighborhood->name,
+                    'city' => $request->json('address.city'),
+                    'state' => $request->json('address.state'),
+                ]);
+        }
+
+        ModelsOrderPayment::query()
+            ->create([
+                'order_id' => $order->id,
+                'type' => OrderPayment::fromValue($request->json('payment.type')),
+            ]);
+
+        $total = 0;
         foreach ($request->products as $product) {
-            $orderProduct = new OrderProduct(
-                StoreProduct::find($product['id']),
-                $product['count']
-            );
+            $model = StoreProduct::query()
+                ->where('id', $product['id'])
+                ->first();
 
-            if (@$product['additionals'] !== null) {
-                foreach ($product['additionals'] as $additional) {
-                    $orderProduct->addAdditional(
-                        new Additional(ProductAdditional::find($additional['id']),
-                        $additional['count'])
-                    );
-                }
-            }
+            ModelsOrderProduct::query()
+                ->create([
+                    'order_id' => $order->id,
+                    'product_id' => $model->id,
+                    'value' => $model->price,
+                    'amount' => $product['count'],
+                    'observation' => $product['observation'],
+                ]);
 
-            if (@$product['replacements'] !== null) {
-                foreach ($product['replacements'] as $replacement) {
-                    $orderProduct->addReplacement(
-                        new Replacement(ProductReplacement::find($replacement['id']))
-                    );
-                }
-            }
-
-            $orderBuilder->addProduct($orderProduct);
+            $total += $model->price * $product['count'];
         }
 
-        $order = $orderBuilder->create();
+        $order->update([
+            'products_total' => $total,
+            'total' => $total + $order->delivery_fee,
+        ]);
 
         return response()
             ->json([
@@ -84,5 +118,4 @@ class OrderController extends Controller
                 'order' => $order
             ]);
     }
-
 }

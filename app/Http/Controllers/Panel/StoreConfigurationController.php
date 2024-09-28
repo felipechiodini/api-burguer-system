@@ -22,7 +22,7 @@ class StoreConfigurationController extends Controller
     {
         StoreConfiguration::query()
             ->updateOrCreate([
-                'user_store_id' => app('currentTenant')->id
+                'store_id' => app('currentTenant')->id
             ], [
                 'warning' => $request->warning,
                 'minimum_order_value' => $request->minimum_order_value

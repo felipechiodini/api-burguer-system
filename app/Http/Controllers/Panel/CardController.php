@@ -33,7 +33,7 @@ class CardController extends Controller
         ]);
 
         StoreCategory::create([
-            'user_store_id' => app('currentTenant')->id,
+            'store_id' => app('currentTenant')->id,
             'name' => $request->name,
             'order' => StoreCategory::query()->max('order')
         ]);

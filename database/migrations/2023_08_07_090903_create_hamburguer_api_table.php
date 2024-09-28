@@ -23,21 +23,20 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('name');
             $table->string('logo')->nullable();
-            $table->string('banner')->nullable();
             $table->string('slug')->unique();
             $table->timestamps();
         });
 
         Schema::create('store_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->boolean('active')->default(false);
             $table->unsignedTinyInteger('type');
         });
 
         Schema::create('store_deliveries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->boolean('active')->default(false);
             $table->unsignedTinyInteger('type');
             $table->unsignedInteger('minutes')->nullable();
@@ -45,7 +44,7 @@ return new class extends Migration
 
         Schema::create('store_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->text('warning')->nullable();
             $table->double('minimum_order_value', 8, 2)->nullable();
             $table->timestamps();
@@ -53,7 +52,7 @@ return new class extends Migration
 
         Schema::create('store_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->string('cep');
             $table->string('street');
             $table->string('number');
@@ -67,7 +66,7 @@ return new class extends Migration
 
         Schema::create('store_neighborhoods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->boolean('active');
             $table->string('name');
             $table->float('price');
@@ -114,7 +113,7 @@ return new class extends Migration
 
         Schema::create('store_banners', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->string('name');
             $table->string('src');
             $table->unsignedTinyInteger('order');
@@ -123,7 +122,7 @@ return new class extends Migration
 
         Schema::create('store_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->string('name', 20);
             $table->unsignedInteger('order');
             $table->timestamps();
@@ -131,7 +130,7 @@ return new class extends Migration
 
         Schema::create('store_customers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->string('name');
             $table->string('document')->nullable();
             $table->string('cellphone');
@@ -140,13 +139,13 @@ return new class extends Migration
 
         Schema::create('store_tables', function (Blueprint $table) {
             $table->uuid('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->timestamps();
         });
 
         Schema::create('store_coupons', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->string('description')->nullable();
             $table->string('code');
             $table->double('value', 8, 2);
@@ -177,7 +176,7 @@ return new class extends Migration
 
         Schema::create('store_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->unsignedTinyInteger('week_day');
             $table->time('start');
             $table->time('end');
@@ -185,14 +184,14 @@ return new class extends Migration
 
         Schema::create('store_scheduled_breaks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->timestamp('start');
             $table->timestamp('end');
         });
 
         Schema::create('store_emergency_closes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
             $table->timestamp('ends_at');
         });
 
@@ -214,7 +213,7 @@ return new class extends Migration
 
         Schema::create('product_additionals', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_product_id')->references('id')->on('store_products');
+            $table->foreignId('product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2);
             $table->softDeletes();
@@ -223,7 +222,7 @@ return new class extends Migration
 
         Schema::create('product_replacements', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_product_id')->references('id')->on('store_products');
+            $table->foreignId('product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2);
             $table->softDeletes();
@@ -232,7 +231,7 @@ return new class extends Migration
 
         Schema::create('product_follow_up', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_product_id')->references('id')->on('store_products');
+            $table->foreignId('product_id')->references('id')->on('store_products');
             $table->string('name');
             $table->double('value', 8, 2)->nullable();
             $table->softDeletes();
@@ -241,9 +240,9 @@ return new class extends Migration
 
         Schema::create('store_orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_store_id')->references('id')->on('user_stores');
-            $table->foreignId('store_customer_id')->references('id')->on('store_customers');
-            $table->foreignId('store_coupon_id')->nullable()->default(null)->references('id')->on('store_coupons');
+            $table->foreignId('store_id')->references('id')->on('user_stores');
+            $table->foreignId('customer_id')->references('id')->on('store_customers');
+            $table->foreignId('coupon_id')->nullable()->default(null)->references('id')->on('store_coupons');
             $table->float('products_total');
             $table->float('delivery_fee');
             $table->float('discount');
@@ -255,8 +254,8 @@ return new class extends Migration
 
         Schema::create('order_products', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_order_id')->references('id')->on('store_orders');
-            $table->foreignId('store_product_id')->references('id')->on('store_products');
+            $table->foreignId('order_id')->references('id')->on('store_orders');
+            $table->foreignId('product_id')->references('id')->on('store_products');
             $table->double('value', 8, 2);
             $table->smallInteger('amount');
             $table->text('observation')->nullable();
@@ -282,48 +281,26 @@ return new class extends Migration
 
         Schema::create('order_product_follow_up', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_order_id')->references('id')->on('store_orders');
+            $table->foreignId('order_id')->references('id')->on('store_orders');
             $table->foreignId('product_replacement_id')->references('id')->on('product_replacements');
             $table->float('value');
         });
 
-        Schema::create('order_deliveries', function (Blueprint $table) {
-            $table->id('id');
-            $table->foreignId('store_order_id')->references('id')->on('store_orders');
-            $table->unsignedTinyInteger('type');
-
-            $name = 'target';
-            $table->string("{$name}_type")->nullable();
-            $table->unsignedBigInteger("{$name}_id")->nullable();
-            $table->index(["{$name}_type", "{$name}_id"], null);
-        });
-
         Schema::create('order_payments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_order_id')->references('id')->on('store_orders');
+            $table->foreignId('order_id')->references('id')->on('store_orders');
             $table->unsignedTinyInteger('type');
-            $table->timestamps();
         });
 
-        Schema::create('delivery_addresses', function (Blueprint $table) {
+        Schema::create('order_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('order_delivery_id')->references('id')->on('order_deliveries');
+            $table->foreignId('order_id')->references('id')->on('store_orders');
             $table->string('cep')->nullable();
             $table->string('street');
             $table->string('number');
             $table->string('neighborhood');
-            $table->string('city');
+            $table->string('city')->nullable();
             $table->string('complement')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('contacts', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('cellphone');
-            $table->string('email');
-            $table->string('message');
-            $table->timestamps();
         });
     }
 };

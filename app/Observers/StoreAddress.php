@@ -8,7 +8,7 @@ class StoreAddress
 {
     public function creating(ModelsStoreAddress $storeAddress): void
     {
-        $storeAddress->user_store_id = app('currentTenant')->id;
+        $storeAddress->store_id = app('currentTenant')->id;
     }
 
 }

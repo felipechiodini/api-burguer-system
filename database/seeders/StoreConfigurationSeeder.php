@@ -13,7 +13,7 @@ class StoreConfigurationSeeder extends Seeder
     {
         UserStore::all()->each(function(UserStore $store) {
             StoreConfiguration::create([
-                'user_store_id' => $store->id,
+                'store_id' => $store->id,
                 'warning' => null,
                 'minimum_order_value' => 25,
             ]);

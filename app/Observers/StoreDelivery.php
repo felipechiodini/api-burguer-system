@@ -8,7 +8,7 @@ class StoreDelivery
 {
     public function creating(ModelsStoreDelivery $storeDelivery): void
     {
-        $storeDelivery->user_store_id = app('currentTenant')->id;
+        $storeDelivery->store_id = app('currentTenant')->id;
     }
 
 }

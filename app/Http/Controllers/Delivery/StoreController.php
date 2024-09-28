@@ -87,6 +87,7 @@ class StoreController extends Controller
 
             $deliveryOptions = StoreDelivery::query()
                 ->select('type', 'minutes')
+                ->where('active', true)
                 ->get()
                 ->map(function($model) {
                     return [
@@ -98,6 +99,7 @@ class StoreController extends Controller
 
             $paymentOptions = StorePayment::query()
                 ->select('type')
+                ->where('active', true)
                 ->get()
                 ->map(function($model) {
                     return [
